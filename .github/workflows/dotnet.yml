@@ -21,6 +21,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore lone-wanderer-game
+      run: dotnet restore lone-wanderer-game/LoneWandererGame.csproj
     - name: Build
-      run: dotnet build lone-wanderer-game --no-restore
+      run: dotnet build lone-wanderer-game/LoneWandererGame.csproj --no-restore
