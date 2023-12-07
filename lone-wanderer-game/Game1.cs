@@ -1,33 +1,68 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LoneWandererGame.GameScreens;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input.InputListeners;
+using MonoGame.Extended.Screens;
+using MonoGame.Extended.Screens.Transitions;
 
-namespace lone_wanderer_game
+namespace LoneWandererGame
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private readonly ScreenManager _screenManager;
+        private readonly KeyboardListener _keyboardListener;
+        private readonly MouseListener _mouseListener;
+
+        public SpriteBatch SpriteBatch { get; private set; }
+        public SpriteFont RegularFont { get; private set; }
+        public MouseListener MouseListener { get { return _mouseListener; } }
+        public KeyboardListener KeyboardListener { get { return _keyboardListener; } }
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
+            _screenManager = new ScreenManager();
+            _keyboardListener = new KeyboardListener();
+            _mouseListener = new MouseListener();
+            Components.Add(_screenManager);
+            Components.Add(new InputListenerComponent(this, _keyboardListener, _mouseListener));
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
+        public void LoadTitleScreen()
+        {
+            _screenManager.LoadScreen(new TitleScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+
+        public void LoadPlayScreen()
+        {
+            _screenManager.LoadScreen(new PlayScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+
+        public void LoadMenuScreen()
+        {
+            _screenManager.LoadScreen(new MenuScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+        public void LoadDeathScreen()
+        {
+            _screenManager.LoadScreen(new DeathScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+
+
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+            LoadTitleScreen();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            RegularFont = Content.Load<SpriteFont>("Fonts/regular");
         }
 
         protected override void Update(GameTime gameTime)
@@ -35,16 +70,14 @@ namespace lone_wanderer_game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
