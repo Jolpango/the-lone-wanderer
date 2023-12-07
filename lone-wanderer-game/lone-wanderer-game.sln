@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lone-wanderer-game", "lone-wanderer-game.csproj", "{476A5DE4-28DD-4CC4-BDD1-C7ECC5CF57B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoneWandererGame", "LoneWandererGame.csproj", "{476A5DE4-28DD-4CC4-BDD1-C7ECC5CF57B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
