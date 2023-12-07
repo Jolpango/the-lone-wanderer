@@ -1,3 +1,3 @@
 ﻿
-using var game = new lone_wanderer_game.Game1();
+using var game = new LoneWandererGame.Game1();
 game.Run();
