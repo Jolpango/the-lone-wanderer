@@ -12,11 +12,15 @@ namespace LoneWandererGame.Enemy
 {
     public class BaseEnemy
     {
-        private float health;
+      
         private float moveSpeed;
-        private Texture2D guySprite;
+        private Texture2D enemySprite;
         private Vector2 position = new Vector2(0.0f, 0.0f);
+        private float attackCooldown = 0.0f;
+
         public Game1 Game { get; private set; }
+        public float health { get; private set; }
+
 
 
         public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game)
@@ -28,7 +32,7 @@ namespace LoneWandererGame.Enemy
         }
         public void LoadContent()
         {
-            guySprite = Game.Content.Load<Texture2D>("Sprites/guy");
+            enemySprite = Game.Content.Load<Texture2D>("Sprites/guy");
         }
 
         public void Update(GameTime gameTime, Player _player)
@@ -42,11 +46,39 @@ namespace LoneWandererGame.Enemy
             }
        
             position+= (direction * moveSpeed * gameTime.GetElapsedSeconds());
+
+
+            //TODO add colision with player and enemy
+            if (attackCooldown < 0.0f)
+            {
+                //player should take dmg TODO
+                attackCooldown = 1.0f;
+            }    
+            attackCooldown-= gameTime.GetElapsedSeconds();
         }
         public void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(guySprite, position, null, Color.White);
+            Game.SpriteBatch.Draw(enemySprite, position, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.15f);
         }
+        public bool TakeDamage(float damage)
+        {
+            this.health -= damage;
+            if (this.health < 0)
+                return false;
+            else
+                return true;
+        }
+        public bool IsDead()
+        {
+            if (this.health < 0)
+                return true;
+            else
+                return false;
+        }
+
+
+        
+
 
 
 
