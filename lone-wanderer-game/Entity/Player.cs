@@ -78,37 +78,38 @@ namespace LoneWandererGame.Entity
             Color colorTint = Color.White;
 
             // Movement Input
-            direction = Vector2.Zero;
+            Vector2 movementDirection = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
                 animation = AnimationState.run_up_down;
                 spriteEffect = SpriteEffects.None;
-                direction.Y = -1;
+                movementDirection.Y = -1;
             }
             else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
                 animation = AnimationState.run_up_down;
                 spriteEffect = SpriteEffects.None;
-                direction.Y = 1;
+                movementDirection.Y = 1;
             }
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
                 animation = AnimationState.run_left_right;
                 spriteEffect = SpriteEffects.None;
-                direction.X = -1;
+                movementDirection.X = -1;
             }
             else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
                 animation = AnimationState.run_left_right;
                 spriteEffect = SpriteEffects.FlipHorizontally;
-                direction.X = 1;
+                movementDirection.X = 1;
             }
 
             // Velocity and Direction
-            if (direction != Vector2.Zero)
+            if (movementDirection != Vector2.Zero)
             {
-                direction.Normalize();
+                movementDirection.Normalize();
+                direction = movementDirection;
                 velocity += direction * acceleration;
             }
             Position += velocity;
@@ -122,6 +123,8 @@ namespace LoneWandererGame.Entity
 
             lastAnimation = animation;
             lastSpriteEffect = spriteEffect;
+
+            Debug.WriteLine(direction);
         }
 
         public void Draw()
