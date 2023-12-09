@@ -54,6 +54,7 @@ namespace LoneWandererGame.Entity
             var spriteSheet = game.Content.Load<SpriteSheet>("Sprites/player_animations.sf", new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Origin = new Vector2(16, 16);
+            sprite.Depth = 0.25f;
 
             lastSpriteEffect = SpriteEffects.None;
             lastAnimation = AnimationState.idle_up_down;
