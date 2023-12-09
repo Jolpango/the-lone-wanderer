@@ -8,9 +8,8 @@ using MonoGame.Extended.Input;
 using LoneWandererGame.Entity;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
-using System.Net;
 using LoneWandererGame.Enemy;
-
+using LoneWandererGame.TileEngines;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -21,9 +20,8 @@ namespace LoneWandererGame.GameScreens
         private Player _player;
         private OrthographicCamera _camera;
         private Texture2D _groundTexture;
+        private TileEngine tileEngine;
 
-        private Vector2 guyPosition = new Vector2(0, 0);
-        private Texture2D guySprite;
         private EnemyHandler enemyHandler;
 
         public PlayScreen(Game1 game) : base(game)
@@ -31,7 +29,6 @@ namespace LoneWandererGame.GameScreens
             enemyHandler = new EnemyHandler(Game);
 
         }
-
         public override void LoadContent()
         {
             base.LoadContent();
@@ -47,6 +44,8 @@ namespace LoneWandererGame.GameScreens
             _groundTexture = Game.Content.Load<Texture2D>("Sprites/checkerboard");
 
             enemyHandler.LoadContent();
+            tileEngine = new TileEngine(Game);
+            tileEngine.LoadContent();
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -86,14 +85,12 @@ namespace LoneWandererGame.GameScreens
 
             // World
             var transformMatrix = _camera.GetViewMatrix();
-            Game.SpriteBatch.Begin(transformMatrix: transformMatrix);
+            Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
+
             Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
+            tileEngine.Draw();
             enemyHandler.Draw(gameTime);
-
-            Game.SpriteBatch.End();
-           
-
         }
     }
 }

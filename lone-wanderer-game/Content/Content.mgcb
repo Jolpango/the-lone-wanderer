@@ -69,3 +69,7 @@
 
 #begin Sprites/SpellAnimations/fireball.sf
 /copy:Sprites/SpellAnimations/fireball.sf
+
+#begin Tilemaps/mountain_landscape.png
+/build:Tilemaps/mountain_landscape.png
+
