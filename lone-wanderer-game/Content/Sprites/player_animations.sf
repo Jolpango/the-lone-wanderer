@@ -1,0 +1,39 @@
+{
+  "textureAtlas": {
+    "texture": "player_sprite.png",
+    "regionWidth": 32,
+    "regionHeight": 32
+  },
+  "cycles": {
+    "run_up_down": {
+      "frames": [1,2,3,2,1],
+      "isLooping": true,
+      "frameDuration": 0.1
+    },
+    "run_left_right": {
+      "frames": [9,10,11],
+      "isLooping": true,
+      "frameDuration": 0.1
+    },
+    "death": {
+      "frames": [16,17,18],
+      "isLooping": false,
+      "frameDuration": 0.5
+    },
+    "take_damage": {
+      "frames": [8],
+      "isLooping": false,
+      "frameDuration": 0.1
+    },
+    "idle_left_right": {
+      "frames": [9],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idle_up_down": {
+      "frames": [0],
+      "isLooping": false,
+      "frameDuration": 0.2
+    }
+  }
+}
