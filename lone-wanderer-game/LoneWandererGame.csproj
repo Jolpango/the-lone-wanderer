@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Monogame.Extended" Version="3.8.0" />
+    <PackageReference Include="MonoGame.Extended.Animations" Version="3.7.0" />
     <PackageReference Include="MonoGame.Extended.Content.Pipeline" Version="3.8.0" />
     <PackageReference Include="MonoGame.Extended.Input" Version="3.8.0" />
     <PackageReference Include="MonoGame.Extended.Tiled" Version="3.8.0" />
@@ -32,6 +33,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Sprites\SpellAnimations\fireball.sf">
+    <None Update="Content\Sprites\player.sf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sprites\player_animations.sf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
