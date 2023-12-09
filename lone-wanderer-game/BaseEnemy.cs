@@ -14,7 +14,6 @@ namespace LoneWandererGame.Enemy
     {
         private float health;
         private float moveSpeed;
-        //private float position;
         private Texture2D guySprite;
         private Vector2 position = new Vector2(0.0f, 0.0f);
         public Game1 Game { get; private set; }
@@ -35,14 +34,14 @@ namespace LoneWandererGame.Enemy
         public void Update(GameTime gameTime, Player _player)
         {
 
-            Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);//_player.Position;
+            Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);
             Vector2 direction = (playerPos - this.position);
             if (direction != new Vector2(0.0f,0.0f))
             { 
                 direction.Normalize(); 
             }
        
-            position+= (direction * moveSpeed * gameTime.GetElapsedSeconds()); // corrct? idk
+            position+= (direction * moveSpeed * gameTime.GetElapsedSeconds());
         }
         public void Draw(GameTime gameTime)
         {
