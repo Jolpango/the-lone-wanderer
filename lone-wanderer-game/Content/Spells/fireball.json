@@ -2,7 +2,7 @@
   "name": "Fireball",
   "type": "ProjectileSpell",
   "asset": "fireball",
-  "speed":  5,
+  "speed":  15,
   "icon": "fireball",
   "levelDefinitions": [
     {

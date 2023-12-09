@@ -12,6 +12,7 @@ namespace LoneWandererGame.Spells
         public string Name { get; private set; }
         public string Icon { get; private set; }
         public string Asset { get; private set; }
+        public float Rotation { get; set; } = 0;
         public Vector2 Position { get; protected set; }
         protected AnimatedSprite sprite;
         public int Damage { get; protected set; }
@@ -26,6 +27,7 @@ namespace LoneWandererGame.Spells
         {
             var spriteSheet = content.Load<SpriteSheet>($"Sprites/SpellAnimations/{Asset}.sf", new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
+            sprite.Depth = 0.16f;
         }
         public Rectangle CollisionRectangle
         { 
@@ -40,7 +42,7 @@ namespace LoneWandererGame.Spells
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            sprite.Draw(spriteBatch, Position, 0, Vector2.One);
+            sprite.Draw(spriteBatch, Position, Rotation, Vector2.One);
         }
     }
 }

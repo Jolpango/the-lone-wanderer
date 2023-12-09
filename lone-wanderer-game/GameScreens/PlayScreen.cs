@@ -10,6 +10,8 @@ using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using LoneWandererGame.Enemy;
 using LoneWandererGame.TileEngines;
+using LoneWandererGame.Spells;
+using System.Collections.Generic;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -23,11 +25,17 @@ namespace LoneWandererGame.GameScreens
         private TileEngine tileEngine;
 
         private EnemyHandler enemyHandler;
+        public SpellBook SpellBook;
+        public List<Spell> ActiveSpells;
+        public List<SpellDefinition> SpellDefinitions { get; private set; }
 
         public PlayScreen(Game1 game) : base(game)
         {
+            _player = new Player(Game, Vector2.Zero);
             enemyHandler = new EnemyHandler(Game);
-
+            ActiveSpells = new List<Spell>();
+            SpellBook = new SpellBook(Game, _player);
+            SpellDefinitions = new List<SpellDefinition>();
         }
         public override void LoadContent()
         {
@@ -35,7 +43,6 @@ namespace LoneWandererGame.GameScreens
             Game.KeyboardListener.KeyPressed += menuactions;
 
             Vector2 windowDimensions = Game.WindowDimensions;
-            _player = new Player(Game, Vector2.Zero);
             _player.LoadContent();
             
             var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
@@ -46,6 +53,11 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.LoadContent();
             tileEngine = new TileEngine(Game);
             tileEngine.LoadContent();
+            SpellDefinitions = SpellLoader.LoadSpells();
+            foreach(var spell in SpellDefinitions)
+            {
+                SpellBook.AddSpell(spell);
+            }
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -72,6 +84,17 @@ namespace LoneWandererGame.GameScreens
 
             _camera.LookAt(_player.Position);
             enemyHandler.Update(gameTime, _player);
+
+            foreach(var spell in ActiveSpells)
+            {
+                spell.Update(gameTime);
+            }
+
+            var spells = SpellBook.Update(gameTime);
+            if (spells is not null)
+            {
+                ActiveSpells.AddRange(spells);
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -91,6 +114,10 @@ namespace LoneWandererGame.GameScreens
             _player.Draw();
             tileEngine.Draw();
             enemyHandler.Draw(gameTime);
+            foreach(var spell in ActiveSpells)
+            {
+                spell.Draw(Game.SpriteBatch);
+            }
             Game.SpriteBatch.End();
         }
     }

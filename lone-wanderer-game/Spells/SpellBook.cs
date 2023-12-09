@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LoneWandererGame.Entity;
 
 namespace LoneWandererGame.Spells
 {
@@ -13,10 +14,12 @@ namespace LoneWandererGame.Spells
     {
         public List<SpellDefinition> Spells { get; private set; }
         public Game1 Game { get; private set; }
-        public SpellBook(Game1 game)
+        public Player Player { get; private set; }
+        public SpellBook(Game1 game, Player player)
         {
             Spells = new List<SpellDefinition>();
             Game = game;
+            Player = player;
         }
         public void AddSpell(SpellDefinition spell)
         {
@@ -60,12 +63,10 @@ namespace LoneWandererGame.Spells
         }
         public List<Spell> ConstructProjectileSpell(SpellDefinition spellDefinition)
         {
-            Vector2 dir = new Vector2(1, 1);
-            dir.Normalize();
             List<Spell> spells = new List<Spell>();
             for (int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
             {
-                var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, new Vector2(200, 200), dir, spellDefinition.Speed);
+                var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, spellDefinition.Speed);
                 spell.LoadContent(Game.Content);
                 spells.Add(spell);
             }

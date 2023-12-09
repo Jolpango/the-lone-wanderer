@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using System;
 
 namespace LoneWandererGame.Spells
 {
@@ -12,6 +13,7 @@ namespace LoneWandererGame.Spells
         {
             this.direction = direction;
             this.speed = speed;
+            this.Rotation = (float)(Math.Atan2(direction.Y, direction.X) / (2 * Math.PI));
         }
 
         public override void LoadContent(ContentManager content)
