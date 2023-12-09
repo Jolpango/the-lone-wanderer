@@ -65,7 +65,7 @@ namespace LoneWandererGame
         protected override void Initialize()
         {
             base.Initialize();
-            LoadTitleScreen();
+            LoadPlayScreen();// LoadTitleScreen();
         }
 
         protected override void LoadContent()

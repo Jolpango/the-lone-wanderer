@@ -8,6 +8,7 @@ using MonoGame.Extended.Input;
 using LoneWandererGame.Entity;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
+using System.Net;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -17,6 +18,7 @@ namespace LoneWandererGame.GameScreens
 
         private Player _player;
         private OrthographicCamera _camera;
+        private Texture2D _groundTexture;
 
         public PlayScreen(Game1 game): base(game) { }
 
@@ -31,6 +33,9 @@ namespace LoneWandererGame.GameScreens
             
             var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
             _camera = new OrthographicCamera(viewportAdapter);
+            _camera.ZoomIn(0.5f);
+
+            _groundTexture = Game.Content.Load<Texture2D>("Sprites/checkerboard");
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -55,7 +60,7 @@ namespace LoneWandererGame.GameScreens
 
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _camera.LookAt(_player.position);
+            _camera.LookAt(_player.Position);
         }
 
         public override void Draw(GameTime gameTime)
@@ -70,7 +75,10 @@ namespace LoneWandererGame.GameScreens
             // World
             var transformMatrix = _camera.GetViewMatrix();
             Game.SpriteBatch.Begin(transformMatrix: transformMatrix);
+
+            Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
+
             Game.SpriteBatch.End();
             
         }

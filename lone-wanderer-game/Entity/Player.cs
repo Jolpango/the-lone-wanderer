@@ -6,6 +6,9 @@ using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
+using System.Collections.Generic;
+using System;
+using System.Diagnostics;
 
 namespace LoneWandererGame.Entity
 {
@@ -14,67 +17,116 @@ namespace LoneWandererGame.Entity
         private Game1 game;
 
         private AnimatedSprite sprite;
+        public enum AnimationState
+        {
+            none,
+            idle_up_down,
+            idle_left_right,
+            run_up_down,
+            run_left_right
+        };
+        private AnimationState lastAnimation;
+        private SpriteEffects lastSpriteEffect;
+        private Vector2 direction = Vector2.Zero;
+        private Vector2 velocity = Vector2.Zero;
 
-        public Vector2 position = new Vector2(0, 0);
-        public float rotation = 0;
-        public Vector2 scale = new Vector2(1, 1);
+        public float acceleration = 1.6f;
+        public float decceleration = 0.75f;
+        public Vector2 Direction { get { return direction; } }
+        public Vector2 Position = Vector2.Zero;
+        public float Rotation = 0;
+        public Vector2 Scale = new Vector2(1, 1);
+
+        public enum State
+        {
+            Running,
+            Attacking
+        };
+        public State state { get; set; }
 
         public Player(Game1 game, Vector2 spawnPosition) {
             this.game = game;
-            position = spawnPosition;
+            Position = spawnPosition;
         }
 
         public void LoadContent()
         {
             var spriteSheet = game.Content.Load<SpriteSheet>("Sprites/player_animations.sf", new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
+            sprite.Origin = new Vector2(16, 16);
 
-            sprite.Play("idle_up_down");
+            lastSpriteEffect = SpriteEffects.None;
+            lastAnimation = AnimationState.idle_up_down;
+            sprite.Play(lastAnimation.ToString());
         }
 
         public void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float walkSpeed = dt * 128;
             var keyboardState = KeyboardExtended.GetState();
-            var animation = "idle_up_down";
-            SpriteEffects flip = SpriteEffects.None;
+
+            // This makes sure we keep the sprites facing direction while idle
+            AnimationState animation = AnimationState.idle_up_down;
+            switch (lastAnimation)
+            {
+                case AnimationState.idle_left_right:
+                case AnimationState.run_left_right:
+                    animation = AnimationState.idle_left_right;
+                    break;
+            }
+            SpriteEffects spriteEffect = lastSpriteEffect;
             Color colorTint = Color.White;
 
+            // Movement Input
+            direction = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                animation = "run_up_down";
-                position.Y -= walkSpeed;
+                animation = AnimationState.run_up_down;
+                spriteEffect = SpriteEffects.None;
+                direction.Y = -1;
             }
-
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                animation = "run_up_down";
-                position.Y += walkSpeed;
+                animation = AnimationState.run_up_down;
+                spriteEffect = SpriteEffects.None;
+                direction.Y = 1;
             }
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                animation = "run_left_right";
-                position.X -= walkSpeed;
+                animation = AnimationState.run_left_right;
+                spriteEffect = SpriteEffects.None;
+                direction.X = -1;
             }
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                animation = "run_left_right";
-                position.X += walkSpeed;
-                flip = SpriteEffects.FlipHorizontally;
+                animation = AnimationState.run_left_right;
+                spriteEffect = SpriteEffects.FlipHorizontally;
+                direction.X = 1;
             }
 
+            // Velocity and Direction
+            if (direction != Vector2.Zero)
+            {
+                direction.Normalize();
+                velocity += direction * acceleration;
+            }
+            Position += velocity;
+            velocity *= decceleration;
+
+            // Sprite
             sprite.Color = colorTint;
-            sprite.Effect = flip;
-            sprite.Play(animation);
+            sprite.Effect = spriteEffect;
+            sprite.Play(animation.ToString());
             sprite.Update(dt);
+
+            lastAnimation = animation;
+            lastSpriteEffect = spriteEffect;
         }
 
         public void Draw()
         {
-            game.SpriteBatch.Draw(sprite, position);
+            game.SpriteBatch.Draw(sprite, Position, Rotation, Scale);
         }
     }
 }
