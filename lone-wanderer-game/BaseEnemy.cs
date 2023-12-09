@@ -36,9 +36,12 @@ namespace LoneWandererGame.Enemy
         {
 
             Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);//_player.Position;
-            Vector2 direction = (playerPos - position);
-
-            direction.Normalize();
+            Vector2 direction = (playerPos - this.position);
+            if (direction != new Vector2(0.0f,0.0f))
+            { 
+                direction.Normalize(); 
+            }
+       
             position+= (direction * moveSpeed * gameTime.GetElapsedSeconds()); // corrct? idk
         }
         public void Draw(GameTime gameTime)
