@@ -12,7 +12,7 @@ namespace LoneWandererGame.Enemy
 {
     public class BaseEnemy
     {
-        private float health;
+        public float health { get; private set; }
         private float moveSpeed;
         private Texture2D guySprite;
         private Vector2 position = new Vector2(0.0f, 0.0f);
@@ -45,8 +45,25 @@ namespace LoneWandererGame.Enemy
         }
         public void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(guySprite, position, null, Color.White);
+            Game.SpriteBatch.Draw(guySprite, position, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.15f);
         }
+        public bool TakeDamage(float damage)
+        {
+            this.health -= damage;
+            if (this.health < 0)
+                return false;
+            else
+                return true;
+        }
+        public bool IsDead()
+        {
+            if (this.health < 0)
+                return true;
+            else
+                return false;
+        }
+        
+
 
 
 

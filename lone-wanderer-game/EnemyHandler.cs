@@ -12,12 +12,12 @@ namespace LoneWandererGame.Enemy
 {
     public class EnemyHandler
     {
-       private List<BaseEnemy> enemyList = new List<BaseEnemy>();
+        private List<BaseEnemy> enemyList = new List<BaseEnemy>();
         public Game1 Game { get; private set; }
 
 
         // temp to just see if it works
-        public EnemyHandler(Game1 game) {Game=game; enemyList.Add(new BaseEnemy(10.0f,10.0f, new Vector2(0.0f,0.0f), game)); }
+        public EnemyHandler(Game1 game) {Game=game; enemyList.Add(new BaseEnemy(10.0f,50.0f, new Vector2(0.0f,0.0f), game)); }
 
         public void LoadContent()
         {
@@ -28,12 +28,21 @@ namespace LoneWandererGame.Enemy
         public void Update(GameTime gameTime, Player _player)
         {
             for (int i = 0; i < enemyList.Count; i++)
+            {
                 enemyList[i].Update(gameTime, _player);
+                if(enemyList[i].IsDead()) 
+                { 
+                    enemyList.RemoveAt(i); 
+                    i--; 
+                }
+                
+
+            }
         }
         public void Draw(GameTime gameTime)
         {
             for(int i = 0;i < enemyList.Count;i++)
-                enemyList[(int)i].Draw(gameTime);
+                enemyList[i].Draw(gameTime);
         }
 
         public BaseEnemy GetEnemy(int index) { return enemyList[index]; }
