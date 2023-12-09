@@ -9,6 +9,8 @@ using MonoGame.Extended.Sprites;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
+using static LoneWandererGame.Entity.Player;
+using System.IO;
 
 namespace LoneWandererGame.Entity
 {
@@ -17,16 +19,22 @@ namespace LoneWandererGame.Entity
         private Game1 game;
 
         private AnimatedSprite sprite;
+        private Color colorTint = Color.White;
+
+
         public enum AnimationState
         {
             none,
             idle_up_down,
             idle_left_right,
             run_up_down,
-            run_left_right
+            run_left_right,
+            death
         };
         private AnimationState lastAnimation;
         private SpriteEffects lastSpriteEffect;
+
+
         private Vector2 direction = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
 
@@ -37,16 +45,42 @@ namespace LoneWandererGame.Entity
         public float Rotation = 0;
         public Vector2 Scale = new Vector2(1, 1);
 
-        public enum State
-        {
-            Running,
-            Attacking
+        public enum State {
+            Alive,
+            Dead
         };
-        public State state { get; set; }
+        private State state;
+        private float damageTimer = 0f;
+        private const float INVINCIBILITY_TIME = 0.3f;
+        public int Health { get; private set; }
+        private const int MAX_HEALTH = 100;
+
+        public void Damage(int amount)
+        {
+            if (state == State.Alive && damageTimer == 0f)
+            {
+                damageTimer = INVINCIBILITY_TIME;
+                Health -= amount;
+                colorTint = Color.Red;
+
+                Debug.WriteLine("Player damaged, health: " + Health.ToString());
+
+                if (Health < 0)
+                {
+                    Health = 0;
+                }
+            }
+        }
+        
 
         public Player(Game1 game, Vector2 spawnPosition) {
             this.game = game;
+            lastSpriteEffect = SpriteEffects.None;
+            lastAnimation = AnimationState.idle_up_down;
+            
             Position = spawnPosition;
+            Health = MAX_HEALTH;
+            state = State.Alive;
         }
 
         public void LoadContent()
@@ -55,9 +89,6 @@ namespace LoneWandererGame.Entity
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Origin = new Vector2(16, 16);
             sprite.Depth = 0.25f;
-
-            lastSpriteEffect = SpriteEffects.None;
-            lastAnimation = AnimationState.idle_up_down;
             sprite.Play(lastAnimation.ToString());
         }
 
@@ -68,58 +99,97 @@ namespace LoneWandererGame.Entity
 
             // This makes sure we keep the sprites facing direction while idle
             AnimationState animation = AnimationState.idle_up_down;
-            switch (lastAnimation)
-            {
-                case AnimationState.idle_left_right:
-                case AnimationState.run_left_right:
-                    animation = AnimationState.idle_left_right;
-                    break;
-            }
             SpriteEffects spriteEffect = lastSpriteEffect;
-            Color colorTint = Color.White;
 
-            // Movement Input
-            Vector2 movementDirection = Vector2.Zero;
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.T) && state == State.Dead)
             {
-                animation = AnimationState.run_up_down;
-                spriteEffect = SpriteEffects.None;
-                movementDirection.Y = -1;
-            }
-            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
-            {
-                animation = AnimationState.run_up_down;
-                spriteEffect = SpriteEffects.None;
-                movementDirection.Y = 1;
+                Health = MAX_HEALTH;
+                state = State.Alive;
+                Debug.WriteLine("Player Revived!");
             }
 
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            if (Health > 0)
             {
-                animation = AnimationState.run_left_right;
-                spriteEffect = SpriteEffects.None;
-                movementDirection.X = -1;
+                if (keyboardState.IsKeyDown(Keys.R))
+                {
+                    Damage(20);
+                }
+                
+
+                switch (lastAnimation)
+                {
+                    case AnimationState.idle_left_right:
+                    case AnimationState.run_left_right:
+                        animation = AnimationState.idle_left_right;
+                        break;
+                }
+
+                if (damageTimer > 0f)
+                {
+                    damageTimer -= dt;
+                    if (damageTimer < 0f)
+                    {
+                        damageTimer = 0;
+                        colorTint = Color.White;
+                    }
+                }
+
+                // Movement Input
+                Vector2 movementDirection = Vector2.Zero;
+                if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+                {
+                    animation = AnimationState.run_up_down;
+                    spriteEffect = SpriteEffects.None;
+                    movementDirection.Y = -1;
+                }
+                else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+                {
+                    animation = AnimationState.run_up_down;
+                    spriteEffect = SpriteEffects.None;
+                    movementDirection.Y = 1;
+                }
+
+                if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+                {
+                    animation = AnimationState.run_left_right;
+                    spriteEffect = SpriteEffects.None;
+                    movementDirection.X = -1;
+                }
+                else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+                {
+                    animation = AnimationState.run_left_right;
+                    spriteEffect = SpriteEffects.FlipHorizontally;
+                    movementDirection.X = 1;
+                }
+
+                // Velocity and Direction
+                if (movementDirection != Vector2.Zero)
+                {
+                    movementDirection.Normalize();
+                    direction = movementDirection;
+                    velocity += direction * acceleration;
+                }
+
+                sprite.Play(animation.ToString());
             }
-            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            else
             {
-                animation = AnimationState.run_left_right;
-                spriteEffect = SpriteEffects.FlipHorizontally;
-                movementDirection.X = 1;
+                if (state == State.Alive)
+                {
+                    state = State.Dead;
+                    colorTint = Color.White;
+                    velocity = Vector2.Zero;
+                    sprite.Play(AnimationState.death.ToString());
+                    Debug.WriteLine("Player Died!");
+                }
             }
 
-            // Velocity and Direction
-            if (movementDirection != Vector2.Zero)
-            {
-                movementDirection.Normalize();
-                direction = movementDirection;
-                velocity += direction * acceleration;
-            }
             Position += velocity;
             velocity *= decceleration;
 
             // Sprite
             sprite.Color = colorTint;
             sprite.Effect = spriteEffect;
-            sprite.Play(animation.ToString());
             sprite.Update(dt);
 
             lastAnimation = animation;

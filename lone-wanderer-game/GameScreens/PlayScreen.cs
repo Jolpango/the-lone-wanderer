@@ -110,16 +110,19 @@ namespace LoneWandererGame.GameScreens
                 ActiveSpells.Remove(spell);
             }
 
-            var spells = SpellBook.Update(gameTime);
-            if (spells is not null)
+            if (_player.Health != 0)
             {
-                ActiveSpells.AddRange(spells);
+                var spells = SpellBook.Update(gameTime);
+                if (spells is not null)
+                {
+                    ActiveSpells.AddRange(spells);
+                }
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(Color.Green);
+            Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
 
             // UI
             Game.SpriteBatch.Begin();
