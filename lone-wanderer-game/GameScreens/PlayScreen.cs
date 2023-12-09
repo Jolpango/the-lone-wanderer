@@ -28,6 +28,8 @@ namespace LoneWandererGame.GameScreens
         public SpellBook SpellBook;
         public List<Spell> ActiveSpells;
         public List<SpellDefinition> SpellDefinitions { get; private set; }
+        public SpellCollisionHandler SpellCollisionHandler { get; private set; }
+        public FloatingTextHandler FloatingTextHandler { get; private set; }
 
         public PlayScreen(Game1 game) : base(game)
         {
@@ -36,12 +38,13 @@ namespace LoneWandererGame.GameScreens
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player);
             SpellDefinitions = new List<SpellDefinition>();
+            FloatingTextHandler = new FloatingTextHandler(Game);
+            SpellCollisionHandler = new SpellCollisionHandler(Game, enemyHandler, ActiveSpells, FloatingTextHandler);
         }
         public override void LoadContent()
         {
             base.LoadContent();
             Game.KeyboardListener.KeyPressed += menuactions;
-
             Vector2 windowDimensions = Game.WindowDimensions;
             _player.LoadContent();
             
@@ -56,7 +59,8 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                SpellBook.AddSpell(spell);
+                if (spell.SpellType == typeof(AoESpell))
+                    SpellBook.AddSpell(spell);
             }
         }
 
@@ -86,10 +90,12 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.Update(gameTime, _player);
 
             UpdateSpells(gameTime);
+            FloatingTextHandler.Update(gameTime);
         }
 
         private void UpdateSpells(GameTime gameTime)
         {
+            SpellCollisionHandler.Update();
             List<Spell> spellsToRemove = new List<Spell>();
             foreach (var spell in ActiveSpells)
             {
@@ -132,6 +138,7 @@ namespace LoneWandererGame.GameScreens
             {
                 spell.Draw(Game.SpriteBatch);
             }
+            FloatingTextHandler.Draw(Game.SpriteBatch);
             Game.SpriteBatch.End();
         }
     }

@@ -63,15 +63,29 @@ namespace LoneWandererGame.Spells
             {
                 return ConstructMeleeSpell(spellDefinition);
             }
+            else if (spellDefinition.SpellType == typeof(AoESpell))
+            {
+                return ConstructAoESpell(spellDefinition);
+            }
             return null;
         }
-
+        private List<Spell> ConstructAoESpell(SpellDefinition spellDefinition)
+        {
+            List<Spell> spells = new List<Spell>();
+            AoESpell spell = new AoESpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position);
+            spell.LoadContent(Game.Content);
+            spell.Timer = spellDefinition.TimeToLive;
+            spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+            spells.Add(spell);
+            return spells;
+        }
         private List<Spell> ConstructMeleeSpell(SpellDefinition spellDefinition)
         {
             List<Spell> spells = new List<Spell>();
             MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction);
             meleeSpell.LoadContent(Game.Content);
             meleeSpell.Timer = spellDefinition.TimeToLive;
+            meleeSpell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
             spells.Add(meleeSpell);
             return spells;
         }
@@ -83,6 +97,7 @@ namespace LoneWandererGame.Spells
             {
                 var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, spellDefinition.Speed);
                 spell.Timer = spellDefinition.TimeToLive;
+                spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
                 spell.LoadContent(Game.Content);
                 spells.Add(spell);
             }

@@ -18,12 +18,6 @@ namespace LoneWandererGame.Spells
         {
             base.LoadContent(content);
             sprite.Play("attack", () => Timer = -1);
-            
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
         }
     }
 }

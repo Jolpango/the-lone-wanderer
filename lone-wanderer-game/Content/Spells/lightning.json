@@ -7,19 +7,19 @@
   "timer": 0.50,
   "levelDefinitions": [
     {
-      "damage": 5,
+      "damage": 20,
       "description": "Level1 spell",
       "specialMultiplier": 1,
       "cooldown": 5
     },
     {
-      "damage": 10,
+      "damage": 30,
       "description": "Level2 spell",
       "specialMultiplier": 1,
       "cooldown": 4
     },
     {
-      "damage": 20,
+      "damage": 40,
       "description": "Level3 spell",
       "specialMultiplier": 1,
       "cooldown": 3
