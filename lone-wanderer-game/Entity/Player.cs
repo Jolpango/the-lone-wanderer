@@ -82,6 +82,10 @@ namespace LoneWandererGame.Entity
             Health = MAX_HEALTH;
             state = State.Alive;
         }
+        public Rectangle getSpriteRectangle()
+        {
+            return (Rectangle)sprite.GetBoundingRectangle(Position, Rotation, Scale);
+        }
 
         public void LoadContent()
         {

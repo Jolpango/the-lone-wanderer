@@ -44,7 +44,7 @@ namespace LoneWandererGame.Enemy
                 { 
                     enemyList.RemoveAt(i); 
                     i--; 
-                }             
+                }
             }
 
             if (spawnTimer <=0.0f)
