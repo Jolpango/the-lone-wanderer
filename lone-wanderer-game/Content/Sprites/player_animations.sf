@@ -16,7 +16,7 @@
       "frameDuration": 0.1
     },
     "death": {
-      "frames": [16,17,18],
+      "frames": [16,17,17,18],
       "isLooping": false,
       "frameDuration": 0.5
     },

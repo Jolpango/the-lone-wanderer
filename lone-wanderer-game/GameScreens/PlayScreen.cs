@@ -90,10 +90,13 @@ namespace LoneWandererGame.GameScreens
                 spell.Update(gameTime);
             }
 
-            var spells = SpellBook.Update(gameTime);
-            if (spells is not null)
+            if (_player.Health != 0)
             {
-                ActiveSpells.AddRange(spells);
+                var spells = SpellBook.Update(gameTime);
+                if (spells is not null)
+                {
+                    ActiveSpells.AddRange(spells);
+                }
             }
         }
 
@@ -118,6 +121,7 @@ namespace LoneWandererGame.GameScreens
             {
                 spell.Draw(Game.SpriteBatch);
             }
+
             Game.SpriteBatch.End();
         }
     }
