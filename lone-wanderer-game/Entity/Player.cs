@@ -123,8 +123,6 @@ namespace LoneWandererGame.Entity
 
             lastAnimation = animation;
             lastSpriteEffect = spriteEffect;
-
-            Debug.WriteLine(direction);
         }
 
         public void Draw()
