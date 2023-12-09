@@ -17,7 +17,7 @@ namespace LoneWandererGame.Enemy
 
 
         // temp to just see if it works
-        public EnemyHandler(Game1 game) {Game=game; enemyList.Add(new BaseEnemy(10.0f,50.0f, new Vector2(0.0f,0.0f), game)); }
+        public EnemyHandler(Game1 game) {Game=game; enemyList.Add(new BaseEnemy(10.0f,100.0f, new Vector2(0.0f,0.0f), game)); }
 
         public void LoadContent()
         {
