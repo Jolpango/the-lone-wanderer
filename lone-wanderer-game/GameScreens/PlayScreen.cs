@@ -30,7 +30,6 @@ namespace LoneWandererGame.GameScreens
         {
             enemyHandler = new EnemyHandler(Game);
 
-
         }
 
         public override void LoadContent()
@@ -45,7 +44,6 @@ namespace LoneWandererGame.GameScreens
             var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
             _camera = new OrthographicCamera(viewportAdapter);
             _camera.ZoomIn(0.5f);
-
             _groundTexture = Game.Content.Load<Texture2D>("Sprites/checkerboard");
 
             enemyHandler.LoadContent();
@@ -94,7 +92,8 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.Draw(gameTime);
 
             Game.SpriteBatch.End();
-            
+           
+
         }
     }
 }

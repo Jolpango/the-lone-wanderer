@@ -34,15 +34,16 @@ namespace LoneWandererGame.Enemy
 
         public void Update(GameTime gameTime, Player _player)
         {
-            Vector2 TempPos = new Vector2(_player.Position.X, _player.Position.Y);//_player.Position;
-            Vector2 direction = (TempPos - position);
+
+            Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);//_player.Position;
+            Vector2 direction = (playerPos - position);
+
             direction.Normalize();
             position+= (direction * moveSpeed * gameTime.GetElapsedSeconds()); // corrct? idk
         }
         public void Draw(GameTime gameTime)
         {
             Game.SpriteBatch.Draw(guySprite, position, null, Color.White);
-
         }
 
 
