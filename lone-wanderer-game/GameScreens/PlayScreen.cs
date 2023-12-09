@@ -91,6 +91,7 @@ namespace LoneWandererGame.GameScreens
             _player.Draw();
             tileEngine.Draw();
             enemyHandler.Draw(gameTime);
+            Game.SpriteBatch.End();
         }
     }
 }
