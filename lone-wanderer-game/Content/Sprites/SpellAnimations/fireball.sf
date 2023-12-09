@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "fireball.png",
+    "regionWidth": 64,
+    "regionHeight": 64
+  },
+  "cycles": {
+    "flying": {
+      "frames": [0,1],
+      "isLooping": true,
+      "frameDuration": 0.09999997
+    }
+  }
+}
