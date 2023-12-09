@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "icesplosion.png",
+    "regionWidth": 200,
+    "regionHeight": 200
+  },
+  "cycles": {
+    "attack": {
+      "frames": [6,5,4,3,2,1,0],
+      "isLooping": false,
+      "frameDuration": 0.05
+    }
+  }
+}

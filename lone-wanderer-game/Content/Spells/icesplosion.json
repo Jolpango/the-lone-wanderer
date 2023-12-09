@@ -1,0 +1,28 @@
+{
+  "name": "Icesplosion",
+  "type": "AoESpell",
+  "asset": "icesplosion",
+  "speed": 15,
+  "icon": "icesplosion",
+  "timer": 5,
+  "levelDefinitions": [
+    {
+      "damage": 5,
+      "description": "Level1 spell",
+      "specialMultiplier": 1,
+      "cooldown": 1
+    },
+    {
+      "damage": 10,
+      "description": "Level2 spell",
+      "specialMultiplier": 1,
+      "cooldown": 0.8
+    },
+    {
+      "damage": 10,
+      "description": "Level3 spell",
+      "specialMultiplier": 2,
+      "cooldown": 0.8
+    }
+  ]
+}
