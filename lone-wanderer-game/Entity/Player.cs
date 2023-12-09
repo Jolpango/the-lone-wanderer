@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace LoneWandererGame.Entity
 {
-    class Player
+    public class Player
     {
         private Game1 game;
 
