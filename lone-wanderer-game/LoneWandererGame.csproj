@@ -33,6 +33,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Sprites\SpellAnimations\fireball.sf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sprites\player.sf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
