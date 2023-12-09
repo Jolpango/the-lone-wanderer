@@ -41,6 +41,7 @@
 /build:Sprites/guy.png
 
 #begin Sprites/player_sprite.png
+/build:Sprites/player_sprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,5 +51,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/player_sprite.png
 
+#begin Sprites/SpellAnimations/fireball.png
+/build:Sprites/SpellAnimations/fireball.png
+
+#begin Sprites/SpellAnimations/fireball.sf
+/copy:Sprites/SpellAnimations/fireball.sf
