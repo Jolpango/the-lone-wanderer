@@ -1,28 +1,28 @@
 {
-  "name": "Fireball",
-  "type": "ProjectileSpell",
-  "asset": "fireball",
-  "speed":  15,
-  "icon": "fireball",
-  "timer": 5,
+  "name": "Whip",
+  "type": "MeleeSpell",
+  "asset": "whip",
+  "speed": 5,
+  "icon": "whip",
+  "timer": 0.25,
   "levelDefinitions": [
     {
       "damage": 5,
       "description": "Level1 spell",
       "specialMultiplier": 1,
-      "cooldown": 1
+      "cooldown": 2
     },
     {
       "damage": 10,
       "description": "Level2 spell",
       "specialMultiplier": 1,
-      "cooldown": 0.8
+      "cooldown": 1.8
     },
     {
-      "damage": 10,
+      "damage": 20,
       "description": "Level3 spell",
-      "specialMultiplier": 2,
-      "cooldown": 0.8
+      "specialMultiplier": 1,
+      "cooldown": 1.2
     }
   ]
 }

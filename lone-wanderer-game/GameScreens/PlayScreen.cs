@@ -85,9 +85,23 @@ namespace LoneWandererGame.GameScreens
             _camera.LookAt(_player.Position);
             enemyHandler.Update(gameTime, _player);
 
-            foreach(var spell in ActiveSpells)
+            UpdateSpells(gameTime);
+        }
+
+        private void UpdateSpells(GameTime gameTime)
+        {
+            List<Spell> spellsToRemove = new List<Spell>();
+            foreach (var spell in ActiveSpells)
             {
                 spell.Update(gameTime);
+                if (spell.Timer < 0)
+                {
+                    spellsToRemove.Add(spell);
+                }
+            }
+            foreach (var spell in spellsToRemove)
+            {
+                ActiveSpells.Remove(spell);
             }
 
             var spells = SpellBook.Update(gameTime);
