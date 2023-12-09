@@ -1,28 +1,28 @@
 {
-  "name": "Fireball",
-  "type": "ProjectileSpell",
-  "asset": "fireball",
-  "speed":  15,
-  "icon": "fireball",
-  "timer": 5,
+  "name": "Lightning",
+  "type": "MeleeSpell",
+  "asset": "lightning",
+  "speed": 5,
+  "icon": "lightning",
+  "timer": 0.50,
   "levelDefinitions": [
     {
       "damage": 5,
       "description": "Level1 spell",
       "specialMultiplier": 1,
-      "cooldown": 1
+      "cooldown": 5
     },
     {
       "damage": 10,
       "description": "Level2 spell",
       "specialMultiplier": 1,
-      "cooldown": 0.8
+      "cooldown": 4
     },
     {
-      "damage": 10,
+      "damage": 20,
       "description": "Level3 spell",
-      "specialMultiplier": 2,
-      "cooldown": 0.8
+      "specialMultiplier": 1,
+      "cooldown": 3
     }
   ]
 }

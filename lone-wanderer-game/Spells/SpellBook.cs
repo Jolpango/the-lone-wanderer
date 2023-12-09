@@ -59,14 +59,30 @@ namespace LoneWandererGame.Spells
             {
                 return ConstructProjectileSpell(spellDefinition);
             }
+            else if (spellDefinition.SpellType == typeof(MeleeSpell))
+            {
+                return ConstructMeleeSpell(spellDefinition);
+            }
             return null;
         }
+
+        private List<Spell> ConstructMeleeSpell(SpellDefinition spellDefinition)
+        {
+            List<Spell> spells = new List<Spell>();
+            MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction);
+            meleeSpell.LoadContent(Game.Content);
+            meleeSpell.Timer = spellDefinition.TimeToLive;
+            spells.Add(meleeSpell);
+            return spells;
+        }
+
         public List<Spell> ConstructProjectileSpell(SpellDefinition spellDefinition)
         {
             List<Spell> spells = new List<Spell>();
             for (int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
             {
                 var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, spellDefinition.Speed);
+                spell.Timer = spellDefinition.TimeToLive;
                 spell.LoadContent(Game.Content);
                 spells.Add(spell);
             }

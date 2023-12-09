@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
@@ -13,6 +14,7 @@ namespace LoneWandererGame.Spells
         public string Icon { get; private set; }
         public string Asset { get; private set; }
         public float Rotation { get; set; } = 0;
+        public float Timer { get ; set; }
         public Vector2 Position { get; protected set; }
         protected AnimatedSprite sprite;
         public int Damage { get; protected set; }
@@ -39,6 +41,7 @@ namespace LoneWandererGame.Spells
         public virtual void Update(GameTime gameTime)
         {
             sprite.Update(gameTime);
+            Timer -= gameTime.GetElapsedSeconds();
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
