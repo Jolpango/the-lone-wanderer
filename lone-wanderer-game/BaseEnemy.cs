@@ -53,7 +53,7 @@ namespace LoneWandererGame.Enemy
         {
             get
             {
-                return new Rectangle((int)position.X, (int)position.Y, enemySprite.Width, enemySprite.Height);
+                return (Rectangle)sprite.GetBoundingRectangle(position, rotation, scale);
             }
         }
 
