@@ -20,9 +20,18 @@ namespace LoneWandererGame
         public MouseListener MouseListener { get { return _mouseListener; } }
         public KeyboardListener KeyboardListener { get { return _keyboardListener; } }
 
+        public Vector2 WindowDimensions
+        {
+            get { return new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height); }
+        }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
             _screenManager = new ScreenManager();
             _keyboardListener = new KeyboardListener();
             _mouseListener = new MouseListener();

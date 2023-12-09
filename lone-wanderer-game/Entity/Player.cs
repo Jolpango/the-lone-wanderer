@@ -13,12 +13,16 @@ namespace LoneWandererGame.Entity
     {
         private Game1 game;
 
-        private Vector2 position = new Vector2(0, 0);
-        private float rotation = 0;
-        private Vector2 scale = new Vector2(1, 1);
         private AnimatedSprite sprite;
 
-        public Player(Game1 game) { this.game = game; }
+        public Vector2 position = new Vector2(0, 0);
+        public float rotation = 0;
+        public Vector2 scale = new Vector2(1, 1);
+
+        public Player(Game1 game, Vector2 spawnPosition) {
+            this.game = game;
+            position = spawnPosition;
+        }
 
         public void LoadContent()
         {
@@ -26,7 +30,6 @@ namespace LoneWandererGame.Entity
             sprite = new AnimatedSprite(spriteSheet);
 
             sprite.Play("idle_up_down");
-            position = new Vector2(100, 100);
         }
 
         public void Update(GameTime gameTime)
@@ -36,7 +39,7 @@ namespace LoneWandererGame.Entity
             var keyboardState = KeyboardExtended.GetState();
             var animation = "idle_up_down";
             SpriteEffects flip = SpriteEffects.None;
-            Color colorTint = new Color(1, 1, 1, 1);
+            Color colorTint = Color.White;
 
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
@@ -63,6 +66,7 @@ namespace LoneWandererGame.Entity
                 flip = SpriteEffects.FlipHorizontally;
             }
 
+            sprite.Color = colorTint;
             sprite.Effect = flip;
             sprite.Play(animation);
             sprite.Update(dt);
