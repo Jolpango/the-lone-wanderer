@@ -1,0 +1,28 @@
+{
+  "name": "Lightning",
+  "type": "MeleeSpell",
+  "asset": "lightning",
+  "speed": 5,
+  "icon": "lightning",
+  "timer": 0.50,
+  "levelDefinitions": [
+    {
+      "damage": 20,
+      "description": "Level1 spell",
+      "specialMultiplier": 1,
+      "cooldown": 5
+    },
+    {
+      "damage": 30,
+      "description": "Level2 spell",
+      "specialMultiplier": 1,
+      "cooldown": 4
+    },
+    {
+      "damage": 40,
+      "description": "Level3 spell",
+      "specialMultiplier": 1,
+      "cooldown": 3
+    }
+  ]
+}

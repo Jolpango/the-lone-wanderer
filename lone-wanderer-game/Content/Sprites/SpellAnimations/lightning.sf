@@ -1,0 +1,19 @@
+{
+  "textureAtlas": {
+    "texture": "lightning.png",
+    "regionWidth": 256,
+    "regionHeight": 16
+  },
+  "cycles": {
+    "right": {
+      "frames": [0,1,2,3],
+      "isLooping": false,
+      "frameDuration": 0.1
+    },
+    "left": {
+      "frames": [4,5,6,7],
+      "isLooping": false,
+      "frameDuration": 0.1
+    }
+  }
+}

@@ -21,7 +21,13 @@ namespace LoneWandererGame.Enemy
         public Game1 Game { get; private set; }
         public float health { get; private set; }
 
-
+        public Rectangle CollisionRectangle
+        {
+            get
+            {
+                return new Rectangle((int)position.X, (int)position.Y, enemySprite.Width, enemySprite.Height);
+            }
+        }
 
         public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game)
         {
@@ -63,14 +69,14 @@ namespace LoneWandererGame.Enemy
         public bool TakeDamage(float damage)
         {
             this.health -= damage;
-            if (this.health < 0)
+            if (this.health <= 0)
                 return false;
             else
                 return true;
         }
         public bool IsDead()
         {
-            if (this.health < 0)
+            if (this.health <= 0)
                 return true;
             else
                 return false;

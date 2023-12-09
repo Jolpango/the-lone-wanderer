@@ -21,6 +21,7 @@ namespace LoneWandererGame.Spells
                     Asset = (string)o.Root["asset"],
                     Icon = (string)o.Root["icon"],
                     Speed = (int)o.Root["speed"],
+                    TimeToLive = (float)o.Root["timer"],
                     SpellType = Type.GetType($"LoneWandererGame.Spells.{(string)o.Root["type"]}"),
                     LevelDefinitions = o.Root["levelDefinitions"].Select(level => new SpellLevelDefinition()
                     {

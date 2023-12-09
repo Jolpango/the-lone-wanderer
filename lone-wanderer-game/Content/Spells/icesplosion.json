@@ -1,9 +1,9 @@
 {
-  "name": "Fireball",
-  "type": "ProjectileSpell",
-  "asset": "fireball",
-  "speed":  15,
-  "icon": "fireball",
+  "name": "Icesplosion",
+  "type": "AoESpell",
+  "asset": "icesplosion",
+  "speed": 15,
+  "icon": "icesplosion",
   "timer": 5,
   "levelDefinitions": [
     {

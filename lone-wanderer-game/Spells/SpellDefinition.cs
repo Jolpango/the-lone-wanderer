@@ -14,6 +14,7 @@ namespace LoneWandererGame.Spells
         public string Asset { get; set; }
         public int CurrentLevel { get; set; } = 0;
         public float Timer { get; set; }
+        public float TimeToLive { get; set; }
         public float Speed { get; set; }
         public List<SpellLevelDefinition> LevelDefinitions { get; set; }
     }
