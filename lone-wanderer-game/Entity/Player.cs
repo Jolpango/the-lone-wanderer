@@ -33,8 +33,10 @@ namespace LoneWandererGame.Entity
         private SpriteEffects lastSpriteEffect;
 
 
-        private Vector2 direction = Vector2.Zero;
+        private Vector2 direction = new Vector2(0, 1);
         private Vector2 velocity = Vector2.Zero;
+
+        public float LastXDirection { get; private set; } = 1f;
 
         public float acceleration = 1.6f;
         public float decceleration = 0.75f;
@@ -157,12 +159,14 @@ namespace LoneWandererGame.Entity
                     animation = AnimationState.run_left_right;
                     spriteEffect = SpriteEffects.None;
                     movementDirection.X = -1;
+                    LastXDirection = -1;
                 }
                 else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
                 {
                     animation = AnimationState.run_left_right;
                     spriteEffect = SpriteEffects.FlipHorizontally;
                     movementDirection.X = 1;
+                    LastXDirection = 1;
                 }
 
                 // Velocity and Direction

@@ -106,7 +106,7 @@ namespace LoneWandererGame.Spells
         }
         private void ConstructMeleeSpell(SpellDefinition spellDefinition)
         {
-            MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction);
+            MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, Player);
             meleeSpell.Sound = spellDefinition.Sound;
             meleeSpell.LoadContent(Game.Content);
             meleeSpell.Timer = spellDefinition.TimeToLive;
