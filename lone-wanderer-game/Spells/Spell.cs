@@ -36,20 +36,26 @@ namespace LoneWandererGame.Spells
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Depth = 0.16f;
         }
-        public Rectangle CollisionRectangle
+        public RectangleF CollisionRectangle
         { 
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, 64, 64);
+                return sprite.GetBoundingRectangle(sprite.OriginNormalized + Position, 0f, Vector2.One);
             }
         }
         public virtual void Update(GameTime gameTime)
         {
             sprite.Update(gameTime);
             Timer -= gameTime.GetElapsedSeconds();
-        }
-        public virtual void Draw(SpriteBatch spriteBatch)
+        } 
+        public virtual void Draw(SpriteBatch spriteBatch, Game1 game)
         {
+            //RectangleF playerRect = CollisionRectangle;
+            //Texture2D tempTexture = new Texture2D(game.GraphicsDevice, (int)playerRect.Width, (int)playerRect.Height);
+            //Color[] data = new Color[(int)playerRect.Width * (int)playerRect.Height];
+            //for (int i = 0; i < data.Length; ++i) data[i] = Color.Red;
+            //    tempTexture.SetData(data);
+            //spriteBatch.Draw(tempTexture, new Vector2(CollisionRectangle.X, CollisionRectangle.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
             sprite.Draw(spriteBatch, Position, Rotation, Vector2.One);
         }
     }
