@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "crystal-small-grey.png",
+    "regionWidth": 16,
+    "regionHeight": 16
+  },
+  "cycles": {
+    "animation0": {
+      "frames": [0,1,2,3,4,5,6,7],
+      "isLooping": true,
+      "frameDuration": 0.1
+    }
+  }
+}

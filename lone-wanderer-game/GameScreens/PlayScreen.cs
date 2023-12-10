@@ -13,11 +13,9 @@ using LoneWandererGame.TileEngines;
 using LoneWandererGame.Spells;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
-using static LoneWandererGame.Entity.Player;
 using System;
-using System.Diagnostics;
-using MonoGame.Extended.TextureAtlases;
 using System.Linq;
+using LoneWandererGame.Powerups;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -29,7 +27,7 @@ namespace LoneWandererGame.GameScreens
         private OrthographicCamera _camera;
         private Texture2D _groundTexture;
         private TileEngine tileEngine;
-
+        private PowerupHandler powerupHandler;
         private EnemyHandler enemyHandler;
         public SpellBook SpellBook;
         public List<Spell> ActiveSpells;
@@ -53,6 +51,7 @@ namespace LoneWandererGame.GameScreens
             // Assumed map width and height is 512
             float tilemapCenter = (512 * 32) / 2f;
             _player = new Player(Game, tileEngine, new Vector2(tilemapCenter, tilemapCenter));
+            powerupHandler = new PowerupHandler(Game, _player);
             enemyHandler = new EnemyHandler(Game, tileEngine);
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player, ActiveSpells);
@@ -76,6 +75,7 @@ namespace LoneWandererGame.GameScreens
 
             enemyHandler.LoadContent();
             tileEngine.LoadContent();
+            powerupHandler.LoadContent();
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
@@ -129,11 +129,10 @@ namespace LoneWandererGame.GameScreens
         {
             if (levelUpInProgres)
             {
-                chooseSpellOnLevelUp();    
+                chooseSpellOnLevelUp();
             }
             else
             {
-
                 //else
                 var keyboardState = KeyboardExtended.GetState();
 
@@ -146,14 +145,17 @@ namespace LoneWandererGame.GameScreens
 
                 UpdateSpells(gameTime);
 
-
-
                 FloatingTextHandler.Update(gameTime);
 
                 playerHealthBar.CurrentValue = _player.Health;
                 xpBar.CurrentValue = PlayerScore.XP;
                 xpBar.MaxValue = PlayerScore.RequiredXP;
             }
+            powerupHandler.Update(gameTime);
+
+            playerHealthBar.CurrentValue = _player.Health;
+            xpBar.CurrentValue = PlayerScore.XP;
+            xpBar.MaxValue = PlayerScore.RequiredXP;
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -221,6 +223,7 @@ namespace LoneWandererGame.GameScreens
             Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
             tileEngine.Draw(_camera.Center);
+            powerupHandler.Draw();
             enemyHandler.Draw(gameTime);
             foreach(var spell in ActiveSpells)
             {

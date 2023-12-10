@@ -85,9 +85,9 @@ namespace LoneWandererGame.Entity
             Health = MAX_HEALTH;
             state = State.Alive;
         }
-        public Rectangle getSpriteRectangle()
+        public RectangleF getSpriteRectangle()
         {
-            return (Rectangle)sprite.GetBoundingRectangle(Position, Rotation, Scale);
+            return sprite.GetBoundingRectangle(Position, Rotation, Scale);
         }
 
         public void LoadContent()
@@ -241,6 +241,31 @@ namespace LoneWandererGame.Entity
         public void Draw()
         {
             game.SpriteBatch.Draw(sprite, Position, Rotation, Scale);
+        }
+
+        public void Heal(int amount)
+        {
+            Health += amount;
+            if (Health >= MAX_HEALTH)
+                Health = MAX_HEALTH;
+        }
+
+        public void SpeedUp(int amount)
+        {
+            float percentage = 1 + (amount / 100f);
+            acceleration *= percentage;
+        }
+
+        public void SlowDown(int amount)
+        {
+            float percentage = 1 + (amount / 100f);
+            acceleration /= percentage;
+        }
+
+        public void MakeInvincible(int amount)
+        {
+            damageTimer = amount;
+            colorTint = Color.Gray;
         }
     }
 }
