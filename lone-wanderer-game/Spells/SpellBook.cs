@@ -10,16 +10,26 @@ using LoneWandererGame.Entity;
 
 namespace LoneWandererGame.Spells
 {
+    public delegate void OnTimerEnd();
+    public class ProjectileSpawner
+    {
+        public float Timer;
+        public OnTimerEnd TimerEnd;
+    }
     public class SpellBook
     {
         public List<SpellDefinition> Spells { get; private set; }
         public Game1 Game { get; private set; }
         public Player Player { get; private set; }
-        public SpellBook(Game1 game, Player player)
+        public List<ProjectileSpawner> ProjectileSpawners { get; private set; }
+        public List<Spell> ActiveSpells { get; private set; }
+        public SpellBook(Game1 game, Player player, List<Spell> activeSpells)
         {
             Spells = new List<SpellDefinition>();
             Game = game;
             Player = player;
+            ProjectileSpawners = new List<ProjectileSpawner>();
+            ActiveSpells = activeSpells;
         }
         public void AddSpell(SpellDefinition spell)
         {
@@ -46,39 +56,42 @@ namespace LoneWandererGame.Spells
             return -1;
         }
 
-        public List<Spell> Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-            List<Spell> spells = null;
+            for(int i = 0; i < ProjectileSpawners.Count; i++)
+            {
+                ProjectileSpawners[i].Timer -= gameTime.GetElapsedSeconds();
+                if (ProjectileSpawners[i].Timer <= 0)
+                {
+                    ProjectileSpawners[i].TimerEnd();
+                    ProjectileSpawners.RemoveAt(i);
+                    i--;
+                }
+            }
             foreach (var spell in Spells)
             {
                 spell.Timer -= gameTime.GetElapsedSeconds();
                 if (spell.Timer < 0)
                 {
                     spell.Timer = spell.LevelDefinitions[spell.CurrentLevel].Cooldown;
-                    if (spells is null)
-                    {
-                        spells = new List<Spell>();
-                    }
-                    spells.AddRange(ConstructSpell(spell));
+                    ConstructSpell(spell);
                 }
             }
-            return spells;
         }
-        public List<Spell> ConstructSpell(SpellDefinition spellDefinition)
+        public void ConstructSpell(SpellDefinition spellDefinition)
         {
             if (spellDefinition.SpellType == typeof(ProjectileSpell))
             {
-                return ConstructProjectileSpell(spellDefinition);
+                ConstructProjectileSpell(spellDefinition);
             }
             else if (spellDefinition.SpellType == typeof(MeleeSpell))
             {
-                return ConstructMeleeSpell(spellDefinition);
+                ConstructMeleeSpell(spellDefinition);
             }
             else if (spellDefinition.SpellType == typeof(AoESpell))
             {
-                return ConstructAoESpell(spellDefinition);
+                ConstructAoESpell(spellDefinition);
             }
-            return null;
         }
         private List<Spell> ConstructAoESpell(SpellDefinition spellDefinition)
         {
@@ -91,31 +104,36 @@ namespace LoneWandererGame.Spells
             spells.Add(spell);
             return spells;
         }
-        private List<Spell> ConstructMeleeSpell(SpellDefinition spellDefinition)
+        private void ConstructMeleeSpell(SpellDefinition spellDefinition)
         {
-            List<Spell> spells = new List<Spell>();
             MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction);
             meleeSpell.Sound = spellDefinition.Sound;
             meleeSpell.LoadContent(Game.Content);
             meleeSpell.Timer = spellDefinition.TimeToLive;
             meleeSpell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
-            spells.Add(meleeSpell);
-            return spells;
+            ActiveSpells.Add(meleeSpell);
         }
 
-        public List<Spell> ConstructProjectileSpell(SpellDefinition spellDefinition)
+        public void ConstructProjectileSpell(SpellDefinition spellDefinition)
         {
-            List<Spell> spells = new List<Spell>();
             for (int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
             {
-                var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position + (Player.Direction * 10 * i), Player.Direction, spellDefinition.Speed);
-                spell.Timer = spellDefinition.TimeToLive;
-                spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
-                spell.Sound = spellDefinition.Sound;
-                spell.LoadContent(Game.Content);
-                spells.Add(spell);
+                ProjectileSpawners.Add(new ProjectileSpawner()
+                {
+                    Timer = i * 0.2f,
+                    TimerEnd = () => { ProjectileTimerCallback(spellDefinition); }
+                });
             }
-            return spells;
+        }
+
+        public void ProjectileTimerCallback(SpellDefinition spellDefinition)
+        {
+            var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, spellDefinition.Speed);
+            spell.Timer = spellDefinition.TimeToLive;
+            spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+            spell.Sound = spellDefinition.Sound;
+            spell.LoadContent(Game.Content);
+            ActiveSpells.Add(spell);
         }
     }
 }

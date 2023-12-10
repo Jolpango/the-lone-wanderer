@@ -48,7 +48,7 @@ namespace LoneWandererGame.GameScreens
             _player = new Player(Game, tileEngine, new Vector2(440f, 300f));
             enemyHandler = new EnemyHandler(Game, tileEngine);
             ActiveSpells = new List<Spell>();
-            SpellBook = new SpellBook(Game, _player);
+            SpellBook = new SpellBook(Game, _player, ActiveSpells);
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
@@ -71,7 +71,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Whip")
+                if (spell.Name == "Knife")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
@@ -167,11 +167,7 @@ namespace LoneWandererGame.GameScreens
 
             if (_player.Health != 0)
             {
-                var spells = SpellBook.Update(gameTime);
-                if (spells is not null)
-                {
-                    ActiveSpells.AddRange(spells);
-                }
+                SpellBook.Update(gameTime);
             }
         }
 

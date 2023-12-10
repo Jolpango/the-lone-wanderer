@@ -151,7 +151,6 @@ namespace LoneWandererGame.Enemy
         public bool TakeDamage(float damage)
         {
             health -= damage;
-            hitSound.Play(0.2f, 1.0f, 1.0f);
             return health > 0;
         }
         public bool IsDead()
