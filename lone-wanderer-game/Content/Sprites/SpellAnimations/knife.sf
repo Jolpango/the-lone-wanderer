@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "knife.png",
+    "regionWidth": 32,
+    "regionHeight": 32
+  },
+  "cycles": {
+    "flying": {
+      "frames": [0,1,2,3],
+      "isLooping": true,
+      "frameDuration": 0.15
+    }
+  }
+}

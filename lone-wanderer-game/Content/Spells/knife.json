@@ -1,0 +1,29 @@
+{
+  "name": "Knife",
+  "type": "ProjectileSpell",
+  "asset": "knife",
+  "speed": 20,
+  "sound": "swish_2",
+  "icon": "lightning",
+  "timer": 3,
+  "levelDefinitions": [
+    {
+      "damage": 20,
+      "description": "Level1 spell",
+      "specialMultiplier": 1,
+      "cooldown": 1
+    },
+    {
+      "damage": 5,
+      "description": "Level2 spell",
+      "specialMultiplier": 2,
+      "cooldown": 0.8
+    },
+    {
+      "damage": 8,
+      "description": "Level3 spell",
+      "specialMultiplier": 3,
+      "cooldown": 0.8
+    }
+  ]
+}
