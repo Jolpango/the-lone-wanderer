@@ -119,8 +119,10 @@ namespace LoneWandererGame.TileEngines
             {
                 for (int y = fromY; y <= toY; y++)
                 {
-                    Tile tile = collisionLayer.GetTileAtIndex(x, y);
-                    if (tile.Empty) continue;
+                    bool tileIsEmpty = collisionLayer.TileIsEmptyAtIndex(x, y);
+                    if (tileIsEmpty) continue;
+
+                    Tile tile = collisionLayer.GetNonEmptyTileAtIndex(x, y);
 
                     Rectangle tileRect = tile.GetCollisionRectangle();
                     if (futureRect.Intersects(tileRect))

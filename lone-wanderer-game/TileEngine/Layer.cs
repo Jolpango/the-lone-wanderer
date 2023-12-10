@@ -9,6 +9,7 @@ namespace LoneWandererGame.TileEngines
     {
         private Game1 game;
         private List<Tile> tiles;
+        private List<int> nonEmptyTileIndices;
         private Texture2D texture;
         public List<int> Data { get; private set; }
         public int Height { get; private set; }
@@ -32,6 +33,7 @@ namespace LoneWandererGame.TileEngines
             Collidable = collidable;
 
             tiles = new List<Tile>();
+            nonEmptyTileIndices = new List<int>();
         }
 
         public void LoadContent(string sheetPath)
@@ -49,7 +51,7 @@ namespace LoneWandererGame.TileEngines
         public void AddTile(Vector2 position, int sheetIndex)
         {
             if (sheetIndex == 0) {
-                tiles.Add(new Tile());
+                nonEmptyTileIndices.Add(-1);
                 return;
             }
 
@@ -65,12 +67,19 @@ namespace LoneWandererGame.TileEngines
             position.X *= TileWidth;
             position.Y *= TileHeight;
 
+            nonEmptyTileIndices.Add(tiles.Count);
             tiles.Add(new Tile(game, texture, position, rect, Depth));
         }
 
-        public Tile GetTileAtIndex(int x, int y)
+        public Tile GetNonEmptyTileAtIndex(int x, int y)
         {
-            return tiles[x + y * Width];
+            int tileIndex = nonEmptyTileIndices[x + y * Width];
+            return tiles[tileIndex];
+        }
+
+        public bool TileIsEmptyAtIndex(int x, int y)
+        {
+            return nonEmptyTileIndices[x + y * Width] == -1;
         }
     }
 }
