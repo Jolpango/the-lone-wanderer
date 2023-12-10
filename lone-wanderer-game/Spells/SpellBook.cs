@@ -46,6 +46,13 @@ namespace LoneWandererGame.Spells
             spell.CurrentLevel = Math.Min(spell.CurrentLevel + 1, spell.LevelDefinitions.Count - 1);
         }
 
+        public bool IsInSpellBookMax(string name)
+        {
+            var spell = Spells.Where(x => x.Name == name).FirstOrDefault();
+            if (spell is null) return false;
+            return spell.LevelDefinitions.Count - 1 == spell.CurrentLevel;
+        }
+
         public int IsSpellInSpellBook(SpellDefinition spell)
         {
             for (int i = 0; i < Spells.Count; i++)
