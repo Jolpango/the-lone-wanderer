@@ -53,7 +53,7 @@ namespace LoneWandererGame.Enemy
         {
             get
             {
-                return (Rectangle)sprite.GetBoundingRectangle(position, rotation, scale);
+                return (Rectangle)sprite.GetBoundingRectangle(position + sprite.OriginNormalized, rotation, scale);
             }
         }
 
@@ -147,7 +147,13 @@ namespace LoneWandererGame.Enemy
         }
         public void Draw(GameTime gameTime)
         {
-              Game.SpriteBatch.Draw(sprite, position, rotation, scale);
+            //RectangleF playerRect = CollisionRectangle;
+            //Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)playerRect.Width, (int)playerRect.Height);
+            //Color[] data = new Color[(int)playerRect.Width * (int)playerRect.Height];
+            //for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+            //    tempTexture.SetData(data);
+            //Game.SpriteBatch.Draw(tempTexture, new Vector2(playerRect.X, playerRect.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
+            Game.SpriteBatch.Draw(sprite, position, rotation, scale);
         }
         public bool TakeDamage(float damage)
         {
@@ -164,16 +170,5 @@ namespace LoneWandererGame.Enemy
             else
                 return false;
         }
-
-
-        
-
-
-
-
-
-
-
     }
-
 }

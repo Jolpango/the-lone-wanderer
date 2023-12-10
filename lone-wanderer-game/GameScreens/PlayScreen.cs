@@ -139,7 +139,7 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.Draw(gameTime);
             foreach(var spell in ActiveSpells)
             {
-                spell.Draw(Game.SpriteBatch);
+                spell.Draw(Game.SpriteBatch, Game);
             }
             FloatingTextHandler.Draw(Game.SpriteBatch);
             Game.SpriteBatch.End();
