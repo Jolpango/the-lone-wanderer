@@ -13,6 +13,10 @@ using LoneWandererGame.TileEngines;
 using LoneWandererGame.Spells;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
+using static LoneWandererGame.Entity.Player;
+using System;
+using System.Diagnostics;
+using MonoGame.Extended.TextureAtlases;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -34,6 +38,7 @@ namespace LoneWandererGame.GameScreens
 
         private FillableBar playerHealthBar;
         private FillableBar xpBar;
+        private bool levelUpInProgres;
 
         private Song backgroundMusic;
 
@@ -47,6 +52,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
+            levelUpInProgres = false;
         }
         public override void LoadContent()
         {
@@ -65,7 +71,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Icesplosion")
+                if (spell.Name == "Whip")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
@@ -113,21 +119,33 @@ namespace LoneWandererGame.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            var keyboardState = KeyboardExtended.GetState();
+            if (levelUpInProgres)
+            {
+                chooseSpellOnLevelUp();    
+            }
+            else
+            {
 
-            _player.Update(gameTime);
+                //else
+                var keyboardState = KeyboardExtended.GetState();
 
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _player.Update(gameTime);
 
-            _camera.LookAt(_player.Position);
-            enemyHandler.Update(gameTime, _player);
+                var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            UpdateSpells(gameTime);
-            FloatingTextHandler.Update(gameTime);
+                _camera.LookAt(_player.Position);
+                enemyHandler.Update(gameTime, _player);
 
-            playerHealthBar.CurrentValue = _player.Health;
-            xpBar.CurrentValue = PlayerScore.XP;
-            xpBar.MaxValue = PlayerScore.RequiredXP;
+                UpdateSpells(gameTime);
+
+
+
+                FloatingTextHandler.Update(gameTime);
+
+                playerHealthBar.CurrentValue = _player.Health;
+                xpBar.CurrentValue = PlayerScore.XP;
+                xpBar.MaxValue = PlayerScore.RequiredXP;
+            }
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -165,6 +183,25 @@ namespace LoneWandererGame.GameScreens
         public void OnLevelUp()
         {
             FloatingTextHandler.AddText("Level up", _player.Position, Color.Green);
+            levelUpInProgres = true;
+        }
+
+        private void chooseSpellOnLevelUp()
+        {
+            MouseState mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                float screenWidth = Game.WindowDimensions.X / (SpellDefinitions.Count + 1);
+                int spellIndex = (int)((mouseState.X - screenWidth) / screenWidth);
+
+                if (SpellBook.IsSpellInSpellBook(SpellDefinitions[spellIndex]) >= 0)
+                    SpellBook.LevelUpSpell(SpellDefinitions[spellIndex].Name);
+                else
+                    SpellBook.AddSpell(SpellDefinitions[spellIndex]);
+
+                levelUpInProgres = false;
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -205,6 +242,47 @@ namespace LoneWandererGame.GameScreens
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);
             }
 
+            //Level up
+            if (levelUpInProgres)
+            {
+                MouseState mouseState = Mouse.GetState();
+                float screenWidthPart = Game.WindowDimensions.X / (SpellDefinitions.Count + 1);
+                float screenHeightPart = Game.WindowDimensions.Y / 4;
+
+                float index = (mouseState.X - screenWidthPart) / screenWidthPart;
+                index = (int)index;
+
+                //Name
+                for (int i = 0; i < SpellDefinitions.Count; i++)
+                {
+                    Color color = Color.DarkGoldenrod;
+                    if (index == i)
+                    {
+                        color = Color.White;
+                    }
+
+                    SpellDefinition spell = SpellDefinitions[i];
+                    Vector2 size = Game.SilkscreenRegularFont.MeasureString(spell.Name);
+                    Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, spell.Name, new Vector2(screenWidthPart * i + screenWidthPart, screenHeightPart), color);
+                    
+                    // icons
+                    Texture2D spellIcon = Game.Content.Load<Texture2D>($"Sprites/SpellIcons/{spell.Icon}");
+                    float scale = .4f;
+                    float iconHeight = screenHeightPart - (spellIcon.Height * scale);
+                    Game.SpriteBatch.Draw(spellIcon, new Vector2(screenWidthPart * i + screenWidthPart, iconHeight),null, Color.White,0,Vector2.Zero,scale, SpriteEffects.None,0);
+
+
+                    //level
+                    string spellLevel;
+                    int locateSpell = SpellBook.IsSpellInSpellBook(SpellDefinitions[i]);
+                    if (locateSpell >= 0)
+                        spellLevel = (SpellBook.Spells[locateSpell].CurrentLevel+1).ToString();
+                    else
+                        spellLevel = "0";
+                    Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, spellLevel, new Vector2(screenWidthPart * i + screenWidthPart, screenHeightPart+20), color);
+
+                }
+            }
             Game.SpriteBatch.End();
         }
     }
