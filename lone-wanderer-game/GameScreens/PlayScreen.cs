@@ -25,7 +25,6 @@ namespace LoneWandererGame.GameScreens
 
         private Player _player;
         private OrthographicCamera _camera;
-        private Texture2D _groundTexture;
         private TileEngine tileEngine;
         private PowerupHandler powerupHandler;
         private EnemyHandler enemyHandler;
@@ -46,6 +45,9 @@ namespace LoneWandererGame.GameScreens
         List<SpellDefinition> randomSpells;
         List<SpellSelection> spellSelections;
 
+        // Shader
+        Effect _effect;
+
         public PlayScreen(Game1 game) : base(game)
         {
             tileEngine = new TileEngine(Game);
@@ -62,6 +64,8 @@ namespace LoneWandererGame.GameScreens
             levelUpInProgres = false;
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
+
+            _effect = Content.Load<Effect>("Effects/LightingShader");
         }
         public override void LoadContent()
         {
@@ -73,7 +77,6 @@ namespace LoneWandererGame.GameScreens
             var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
             _camera = new OrthographicCamera(viewportAdapter);
             _camera.ZoomIn(0.5f);
-            _groundTexture = Game.Content.Load<Texture2D>("Sprites/checkerboard");
 
             enemyHandler.LoadContent();
             tileEngine.LoadContent();
@@ -279,9 +282,8 @@ namespace LoneWandererGame.GameScreens
 
             // World
             var transformMatrix = _camera.GetViewMatrix();
-            Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
+            Game.SpriteBatch.Begin(effect: _effect, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
 
-            Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
             tileEngine.Draw(_camera.BoundingRectangle);
             powerupHandler.Draw();

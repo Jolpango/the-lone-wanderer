@@ -14,6 +14,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Effects/LightingShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/LightingShader.fx
+
 #begin Fonts/bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
