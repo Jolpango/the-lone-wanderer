@@ -42,7 +42,7 @@ namespace LoneWandererGame.GameScreens
             SpellBook = new SpellBook(Game, _player);
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
-            SpellCollisionHandler = new SpellCollisionHandler(Game, enemyHandler, ActiveSpells, FloatingTextHandler);
+            SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
         }
         public override void LoadContent()
         {
