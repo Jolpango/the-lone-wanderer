@@ -71,7 +71,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Knife")
+                if (spell.Name == "Whip")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
