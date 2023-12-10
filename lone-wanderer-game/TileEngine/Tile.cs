@@ -27,12 +27,9 @@ namespace LoneWandererGame.TileEngines
             Empty = false;
         }
 
-        public void Draw(Vector2 cameraPosition)
+        public void Draw()
         {
-            Vector2 diff = cameraPosition - Position;
-            float l = diff.Length();
-            if (l < 500)
-                game.SpriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
+            game.SpriteBatch.Draw(Texture, Position, SourceRect, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
         }
 
         public Rectangle GetCollisionRectangle()

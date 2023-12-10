@@ -222,7 +222,7 @@ namespace LoneWandererGame.GameScreens
 
             Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
-            tileEngine.Draw(_camera.Center);
+            tileEngine.Draw(_camera.BoundingRectangle);
             powerupHandler.Draw();
             enemyHandler.Draw(gameTime);
             foreach(var spell in ActiveSpells)
