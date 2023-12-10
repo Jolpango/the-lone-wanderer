@@ -92,6 +92,10 @@ namespace LoneWandererGame.Spells
             {
                 ConstructAoESpell(spellDefinition);
             }
+            else if (spellDefinition.SpellType == typeof(GravitySpell))
+            {
+                ConstructGravitySpell(spellDefinition);
+            }
         }
         private List<Spell> ConstructAoESpell(SpellDefinition spellDefinition)
         {
@@ -112,6 +116,16 @@ namespace LoneWandererGame.Spells
             meleeSpell.Timer = spellDefinition.TimeToLive;
             meleeSpell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
             ActiveSpells.Add(meleeSpell);
+        }
+
+        private void ConstructGravitySpell(SpellDefinition spellDefinition)
+        {
+            GravitySpell spell = new GravitySpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player);
+            spell.Sound = spellDefinition.Sound;
+            spell.LoadContent(Game.Content);
+            spell.Timer = spellDefinition.TimeToLive;
+            spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+            ActiveSpells.Add(spell);
         }
 
         public void ConstructProjectileSpell(SpellDefinition spellDefinition)
