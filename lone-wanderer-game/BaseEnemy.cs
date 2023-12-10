@@ -47,6 +47,7 @@ namespace LoneWandererGame.Enemy
         private SpriteEffects lastSpriteEffect;
         private Vector2 direction = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
+        private FillableBar healthBar;
 
         public Game1 Game { get; private set; }
         public float health { get; private set; }
@@ -78,6 +79,16 @@ namespace LoneWandererGame.Enemy
             lastSpriteEffect = SpriteEffects.None;
             lastAnimation = AnimationState.idle_Down;
             sprite.Play(lastAnimation.ToString());
+            healthBar = new FillableBar()
+            {
+                MaxValue = (int)health,
+                CurrentValue = (int)health,
+                BarHeight = 4,
+                BarWidth = 40,
+                Game = Game,
+                Position = position
+            };
+            healthBar.CreateTexture();
         }
 
         public void Update(GameTime gameTime, Player _player)
@@ -93,7 +104,8 @@ namespace LoneWandererGame.Enemy
             if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
                 position += (direction * moveSpeed * gameTime.GetElapsedSeconds());
 
-
+            healthBar.CurrentValue = (int)health;
+            healthBar.Position = new Vector2(position.X, position.Y - sprite.Origin.Y);
             //Animation
             animation(gameTime, direction, distanceToPlayer);
 
@@ -106,7 +118,8 @@ namespace LoneWandererGame.Enemy
 
                 if (playerbox.Intersects(enemyBox))
                 {
-                   // TODO take damage on player here
+                    // TODO take damage on player here
+                    _player.Damage(10);
                 }
                 attackCooldown = 1.0f;
             }    
@@ -121,6 +134,7 @@ namespace LoneWandererGame.Enemy
             //    tempTexture.SetData(data);
             //Game.SpriteBatch.Draw(tempTexture, new Vector2(playerRect.X, playerRect.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
             Game.SpriteBatch.Draw(sprite, position, rotation, scale);
+            healthBar.Draw();
         }
         public bool TakeDamage(float damage)
         {
