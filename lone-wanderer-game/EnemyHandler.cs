@@ -17,6 +17,8 @@ namespace LoneWandererGame.Enemy
 {
     public class EnemyHandler
     {
+        private float bossSpawn = 25.0f;
+        private int bossNr = 1;
         //Just to disable enemies (1/2)
         private bool disableEnemies = false;
 
@@ -99,6 +101,14 @@ namespace LoneWandererGame.Enemy
                         addEnemyDragonRider(10.0f, 100.0f, spawnPos);
                     else if (i % 5 == 4)
                         addEnemyLord(10.0f, 100.0f, spawnPos);
+
+                    if ((int)gameTime.TotalGameTime.TotalSeconds >= bossSpawn)
+                    {
+                              
+                        addEnemyOverLord(50.0f*bossNr, 50.0f, spawnPos, 5+(5*bossNr));
+                        bossNr++;
+                        bossSpawn = (float)bossNr * 25;
+                    }
                 }
             }
             spawnTimer -= gameTime.GetElapsedSeconds();
@@ -140,6 +150,12 @@ namespace LoneWandererGame.Enemy
         public void addEnemyLord(float health, float moveSpeed, Vector2 position)
         {
             enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-lord.sf"));
+            enemyList.Last().LoadContent();
+
+        }
+        public void addEnemyOverLord(float health, float moveSpeed, Vector2 position, int damage)
+        {
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-overlord.sf",4.0f,4.0f));
             enemyList.Last().LoadContent();
 
         }
