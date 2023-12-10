@@ -97,16 +97,14 @@ namespace LoneWandererGame.Spells
                 ConstructGravitySpell(spellDefinition);
             }
         }
-        private List<Spell> ConstructAoESpell(SpellDefinition spellDefinition)
+        private void ConstructAoESpell(SpellDefinition spellDefinition)
         {
-            List<Spell> spells = new List<Spell>();
             AoESpell spell = new AoESpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position);
             spell.Sound = spellDefinition.Sound;
             spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
-            spells.Add(spell);
-            return spells;
+            ActiveSpells.Add(spell);
         }
         private void ConstructMeleeSpell(SpellDefinition spellDefinition)
         {
@@ -120,7 +118,21 @@ namespace LoneWandererGame.Spells
 
         private void ConstructGravitySpell(SpellDefinition spellDefinition)
         {
-            GravitySpell spell = new GravitySpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player);
+            for(int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
+            {
+                float multi = 1 + (i * 0.1f);
+                ProjectileSpawners.Add(new ProjectileSpawner()
+                {
+                    Timer = i * 0.2f,
+                    TimerEnd = () => { GravitySpellCallback(spellDefinition, multi); }
+                });
+            }
+
+        }
+
+        private void GravitySpellCallback(SpellDefinition spellDefinition, float forceMulti)
+        {
+            GravitySpell spell = new GravitySpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player, spellDefinition.Speed, forceMulti);
             spell.Sound = spellDefinition.Sound;
             spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;

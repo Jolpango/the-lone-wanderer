@@ -16,13 +16,13 @@
     {
       "damage": 15,
       "description": "Level2 spell",
-      "specialMultiplier": 1,
+      "specialMultiplier": 2,
       "cooldown": 1.8
     },
     {
       "damage": 20,
       "description": "Level3 spell",
-      "specialMultiplier": 1,
+      "specialMultiplier": 3,
       "cooldown": 1.2
     }
   ]
