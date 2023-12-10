@@ -642,6 +642,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/SpellAnimations/lightning.png
 
+#begin Sprites/SpellAnimations/Pixel_Magic.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/SpellAnimations/Pixel_Magic.png
+
 #begin Sprites/SpellAnimations/whip.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -689,6 +701,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/SpellIcons/lightning.png
+
+#begin Sprites/SpellIcons/Tornado.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/SpellIcons/Tornado.png
 
 #begin Sprites/SpellIcons/whip.png
 /importer:TextureImporter

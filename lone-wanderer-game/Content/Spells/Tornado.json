@@ -1,0 +1,29 @@
+{
+  "name": "Tornado",
+  "type": "PiercingSpell",
+  "asset": "Pixel_Magic",
+  "speed": 3,
+  "sound": "foom_0",
+  "icon": "Tornado",
+  "timer": 3,
+  "levelDefinitions": [
+    {
+      "damage": 5,
+      "description": "Level1 spell",
+      "specialMultiplier": 1,
+      "cooldown": 2
+    },
+    {
+      "damage": 10,
+      "description": "Level2 spell",
+      "specialMultiplier": 1,
+      "cooldown": 1.5
+    },
+    {
+      "damage": 10,
+      "description": "Level3 spell",
+      "specialMultiplier": 2,
+      "cooldown": 1.0
+    }
+  ]
+}

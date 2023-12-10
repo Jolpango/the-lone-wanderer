@@ -55,7 +55,7 @@ namespace LoneWandererGame.GameScreens
             powerupHandler = new PowerupHandler(Game, _player);
             enemyHandler = new EnemyHandler(Game, tileEngine);
             ActiveSpells = new List<Spell>();
-            SpellBook = new SpellBook(Game, _player, ActiveSpells);
+            SpellBook = new SpellBook(Game, _player, ActiveSpells, enemyHandler);
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
@@ -81,7 +81,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Gravity Axe")
+                if (spell.Name == "Tornado")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;

@@ -163,7 +163,7 @@ namespace LoneWandererGame.Enemy
         {   
             return health <= 0;
         }
-
+        public Vector2 getPos() { return position; }
         private void animation(GameTime gameTime, Vector2 direction, Vector2 distanceToPlayer)
         {
             AnimationState animation = AnimationState.idle_Up; // idk
@@ -200,5 +200,6 @@ namespace LoneWandererGame.Enemy
             lastAnimation = animation;
             lastSpriteEffect = spriteEffect;
         }
+   
     }
 }

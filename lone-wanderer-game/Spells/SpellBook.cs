@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LoneWandererGame.Entity;
+using LoneWandererGame.Enemy;
+using Autofac.Core.Activators.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace LoneWandererGame.Spells
 {
@@ -23,13 +26,15 @@ namespace LoneWandererGame.Spells
         public Player Player { get; private set; }
         public List<ProjectileSpawner> ProjectileSpawners { get; private set; }
         public List<Spell> ActiveSpells { get; private set; }
-        public SpellBook(Game1 game, Player player, List<Spell> activeSpells)
+        public EnemyHandler EnemyHandler;
+        public SpellBook(Game1 game, Player player, List<Spell> activeSpells, EnemyHandler enemyhandler)
         {
             Spells = new List<SpellDefinition>();
             Game = game;
             Player = player;
             ProjectileSpawners = new List<ProjectileSpawner>();
             ActiveSpells = activeSpells;
+            EnemyHandler = enemyhandler;
         }
         public void AddSpell(SpellDefinition spell)
         {
@@ -103,6 +108,10 @@ namespace LoneWandererGame.Spells
             {
                 ConstructGravitySpell(spellDefinition);
             }
+            else if (spellDefinition.SpellType == typeof(PiercingSpell))
+            {
+                ConstructPiercingSpell(spellDefinition);
+            }
         }
         private void ConstructAoESpell(SpellDefinition spellDefinition)
         {
@@ -158,6 +167,17 @@ namespace LoneWandererGame.Spells
                 });
             }
         }
+        public void ConstructPiercingSpell(SpellDefinition spellDefinition)
+        {
+            for (int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
+            {
+                ProjectileSpawners.Add(new ProjectileSpawner()
+                {
+                    Timer = i * 0.2f,
+                    TimerEnd = () => { PiercingTimerCallback(spellDefinition); }
+                });
+            }
+        }
 
         public void ProjectileTimerCallback(SpellDefinition spellDefinition)
         {
@@ -167,6 +187,34 @@ namespace LoneWandererGame.Spells
             spell.Sound = spellDefinition.Sound;
             spell.LoadContent(Game.Content);
             ActiveSpells.Add(spell);
+        }
+        public void PiercingTimerCallback(SpellDefinition spellDefinition)
+        {
+            Vector2 closestEnemy = ClosestEnemy();
+            if (closestEnemy.Length() < 200.0f)
+            {
+                closestEnemy.Normalize();
+                var spell = new PiercingSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, closestEnemy, spellDefinition.Speed);
+                spell.Timer = spellDefinition.TimeToLive;
+                spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+                spell.Sound = spellDefinition.Sound;
+                spell.LoadContent(Game.Content);
+                ActiveSpells.Add(spell);
+            }
+        }
+        public Vector2 ClosestEnemy()
+        {
+            List<BaseEnemy> enemies = EnemyHandler.GetEnemyAll();
+            Vector2 PlayePos = Player.Position;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Vector2 distance = enemies[i].getPos() - PlayePos;
+                if (distance.Length() < 200.0f) // distance to close* enemy
+                {
+                    return distance;
+                }
+            }
+            return new Vector2(1000000.0f,1000000.0f); // big number to be far away
         }
     }
 }
