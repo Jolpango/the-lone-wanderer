@@ -15,7 +15,6 @@ namespace LoneWandererGame.Enemy
     public class BaseEnemy
     {
         private float moveSpeed;
-        private Texture2D enemySprite;
         private Vector2 position = new Vector2(0.0f, 0.0f);
         private float attackCooldown = 0.0f;
         private TileEngine tileEngine;
