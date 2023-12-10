@@ -48,6 +48,13 @@ namespace LoneWandererGame
                     if (collisions.Count != 0)
                         spell.Timer = -1;
                 }
+                if (spell.GetType() == typeof(PiercingSpell))
+                {
+                    Vector2 velocity = ((PiercingSpell)spell).GetVelocity;
+                    List<Rectangle> collisions = tileEngine.GetCollisions(spell.CollisionRectangle, velocity);
+                    if (collisions.Count != 0)
+                        spell.Timer = -1;
+                }
             }
         }
     }

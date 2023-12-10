@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "Pixel_Magic.png",
+    "regionWidth": 64,
+    "regionHeight": 64
+  },
+  "cycles": {
+    "flying": {
+      "frames": [ 49, 39, 29, 19, 9 ],
+      "isLooping": false,
+      "frameDuration": 0.2
+    }
+  }
+}
