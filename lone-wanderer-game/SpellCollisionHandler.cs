@@ -2,6 +2,7 @@
 using LoneWandererGame.Spells;
 using LoneWandererGame.TileEngines;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System.Collections.Generic;
 
 namespace LoneWandererGame
@@ -13,6 +14,7 @@ namespace LoneWandererGame
         Game1 game;
         TileEngine tileEngine;
         FloatingTextHandler floatingTextHandler;
+        private SoundEffect hitSound;
         public SpellCollisionHandler(Game1 game, TileEngine tileEngine, EnemyHandler enemyHandler, List<Spell> spells, FloatingTextHandler floatingTextHandler)
         {
             this.spells = spells;
@@ -20,6 +22,7 @@ namespace LoneWandererGame
             this.game = game;
             this.tileEngine = tileEngine;
             this.floatingTextHandler = floatingTextHandler;
+            hitSound = game.Content.Load<SoundEffect>("Sounds/hit");
         }
         public void Update()
         {
@@ -33,7 +36,6 @@ namespace LoneWandererGame
                         floatingTextHandler.AddText(spell.Damage.ToString(), new Vector2(enemy.CollisionRectangle.X, enemy.CollisionRectangle.Y), Color.Red);
                         if (spell.GetType() == typeof(ProjectileSpell))
                             spell.Timer = -1;
-
                         spell.HitEnemies.Add(enemy);
                     }
                 }

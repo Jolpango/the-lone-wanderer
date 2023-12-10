@@ -4,6 +4,7 @@
   "asset": "whip",
   "speed": 5,
   "icon": "whip",
+  "sound": "swish_2",
   "timer": 0.25,
   "levelDefinitions": [
     {

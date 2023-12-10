@@ -28,6 +28,7 @@ namespace LoneWandererGame.Spells
         {
             base.LoadContent(content);
             sprite.Play("flying");
+            SoundEffect.Play(0.05f, 1.0f, 1.0f);
         }
 
         public override void Update(GameTime gameTime)

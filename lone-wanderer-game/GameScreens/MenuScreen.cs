@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens;
@@ -18,6 +20,7 @@ namespace LoneWandererGame.GameScreens
     {
         private new Game1 Game => (Game1)base.Game;
         private int currentItem = 0;
+        private Song backgroundMusic;
         public MenuScreen(Game1 game): base(game)
         {
             MenuItems = new List<MenuItem>()
@@ -37,9 +40,20 @@ namespace LoneWandererGame.GameScreens
 
         public List<MenuItem> MenuItems { get; set; }
 
+        private SoundEffect menuNavigateSound;
+        private SoundEffect menuClickSound;
+        private Texture2D background;
+
         public override void LoadContent()
         {
             base.LoadContent();
+            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.IsRepeating = true;
+            backgroundMusic = Game.Content.Load<Song>("Sounds/menuchip");
+            MediaPlayer.Play(backgroundMusic);
+            menuNavigateSound = Game.Content.Load<SoundEffect>("Sounds/swish_2");
+            menuClickSound = Game.Content.Load<SoundEffect>("Sounds/swish_4");
+            background = Game.Content.Load<Texture2D>("Sprites/menubackground");
         }
 
         public override void Update(GameTime gameTime)
@@ -51,15 +65,18 @@ namespace LoneWandererGame.GameScreens
             }
             if (keyboardState.WasKeyJustDown(Keys.Enter))
             {
+                menuClickSound.Play();
                 MenuItems[currentItem].OnPress();
             }
             if (keyboardState.WasKeyJustDown(Keys.S) || keyboardState.WasKeyJustDown(Keys.Down))
             {
                 currentItem = currentItem + 1;
+                menuNavigateSound.Play();
             }
             if (keyboardState.WasKeyJustDown(Keys.W) || keyboardState.WasKeyJustDown(Keys.Up))
             {
                 currentItem--;
+                menuNavigateSound.Play();
             }
             if (currentItem < 0)
                 currentItem = 0;
@@ -70,6 +87,7 @@ namespace LoneWandererGame.GameScreens
         {
             Game.GraphicsDevice.Clear(Color.Gray);
             Game.SpriteBatch.Begin();
+            Game.SpriteBatch.Draw(background, Vector2.Zero, Color.White);
             Vector2 center = Game.WindowDimensions / 2;
             Color textColor = Color.White;
             float scale = 1f;
