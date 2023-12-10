@@ -239,11 +239,13 @@ namespace LoneWandererGame.GameScreens
         private void chooseSpellOnLevelUp()
         {
             MouseStateExtended mouseState = MouseExtended.GetState();
-            Rectangle mouseRec = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+            bool hasCollide = false;
             foreach(var spell in spellSelections)
             {
-                if (spell.Rectangle.Contains(mouseRec))
+                if (spell.Rectangle.Contains(Game.CustomCursor.Rectangle))
                 {
+                    Game.CustomCursor.CursorState = CursorState.select;
+                    hasCollide = true;
                     spell.Color = Color.Gold;
                 }
                 else
@@ -251,11 +253,15 @@ namespace LoneWandererGame.GameScreens
                     spell.Color = Color.White;
                 }
             }
+            if (!hasCollide)
+            {
+                Game.CustomCursor.CursorState = CursorState.pointer;
+            }
             if (mouseState.WasButtonJustDown(MouseButton.Left))
             {
                 foreach (var spell in spellSelections)
                 {
-                    if (spell.Rectangle.Contains(mouseRec))
+                    if (spell.Rectangle.Contains(Game.CustomCursor.Rectangle))
                     {
                         if (SpellBook.IsSpellInSpellBook(spell.SpellDefinition) >= 0)
                             SpellBook.LevelUpSpell(spell.SpellDefinition.Name);
@@ -320,6 +326,8 @@ namespace LoneWandererGame.GameScreens
                     spellSelection.Draw(Game.SpriteBatch, Game.SilkscreenRegularFont);
                 }
             }
+
+            Game.CustomCursor.Draw();
             Game.SpriteBatch.End();
         }
     }

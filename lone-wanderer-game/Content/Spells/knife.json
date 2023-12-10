@@ -4,7 +4,7 @@
   "asset": "knife",
   "speed": 20,
   "sound": "swish_2",
-  "icon": "lightning",
+  "icon": "knife",
   "timer": 3,
   "levelDefinitions": [
     {

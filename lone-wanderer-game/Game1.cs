@@ -25,6 +25,8 @@ namespace LoneWandererGame
         public MouseListener MouseListener { get { return _mouseListener; } }
         public KeyboardListener KeyboardListener { get { return _keyboardListener; } }
 
+        public CustomCursor CustomCursor { get; private set; }
+
         public Vector2 WindowDimensions
         {
             get { return new Vector2((float)GraphicsDevice.Viewport.Width, (float)GraphicsDevice.Viewport.Height); }
@@ -44,7 +46,8 @@ namespace LoneWandererGame
             Components.Add(new InputListenerComponent(this, _keyboardListener, _mouseListener));
 
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
+            CustomCursor = new CustomCursor(this);
         }
 
         public void LoadTitleScreen()
@@ -80,11 +83,12 @@ namespace LoneWandererGame
             BoldFont = Content.Load<SpriteFont>("Fonts/bold");
             SilkscreenBoldFont = Content.Load<SpriteFont>("Fonts/silkscreen-bold");
             SilkscreenRegularFont = Content.Load<SpriteFont>("Fonts/silkscreen-regular");
+            CustomCursor.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-
+            CustomCursor.Update(gameTime);
             base.Update(gameTime);
         }
 
