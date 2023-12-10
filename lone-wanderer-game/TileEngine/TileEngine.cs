@@ -49,6 +49,13 @@ namespace LoneWandererGame.TileEngines
             }
         }
 
+        public int CullIndex(int index, int min, int max)
+            {
+                if (index < min) return min;
+                if (index >= max) return max - 1;
+                return index;
+            }
+
         public void LoadContent()
         {
             jsonMap = JObject.Parse(File.ReadAllText("Content/Tilemaps/big_map.json"));
@@ -108,10 +115,25 @@ namespace LoneWandererGame.TileEngines
             }
         }
 
-        public void Draw(Vector2 cameraPosition)
+        public void Draw(RectangleF rect)
         {
+            Layer firstLayer = layers[0];
+            Rectangle newRect = new Rectangle(
+                (int)Math.Ceiling(rect.X / firstLayer.TileWidth),
+                (int)Math.Ceiling(rect.Y / firstLayer.TileHeight),
+                (int)Math.Ceiling(rect.Width / firstLayer.TileWidth),
+                (int)Math.Ceiling(rect.Height / firstLayer.TileHeight)
+            );
+
+            int margin = 2;
+
+            int fromX = CullIndex(newRect.X - margin, 0, firstLayer.Width);
+            int fromY = CullIndex(newRect.Y - margin, 0, firstLayer.Width);
+            int toX = CullIndex(newRect.X + margin + newRect.Width, 0, firstLayer.Width);
+            int toY = CullIndex(newRect.Y + margin + newRect.Height, 0, firstLayer.Width);
+
             foreach (Layer layer in layers)
-                layer.Draw(cameraPosition);
+                layer.Draw(fromX, toX, fromY, toY);
         }
 
         public Vector2 GetMapSize()
@@ -121,13 +143,6 @@ namespace LoneWandererGame.TileEngines
 
         public List<Rectangle> GetCollisions(RectangleF collisionRect, Vector2 velocity)
         {
-            int CullIndex(int index, int min, int max)
-            {
-                if (index < min) return min;
-                if (index >= max) return max - 1;
-                return index;
-            }
-
             List<Rectangle> collisions = new List<Rectangle>();
 
             Layer collisionLayer = layers[collisionLayerIndex]; // NOTE(Medo): This is no longer valid, this is why we have slow and buggy things: "hardcoded for now, because I can" /Anton

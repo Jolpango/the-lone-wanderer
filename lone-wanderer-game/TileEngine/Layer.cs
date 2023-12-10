@@ -42,11 +42,12 @@ namespace LoneWandererGame.TileEngines
             textures = sheets;
         }
 
-        public void Draw(Vector2 cameraPosition)
+        public void Draw(int fromX, int toX, int fromY, int toY)
         {
-            foreach (Tile tile in tiles)
-                if (!tile.Empty)
-                	tile.Draw(cameraPosition);
+            for (int x = fromX; x <= toX; x++)
+                for (int y = fromY; y <= toY; y++)
+                    if (!TileIsEmptyAtIndex(x, y))
+                        GetNonEmptyTileAtIndex(x, y).Draw();
         }
 
         public void AddTile(Vector2 position, int sheetIndex)
