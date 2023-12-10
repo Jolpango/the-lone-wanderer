@@ -1,0 +1,19 @@
+{
+  "textureAtlas": {
+    "texture": "cursor.png",
+    "regionWidth": 32,
+    "regionHeight": 32
+  },
+  "cycles": {
+    "select": {
+      "frames": [22,23,24,25,26,27,28,29,30,31],
+      "isLooping": true,
+      "frameDuration": 0.1
+    },
+    "pointer": {
+      "frames": [30],
+      "isLooping": true,
+      "frameDuration": 0.2
+    }
+  }
+}

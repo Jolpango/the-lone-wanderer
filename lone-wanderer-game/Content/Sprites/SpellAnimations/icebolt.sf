@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "icebolt.png",
+    "regionWidth": 32,
+    "regionHeight": 32
+  },
+  "cycles": {
+    "flying": {
+      "frames": [32,33,34,35,36,37,38,39],
+      "isLooping": true,
+      "frameDuration": 0.1
+    }
+  }
+}
