@@ -33,7 +33,7 @@ namespace LoneWandererGame
                     if (!spell.HitEnemies.Contains(enemy) && spell.CollisionRectangle.Intersects(enemy.CollisionRectangle))
                     {
                         enemy.TakeDamage(spell.Damage);
-                        hitSound.Play(0.2f, 1.0f, 1.0f);
+                        hitSound.Play(0.05f, 1.0f, 1.0f);
                         floatingTextHandler.AddText(spell.Damage.ToString(), new Vector2(enemy.CollisionRectangle.X, enemy.CollisionRectangle.Y), Color.Red);
                         if (spell.GetType() == typeof(ProjectileSpell))
                             spell.Timer = -1;

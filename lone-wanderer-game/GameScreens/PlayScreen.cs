@@ -17,6 +17,7 @@ using static LoneWandererGame.Entity.Player;
 using System;
 using System.Diagnostics;
 using MonoGame.Extended.TextureAtlases;
+using System.Linq;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -41,6 +42,10 @@ namespace LoneWandererGame.GameScreens
         private bool levelUpInProgres;
 
         private Song backgroundMusic;
+        private int spellChoices = 2;
+
+        private Random rnd;
+        List<SpellDefinition> randomSpells;
 
         public PlayScreen(Game1 game) : base(game)
         {
@@ -55,6 +60,7 @@ namespace LoneWandererGame.GameScreens
             FloatingTextHandler = new FloatingTextHandler(Game);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
             levelUpInProgres = false;
+            rnd = new Random();
         }
         public override void LoadContent()
         {
@@ -182,6 +188,8 @@ namespace LoneWandererGame.GameScreens
         {
             FloatingTextHandler.AddText("Level up", _player.Position, Color.Green);
             levelUpInProgres = true;
+            randomSpells = new List<SpellDefinition>();
+            randomSpells.AddRange(SpellDefinitions.OrderBy(x => rnd.Next()).Take(spellChoices));
         }
 
         private void chooseSpellOnLevelUp()
@@ -190,13 +198,13 @@ namespace LoneWandererGame.GameScreens
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                float screenWidth = Game.WindowDimensions.X / (SpellDefinitions.Count + 1);
+                float screenWidth = Game.WindowDimensions.X / (randomSpells.Count + 1);
                 int spellIndex = (int)((mouseState.X - screenWidth) / screenWidth);
 
-                if (SpellBook.IsSpellInSpellBook(SpellDefinitions[spellIndex]) >= 0)
-                    SpellBook.LevelUpSpell(SpellDefinitions[spellIndex].Name);
+                if (SpellBook.IsSpellInSpellBook(randomSpells[spellIndex]) >= 0)
+                    SpellBook.LevelUpSpell(randomSpells[spellIndex].Name);
                 else
-                    SpellBook.AddSpell(SpellDefinitions[spellIndex]);
+                    SpellBook.AddSpell(randomSpells[spellIndex]);
 
                 levelUpInProgres = false;
             }
@@ -251,7 +259,7 @@ namespace LoneWandererGame.GameScreens
                 index = (int)index;
 
                 //Name
-                for (int i = 0; i < SpellDefinitions.Count; i++)
+                for (int i = 0; i < randomSpells.Count; i++)
                 {
                     Color color = Color.DarkGoldenrod;
                     if (index == i)
@@ -259,7 +267,7 @@ namespace LoneWandererGame.GameScreens
                         color = Color.White;
                     }
 
-                    SpellDefinition spell = SpellDefinitions[i];
+                    SpellDefinition spell = randomSpells[i];
                     Vector2 size = Game.SilkscreenRegularFont.MeasureString(spell.Name);
                     Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, spell.Name, new Vector2(screenWidthPart * i + screenWidthPart, screenHeightPart), color);
                     
@@ -272,7 +280,7 @@ namespace LoneWandererGame.GameScreens
 
                     //level
                     string spellLevel;
-                    int locateSpell = SpellBook.IsSpellInSpellBook(SpellDefinitions[i]);
+                    int locateSpell = SpellBook.IsSpellInSpellBook(randomSpells[i]);
                     if (locateSpell >= 0)
                         spellLevel = (SpellBook.Spells[locateSpell].CurrentLevel+1).ToString();
                     else
