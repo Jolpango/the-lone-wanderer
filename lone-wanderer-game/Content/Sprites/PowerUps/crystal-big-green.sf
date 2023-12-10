@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "crystal-big-green.png",
+    "regionWidth": 32,
+    "regionHeight": 32
+  },
+  "cycles": {
+    "animation0": {
+      "frames": [0,1,2,3,4,5,6,7],
+      "isLooping": true,
+      "frameDuration": 0.1
+    }
+  }
+}

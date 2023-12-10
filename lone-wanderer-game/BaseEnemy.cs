@@ -130,8 +130,8 @@ namespace LoneWandererGame.Enemy
 
             if (attackCooldown <= 0.0f)
             {
-                Rectangle playerbox = _player.getSpriteRectangle();
-                Rectangle enemyBox = (Rectangle)sprite.GetBoundingRectangle(position, rotation, scale);
+                RectangleF playerbox = _player.getSpriteRectangle();
+                RectangleF enemyBox = sprite.GetBoundingRectangle(position, rotation, scale);
 
                 if (playerbox.Intersects(enemyBox))
                 {
