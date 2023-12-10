@@ -187,6 +187,7 @@ namespace LoneWandererGame.GameScreens
 
             Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 150f), Color.White);
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Level: {PlayerScore.Level}", new Vector2(10f, 40f), Color.White);
+            Game.SpriteBatch.DrawString(Game.RegularFont, $"Score: {PlayerScore.Score}", new Vector2(10f, 80f), Color.White);
             playerHealthBar.Draw();
             xpBar.Draw();
 
