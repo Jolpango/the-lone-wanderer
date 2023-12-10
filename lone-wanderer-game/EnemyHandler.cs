@@ -64,6 +64,7 @@ namespace LoneWandererGame.Enemy
                 enemyList[i].Update(gameTime, _player);
                 if (enemyList[i].IsDead())
                 {
+                    PlayerScore.GainXP(1);
                     enemyList.RemoveAt(i);
                     i--;
                 }

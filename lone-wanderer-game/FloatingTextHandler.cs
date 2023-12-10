@@ -17,12 +17,14 @@ namespace LoneWandererGame
         public float timer = 1.0f;
         public SpriteFont font;
         public float alpha = 1.0f;
+        public Color color = Color.White;
 
-        public FloatingText(string text, Vector2 position, SpriteFont font)
+        public FloatingText(string text, Vector2 position, SpriteFont font, Color color)
         {
             this.text = text;
             this.position = position;
             this.font = font;
+            this.color = color;
         }
 
         public void Update(GameTime gameTime)
@@ -34,7 +36,7 @@ namespace LoneWandererGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, text, position, Color.White, 0, Vector2.Zero, alpha, SpriteEffects.None, 1.0f);
+            spriteBatch.DrawString(font, text, position, color * alpha, 0, Vector2.Zero, 1, SpriteEffects.None, 1.0f);
         }
     }
     public class FloatingTextHandler
@@ -64,9 +66,9 @@ namespace LoneWandererGame
             }
         }
 
-        public void AddText(string text, Vector2 position)
+        public void AddText(string text, Vector2 position, Color color)
         {
-            this.texts.Add(new FloatingText(text, position, game.SilkscreenRegularFont));
+            this.texts.Add(new FloatingText(text, position, game.SilkscreenRegularFont, color));
         }
 
         public void Draw(SpriteBatch spriteBatch)
