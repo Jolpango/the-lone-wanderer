@@ -35,8 +35,9 @@ namespace LoneWandererGame.GameScreens
 
         public PlayScreen(Game1 game) : base(game)
         {
-            _player = new Player(Game, Vector2.Zero);
-            enemyHandler = new EnemyHandler(Game);
+            tileEngine = new TileEngine(Game);
+            _player = new Player(Game, tileEngine, new Vector2(440f, 300f));
+            enemyHandler = new EnemyHandler(Game, tileEngine);
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player);
             SpellDefinitions = new List<SpellDefinition>();
@@ -49,14 +50,13 @@ namespace LoneWandererGame.GameScreens
             Game.KeyboardListener.KeyPressed += menuactions;
             Vector2 windowDimensions = Game.WindowDimensions;
             _player.LoadContent();
-            
+
             var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
             _camera = new OrthographicCamera(viewportAdapter);
             _camera.ZoomIn(0.5f);
             _groundTexture = Game.Content.Load<Texture2D>("Sprites/checkerboard");
 
             enemyHandler.LoadContent();
-            tileEngine = new TileEngine(Game);
             tileEngine.LoadContent();
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
