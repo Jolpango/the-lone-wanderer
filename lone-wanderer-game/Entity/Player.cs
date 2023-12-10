@@ -1,23 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using MonoGame.Extended.Input;
-using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using System.Collections.Generic;
-using System;
 using System.Diagnostics;
-using static LoneWandererGame.Entity.Player;
-using System.IO;
+using LoneWandererGame.TileEngines;
+using System.Collections.Generic;
 
 namespace LoneWandererGame.Entity
 {
     public class Player
     {
         private Game1 game;
-
+        private TileEngine tileEngine;
         private AnimatedSprite sprite;
         private Color colorTint = Color.White;
 
@@ -73,11 +71,12 @@ namespace LoneWandererGame.Entity
         }
         
 
-        public Player(Game1 game, Vector2 spawnPosition) {
+        public Player(Game1 game, TileEngine tileEngine, Vector2 spawnPosition) {
             this.game = game;
             lastSpriteEffect = SpriteEffects.None;
             lastAnimation = AnimationState.idle_up_down;
             
+            this.tileEngine = tileEngine;
             Position = spawnPosition;
             Health = MAX_HEALTH;
             state = State.Alive;
@@ -172,6 +171,17 @@ namespace LoneWandererGame.Entity
                     movementDirection.Normalize();
                     direction = movementDirection;
                     velocity += direction * acceleration;
+                }
+
+                RectangleF playerRect = sprite.GetBoundingRectangle(Position, Rotation, Scale); // This might break if we scale/rotate
+                List<Rectangle> collisions = tileEngine.GetCollisions(playerRect, velocity);
+                if (collisions.Count > 0)
+                {
+                    TileEngine.CollisionResolution resolution = tileEngine
+                        .ResolveCollisions(collisions, playerRect, Position, sprite.Origin, velocity);
+
+                    Position = resolution.position;
+                    velocity = resolution.velocity;
                 }
 
                 sprite.Play(animation.ToString());

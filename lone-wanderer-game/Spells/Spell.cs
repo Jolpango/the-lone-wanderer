@@ -40,7 +40,7 @@ namespace LoneWandererGame.Spells
         { 
             get
             {
-                return sprite.GetBoundingRectangle(sprite.OriginNormalized + Position, 0f, Vector2.One);
+                return sprite.GetBoundingRectangle(Position, 0f, Vector2.One);
             }
         }
         public virtual void Update(GameTime gameTime)

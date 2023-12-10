@@ -42,11 +42,17 @@ namespace LoneWandererGame.TileEngines
         public void Draw()
         {
             foreach (Tile tile in tiles)
-                tile.Draw();
+                if (!tile.Empty)
+                    tile.Draw();
         }
 
         public void AddTile(Vector2 position, int sheetIndex)
         {
+            if (sheetIndex == 0) {
+                tiles.Add(new Tile());
+                return;
+            }
+
             int tileSetTilesWide = texture.Width / TileWidth;
             Rectangle rect = new Rectangle(
                 (sheetIndex -1) % tileSetTilesWide,
@@ -60,6 +66,11 @@ namespace LoneWandererGame.TileEngines
             position.Y *= TileHeight;
 
             tiles.Add(new Tile(game, texture, position, rect, Depth));
+        }
+
+        public Tile GetTileAtIndex(int x, int y)
+        {
+            return tiles[x + y * Width];
         }
     }
 }

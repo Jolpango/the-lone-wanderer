@@ -3,27 +3,22 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LoneWandererGame.Entity;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using LoneWandererGame.TileEngines;
-using MonoGame.Extended.Timers;
 
 
 namespace LoneWandererGame.Enemy
 {
     public class BaseEnemy
     {
-      
         private float moveSpeed;
         private Texture2D enemySprite;
         private Vector2 position = new Vector2(0.0f, 0.0f);
         private float attackCooldown = 0.0f;
-       
+        private TileEngine tileEngine;
         //animation
         private float distanceToPlayerStop = 30.0f; 
 
@@ -53,27 +48,28 @@ namespace LoneWandererGame.Enemy
         public float health { get; private set; }
         String spriteName;
 
-        public Rectangle CollisionRectangle
+        public RectangleF CollisionRectangle
         {
             get
             {
-                return (Rectangle)sprite.GetBoundingRectangle(position + sprite.OriginNormalized, rotation, scale);
+                return sprite.GetBoundingRectangle(position, rotation, scale);
             }
         }
 
-        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, String spriteName)
+        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, TileEngine tileEngine, string spriteName)
         {
             this.health = health;
             this.moveSpeed = moveSpeed;
             this.position = position;
             Game = game;
-            this .spriteName = spriteName;
+            this.spriteName = spriteName;
+            this.tileEngine = tileEngine;
         }
         public void LoadContent()
         {
             var spriteSheet = Game.Content.Load<SpriteSheet>(spriteName, new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
-            sprite.Origin = new Vector2(16, 16);
+            sprite.Origin = new Vector2(24, 32); // hardcoded, should be calculated but I'm too lazy
             sprite.Depth = 0.25f;
 
             lastSpriteEffect = SpriteEffects.None;
@@ -94,23 +90,36 @@ namespace LoneWandererGame.Enemy
         public void Update(GameTime gameTime, Player _player)
         {
             //Movement
-            Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);
-            Vector2 direction = (playerPos - this.position) - new Vector2(20.0f, 20.0f); // this makes it in middle of player
+            Vector2 direction = _player.Position - position - new Vector2(20.0f,20.0f); // this makes it in middle of player
             Vector2 distanceToPlayer = direction;
-            if (direction != new Vector2(0.0f, 0.0f))
-            {
+            if (direction != Vector2.Zero)
                 direction.Normalize();
-            }
+
+            velocity = Vector2.Zero;
             if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
-                position += (direction * moveSpeed * gameTime.GetElapsedSeconds());
+            {
+                velocity = direction * moveSpeed * gameTime.GetElapsedSeconds();
+                List<Rectangle> collisions = tileEngine.GetCollisions(CollisionRectangle, velocity);
+                {
+                    if (collisions.Count > 0)
+                    {
+                        TileEngine.CollisionResolution resolution = tileEngine
+                            .ResolveCollisions(collisions, CollisionRectangle, position, sprite.Origin, velocity);
+
+                        position = resolution.position;
+                        velocity = resolution.velocity;
+                    }
+                }
+            }
+
+            position += velocity;
 
             healthBar.CurrentValue = (int)health;
             healthBar.Position = new Vector2(position.X, position.Y - sprite.Origin.Y);
+
             //Animation
             animation(gameTime, direction, distanceToPlayer);
 
-
-          
             if (attackCooldown < 0.0f)
             {
                 Rectangle playerbox = _player.getSpriteRectangle();
@@ -118,8 +127,7 @@ namespace LoneWandererGame.Enemy
 
                 if (playerbox.Intersects(enemyBox))
                 {
-                    // TODO take damage on player here
-                    _player.Damage(10);
+                   // TODO take damage on player here
                 }
                 attackCooldown = 1.0f;
             }    
@@ -138,18 +146,12 @@ namespace LoneWandererGame.Enemy
         }
         public bool TakeDamage(float damage)
         {
-            this.health -= damage;
-            if (this.health <= 0)
-                return false;
-            else
-                return true;
+            health -= damage;
+            return health > 0;
         }
         public bool IsDead()
         {
-            if (this.health <= 0)
-                return true;
-            else
-                return false;
+            return health <= 0;
         }
 
         private void animation(GameTime gameTime, Vector2 direction, Vector2 distanceToPlayer)

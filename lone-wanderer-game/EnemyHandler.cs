@@ -11,6 +11,7 @@ using LoneWandererGame.Entity;
 using MonoGame.Extended;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework.Input;
+using LoneWandererGame.TileEngines;
 
 namespace LoneWandererGame.Enemy
 {
@@ -21,6 +22,7 @@ namespace LoneWandererGame.Enemy
 
         private List<BaseEnemy> enemyList = new List<BaseEnemy>();
         private float spawnTimer = 0;
+        private TileEngine tileEngine;
         Random randomNumber;
         
 
@@ -29,9 +31,10 @@ namespace LoneWandererGame.Enemy
 
 
         // temp to just see if it works
-        public EnemyHandler(Game1 game) 
+        public EnemyHandler(Game1 game, TileEngine tileEngine)
         {
-            Game=game;
+            Game = game;
+            this.tileEngine = tileEngine;
             randomNumber = new Random();
 
         }
@@ -110,31 +113,31 @@ namespace LoneWandererGame.Enemy
 
         public void addEnemyBlue(float health, float moveSpeed, Vector2 position)
         {
-            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, "Sprites/Enemies/dark_soldier.sf"));
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier.sf"));
             enemyList.Last().LoadContent();
             
         }
         public void addEnemyBlack(float health, float moveSpeed, Vector2 position)
         {
-            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, "Sprites/Enemies/dark_soldier-black.sf"));
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-black.sf"));
             enemyList.Last().LoadContent();
 
         }
         public void addEnemyCommander(float health, float moveSpeed, Vector2 position)
         {
-            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, "Sprites/Enemies/dark_soldier-commander.sf"));
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-commander.sf"));
             enemyList.Last().LoadContent();
 
         }
         public void addEnemyDragonRider(float health, float moveSpeed, Vector2 position)
         {
-            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, "Sprites/Enemies/dark_soldier-dragonrider.sf"));
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-dragonrider.sf"));
             enemyList.Last().LoadContent();
 
         }
         public void addEnemyLord(float health, float moveSpeed, Vector2 position)
         {
-            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, "Sprites/Enemies/dark_soldier-lord.sf"));
+            enemyList.Add(new BaseEnemy(health, moveSpeed, position, Game, tileEngine, "Sprites/Enemies/dark_soldier-lord.sf"));
             enemyList.Last().LoadContent();
 
         }
