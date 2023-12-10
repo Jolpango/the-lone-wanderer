@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Media;
 using static LoneWandererGame.Entity.Player;
 using System;
 using System.Diagnostics;
+using MonoGame.Extended.TextureAtlases;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -194,13 +195,11 @@ namespace LoneWandererGame.GameScreens
                 float screenWidth = Game.WindowDimensions.X / (SpellDefinitions.Count + 1);
                 int spellIndex = (int)((mouseState.X - screenWidth) / screenWidth);
 
-                if (SpellBook.IsSpellInSpellBook(SpellDefinitions[spellIndex]))
+                if (SpellBook.IsSpellInSpellBook(SpellDefinitions[spellIndex]) >= 0)
                     SpellBook.LevelUpSpell(SpellDefinitions[spellIndex].Name);
                 else
                     SpellBook.AddSpell(SpellDefinitions[spellIndex]);
 
-                //Debug.WriteLine(index.ToString());
-                //TODO add lvlv up to spells
                 levelUpInProgres = false;
             }
         }
@@ -243,7 +242,7 @@ namespace LoneWandererGame.GameScreens
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);
             }
 
-            //if lvl up
+            //Level up
             if (levelUpInProgres)
             {
                 MouseState mouseState = Mouse.GetState();
@@ -252,6 +251,8 @@ namespace LoneWandererGame.GameScreens
 
                 float index = (mouseState.X - screenWidthPart) / screenWidthPart;
                 index = (int)index;
+
+                //Name
                 for (int i = 0; i < SpellDefinitions.Count; i++)
                 {
                     Color color = Color.DarkGoldenrod;
@@ -263,7 +264,22 @@ namespace LoneWandererGame.GameScreens
                     SpellDefinition spell = SpellDefinitions[i];
                     Vector2 size = Game.SilkscreenRegularFont.MeasureString(spell.Name);
                     Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, spell.Name, new Vector2(screenWidthPart * i + screenWidthPart, screenHeightPart), color);
+                    
+                    // icons
+                    Texture2D spellIcon = Game.Content.Load<Texture2D>($"Sprites/SpellIcons/{spell.Icon}");
+                    float scale = .4f;
+                    float iconHeight = screenHeightPart - (spellIcon.Height * scale);
+                    Game.SpriteBatch.Draw(spellIcon, new Vector2(screenWidthPart * i + screenWidthPart, iconHeight),null, Color.White,0,Vector2.Zero,scale, SpriteEffects.None,0);
 
+
+                    //level
+                    string spellLevel;
+                    int locateSpell = SpellBook.IsSpellInSpellBook(SpellDefinitions[i]);
+                    if (locateSpell >= 0)
+                        spellLevel = (SpellBook.Spells[locateSpell].CurrentLevel+1).ToString();
+                    else
+                        spellLevel = "0";
+                    Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, spellLevel, new Vector2(screenWidthPart * i + screenWidthPart, screenHeightPart+20), color);
 
                 }
             }

@@ -36,14 +36,14 @@ namespace LoneWandererGame.Spells
             spell.CurrentLevel = Math.Min(spell.CurrentLevel + 1, spell.LevelDefinitions.Count - 1);
         }
 
-        public bool IsSpellInSpellBook(SpellDefinition spell)
+        public int IsSpellInSpellBook(SpellDefinition spell)
         {
             for (int i = 0; i < Spells.Count; i++)
             {
                 if (Spells[i].Name == spell.Name)
-                    return true;
+                    return i;
             }
-            return false;
+            return -1;
         }
 
         public List<Spell> Update(GameTime gameTime)
