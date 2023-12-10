@@ -45,7 +45,9 @@ namespace LoneWandererGame.GameScreens
         public PlayScreen(Game1 game) : base(game)
         {
             tileEngine = new TileEngine(Game);
-            _player = new Player(Game, tileEngine, new Vector2(440f, 300f));
+            // Assumed map width and height is 512
+            float tilemapCenter = (512 * 32) / 2f;
+            _player = new Player(Game, tileEngine, new Vector2(tilemapCenter, tilemapCenter));
             enemyHandler = new EnemyHandler(Game, tileEngine);
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player, ActiveSpells);
@@ -100,7 +102,7 @@ namespace LoneWandererGame.GameScreens
             PlayerScore.OnGainXp = GainXpFloatingText;
             PlayerScore.OnLevelUp = OnLevelUp;
             backgroundMusic = Game.Content.Load<Song>("Sounds/stage1");
-            MediaPlayer.Play(backgroundMusic);
+            //MediaPlayer.Play(backgroundMusic);
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -210,7 +212,7 @@ namespace LoneWandererGame.GameScreens
 
             Game.SpriteBatch.Draw(_groundTexture, Vector2.Zero, Color.White);
             _player.Draw();
-            tileEngine.Draw();
+            tileEngine.Draw(_camera.Center);
             enemyHandler.Draw(gameTime);
             foreach(var spell in ActiveSpells)
             {

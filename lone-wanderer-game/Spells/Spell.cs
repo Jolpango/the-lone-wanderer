@@ -37,7 +37,7 @@ namespace LoneWandererGame.Spells
         {
             var spriteSheet = content.Load<SpriteSheet>($"Sprites/SpellAnimations/{Asset}.sf", new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
-            sprite.Depth = 0.16f;
+            sprite.Depth = 0.26f;
             SoundEffect = content.Load<SoundEffect>($"Sounds/{Sound}");
         }
         public RectangleF CollisionRectangle

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Screens;
 
 namespace LoneWandererGame.TileEngines
 {
@@ -9,8 +10,8 @@ namespace LoneWandererGame.TileEngines
     {
         private Game1 game;
         private List<Tile> tiles;
+        private List<Texture2D> textures;
         private List<int> nonEmptyTileIndices;
-        private Texture2D texture;
         public List<int> Data { get; private set; }
         public int Height { get; private set; }
         public int Width { get; private set; }
@@ -36,16 +37,16 @@ namespace LoneWandererGame.TileEngines
             nonEmptyTileIndices = new List<int>();
         }
 
-        public void LoadContent(string sheetPath)
+        public void LoadContent(List<Texture2D> sheets)
         {
-            texture = game.Content.Load<Texture2D>(sheetPath);
+            textures = sheets;
         }
 
-        public void Draw()
+        public void Draw(Vector2 cameraPosition)
         {
             foreach (Tile tile in tiles)
                 if (!tile.Empty)
-                    tile.Draw();
+                	tile.Draw(cameraPosition);
         }
 
         public void AddTile(Vector2 position, int sheetIndex)
@@ -54,11 +55,14 @@ namespace LoneWandererGame.TileEngines
                 nonEmptyTileIndices.Add(-1);
                 return;
             }
-
-            int tileSetTilesWide = texture.Width / TileWidth;
+            int tileSetTilesWide = textures[0].Width / TileWidth;
+            int tileCount = tileSetTilesWide * tileSetTilesWide;
+            int textureIndex = sheetIndex / tileCount;
+            int tileIndex = sheetIndex % tileCount;
+            
             Rectangle rect = new Rectangle(
-                (sheetIndex -1) % tileSetTilesWide,
-                (sheetIndex -1) / tileSetTilesWide,
+                (tileIndex - 1) % tileSetTilesWide,
+                (tileIndex - 1) / tileSetTilesWide,
                 TileWidth,
                 TileHeight
             );
@@ -68,7 +72,7 @@ namespace LoneWandererGame.TileEngines
             position.Y *= TileHeight;
 
             nonEmptyTileIndices.Add(tiles.Count);
-            tiles.Add(new Tile(game, texture, position, rect, Depth));
+            tiles.Add(new Tile(game, textures[textureIndex], position, rect, Depth));
         }
 
         public Tile GetNonEmptyTileAtIndex(int x, int y)

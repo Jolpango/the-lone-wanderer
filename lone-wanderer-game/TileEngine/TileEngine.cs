@@ -4,7 +4,9 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using MonoGame.Extended;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace LoneWandererGame.TileEngines
 {
@@ -13,11 +15,14 @@ namespace LoneWandererGame.TileEngines
         private Game1 game;
         private JObject jsonMap;
         private List<Layer> layers;
+        private List<Texture2D> textures;
+        private int collisionLayerIndex;
         public TileEngine(Game1 game)
         {
             this.game = game;
 
             layers = new List<Layer>();
+            textures = new List<Texture2D>();
         }
 
         public struct CollisionDirection
@@ -46,29 +51,51 @@ namespace LoneWandererGame.TileEngines
 
         public void LoadContent()
         {
-            jsonMap = JObject.Parse(File.ReadAllText("Content/Tilemaps/map1.json"));
+            jsonMap = JObject.Parse(File.ReadAllText("Content/Tilemaps/big_map.json"));
 
             int tileHeight = (int)jsonMap.Root["tileheight"];
             int tileWidth = (int)jsonMap.Root["tilewidth"];
 
+            foreach (JToken token in jsonMap.Root["tilesets"])
+            {
+                string tilesheetPath = "Tilemaps/" + (string)token["image"];
+
+                // Removes file extension
+                int delimiterIndex = tilesheetPath.LastIndexOf('.');
+                if (delimiterIndex != -1)
+                {
+                    tilesheetPath = tilesheetPath[..delimiterIndex];
+                }
+                textures.Add(game.Content.Load<Texture2D>(tilesheetPath));
+            }
+
+            // Tile Layers adn Textures assumed to be the same size
             JToken tileset = jsonMap.Root["tilesets"][0];
-            string tilesheetPath = (string)tileset["image"];
+
             int sheetTileHeight = (int)tileset["tileheight"];
             int sheetTileWidth = (int)tileset["tilewidth"];
             int sheetImageHeight = (int)tileset["imageheight"];
             int sheetImageWidth = (int)tileset["imagewidth"];
 
-            foreach (JToken layer in jsonMap.Root["layers"].ToList())
+            List<JToken> layersFromFile = jsonMap.Root["layers"].ToList();
+            // Not allowed to have mroe layers then 6!
+            Debug.Assert(layersFromFile.Count < 6);
+
+            foreach (JToken layer in layersFromFile)
             {
                 List<int> data = layer["data"].Select(datapoint => (int)datapoint).ToList();
                 bool collidable = (bool)layer["properties"][0]["value"];
+                if (collidable)
+                {
+                    collisionLayerIndex = layers.Count;
+                }
                 int height = (int)layer["height"];
                 int width = (int)layer["width"];
                 string name = (string)layer["name"];
                 float depth = (layers.Count + 1) / 10f;
 
                 Layer newLayer = new Layer(game, data.ToList(), height, width, sheetTileHeight, sheetTileWidth, name, depth, collidable);
-                newLayer.LoadContent("Tilemaps/mountain_landscape");
+                newLayer.LoadContent(textures);
                 for (int i = 0; i < data.Count; i++)
                 {
                     int mapX = i % width;
@@ -81,10 +108,10 @@ namespace LoneWandererGame.TileEngines
             }
         }
 
-        public void Draw()
+        public void Draw(Vector2 cameraPosition)
         {
             foreach (Layer layer in layers)
-                layer.Draw();
+                layer.Draw(cameraPosition);
         }
 
         public List<Rectangle> GetCollisions(RectangleF collisionRect, Vector2 velocity)
@@ -98,7 +125,7 @@ namespace LoneWandererGame.TileEngines
 
             List<Rectangle> collisions = new List<Rectangle>();
 
-            Layer collisionLayer = layers[2]; // hardcoded for now, because I can
+            Layer collisionLayer = layers[collisionLayerIndex]; // NOTE(Medo): This is no longer valid, this is why we have slow and buggy things: "hardcoded for now, because I can" /Anton
             RectangleF futureRect = new RectangleF(
                 collisionRect.X + velocity.X,
                 collisionRect.Y + velocity.Y,

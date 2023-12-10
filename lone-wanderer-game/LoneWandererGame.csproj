@@ -79,6 +79,9 @@
     <None Update="Content\Sprites\SpellAnimations\whip.sf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Tilemaps\big_map.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\Tilemaps\map1.json">

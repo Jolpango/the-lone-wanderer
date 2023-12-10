@@ -154,7 +154,7 @@ namespace LoneWandererGame.Enemy
             return health > 0;
         }
         public bool IsDead()
-        {
+        {   
             return health <= 0;
         }
 
