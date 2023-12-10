@@ -31,6 +31,8 @@ namespace LoneWandererGame.GameScreens
         public SpellCollisionHandler SpellCollisionHandler { get; private set; }
         public FloatingTextHandler FloatingTextHandler { get; private set; }
 
+        private FillableBar playerHealthBar;
+
         public PlayScreen(Game1 game) : base(game)
         {
             _player = new Player(Game, Vector2.Zero);
@@ -62,6 +64,17 @@ namespace LoneWandererGame.GameScreens
                 if (spell.SpellType == typeof(AoESpell))
                     SpellBook.AddSpell(spell);
             }
+            int padding = 0;
+            playerHealthBar = new FillableBar()
+            {
+                BarWidth = (int)Game.WindowDimensions.X - padding,
+                BarHeight = 20,
+                MaxValue = Player.MAX_HEALTH,
+                Game = Game,
+                CurrentValue = _player.Health,
+                Position = new Vector2((int)(Game.WindowDimensions.X - padding) / 2, padding)
+            };
+            playerHealthBar.CreateTexture();
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -91,6 +104,8 @@ namespace LoneWandererGame.GameScreens
 
             UpdateSpells(gameTime);
             FloatingTextHandler.Update(gameTime);
+
+            playerHealthBar.CurrentValue = _player.Health;
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -141,9 +156,11 @@ namespace LoneWandererGame.GameScreens
             Game.SpriteBatch.End();
 
             // UI
-            Game.SpriteBatch.Begin();
+            Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
 
             Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 10f), Color.White);
+
+            playerHealthBar.Draw();
 
             // FPS Counter
             {

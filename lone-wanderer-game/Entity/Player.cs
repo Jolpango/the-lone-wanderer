@@ -53,7 +53,7 @@ namespace LoneWandererGame.Entity
         private float damageTimer = 0f;
         private const float INVINCIBILITY_TIME = 0.3f;
         public int Health { get; private set; }
-        private const int MAX_HEALTH = 100;
+        public const int MAX_HEALTH = 100;
 
         public void Damage(int amount)
         {
