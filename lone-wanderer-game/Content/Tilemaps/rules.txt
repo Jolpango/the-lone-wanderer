@@ -1,1 +1,1 @@
-Rules.tmx
+Rules/autorules.tmx
