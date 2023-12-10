@@ -121,16 +121,19 @@ namespace LoneWandererGame.Enemy
             //Animation
             animation(gameTime, direction, distanceToPlayer);
 
-            if (attackCooldown < 0.0f)
+
+            if (attackCooldown <= 0.0f)
             {
                 Rectangle playerbox = _player.getSpriteRectangle();
                 Rectangle enemyBox = (Rectangle)sprite.GetBoundingRectangle(position, rotation, scale);
 
                 if (playerbox.Intersects(enemyBox))
                 {
-                   // TODO take damage on player here
+                    // TODO take damage on player here
+                    //_player.Damage(10);
+                    attackCooldown = 1.0f;
                 }
-                attackCooldown = 1.0f;
+                
             }    
             attackCooldown-= gameTime.GetElapsedSeconds();
         }
