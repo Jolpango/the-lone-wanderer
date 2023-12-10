@@ -10,6 +10,8 @@ using LoneWandererGame.Entity;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
+using LoneWandererGame.TileEngines;
+using MonoGame.Extended.Timers;
 
 
 namespace LoneWandererGame.Enemy
@@ -48,6 +50,7 @@ namespace LoneWandererGame.Enemy
 
         public Game1 Game { get; private set; }
         public float health { get; private set; }
+        String spriteName;
 
         public Rectangle CollisionRectangle
         {
@@ -57,16 +60,17 @@ namespace LoneWandererGame.Enemy
             }
         }
 
-        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game)
+        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, String spriteName)
         {
             this.health = health;
             this.moveSpeed = moveSpeed;
             this.position = position;
             Game = game;
+            this .spriteName = spriteName;
         }
         public void LoadContent()
         {
-            var spriteSheet = Game.Content.Load<SpriteSheet>("Sprites/Enemies/dark_soldier.sf", new JsonContentLoader());
+            var spriteSheet = Game.Content.Load<SpriteSheet>(spriteName, new JsonContentLoader());
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Origin = new Vector2(16, 16);
             sprite.Depth = 0.25f;
@@ -74,61 +78,24 @@ namespace LoneWandererGame.Enemy
             lastSpriteEffect = SpriteEffects.None;
             lastAnimation = AnimationState.idle_Down;
             sprite.Play(lastAnimation.ToString());
-
-            //enemySprite = Game.Content.Load<Texture2D>("Sprites/guy");
         }
 
         public void Update(GameTime gameTime, Player _player)
         {
-          
-
             //Movement
             Vector2 playerPos = new Vector2(_player.Position.X, _player.Position.Y);
-            Vector2 direction = (playerPos - this.position) - new Vector2(20.0f,20.0f); // this makes it in middle of player
+            Vector2 direction = (playerPos - this.position) - new Vector2(20.0f, 20.0f); // this makes it in middle of player
             Vector2 distanceToPlayer = direction;
-            if (direction != new Vector2(0.0f,0.0f))
-            { 
-                direction.Normalize(); 
+            if (direction != new Vector2(0.0f, 0.0f))
+            {
+                direction.Normalize();
             }
             if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
                 position += (direction * moveSpeed * gameTime.GetElapsedSeconds());
 
 
             //Animation
-            AnimationState animation = AnimationState.idle_Up; // idk
-            switch (lastAnimation)
-            {
-                case AnimationState.walk_Up:
-                    animation = AnimationState.idle_Up;
-                    break;
-                case AnimationState.walk_Left:
-                    animation = AnimationState.idle_Left;
-                    break;
-                case AnimationState.walk_Down:
-                    animation = AnimationState.idle_Down;
-                    break;
-                case AnimationState.walk_Right:
-                    animation = AnimationState.idle_Right;
-                    break;
-
-            }
-            SpriteEffects spriteEffect = lastSpriteEffect;
-            Color colorTint = Color.White;
-            if (direction.X >= 0.5f) { animation = AnimationState.walk_Right; }
-            else if (direction.X <= -0.5f) { animation = AnimationState.walk_Left; }
-            else if (direction.Y <= -0.5f) { animation = AnimationState.walk_Up; }
-            else if (direction.Y >= 0.5f) { animation = AnimationState.walk_Down; }
-
-            // Sprite
-            sprite.Color = colorTint;
-            sprite.Effect = spriteEffect;
-            sprite.Play(animation.ToString());
-            if(distanceToPlayer.LengthSquared() > distanceToPlayerStop)
-                sprite.Update(gameTime.GetElapsedSeconds());
-
-            lastAnimation = animation;
-            lastSpriteEffect = spriteEffect;
-
+            animation(gameTime, direction, distanceToPlayer);
 
 
           
@@ -169,6 +136,43 @@ namespace LoneWandererGame.Enemy
                 return true;
             else
                 return false;
+        }
+
+        private void animation(GameTime gameTime, Vector2 direction, Vector2 distanceToPlayer)
+        {
+            AnimationState animation = AnimationState.idle_Up; // idk
+            switch (lastAnimation)
+            {
+                case AnimationState.walk_Up:
+                    animation = AnimationState.idle_Up;
+                    break;
+                case AnimationState.walk_Left:
+                    animation = AnimationState.idle_Left;
+                    break;
+                case AnimationState.walk_Down:
+                    animation = AnimationState.idle_Down;
+                    break;
+                case AnimationState.walk_Right:
+                    animation = AnimationState.idle_Right;
+                    break;
+
+            }
+            SpriteEffects spriteEffect = lastSpriteEffect;
+            Color colorTint = Color.White;
+            if (direction.X >= 0.5f) { animation = AnimationState.walk_Right; }
+            else if (direction.X <= -0.5f) { animation = AnimationState.walk_Left; }
+            else if (direction.Y <= -0.5f) { animation = AnimationState.walk_Up; }
+            else if (direction.Y >= 0.5f) { animation = AnimationState.walk_Down; }
+
+            // Sprite
+            sprite.Color = colorTint;
+            sprite.Effect = spriteEffect;
+            sprite.Play(animation.ToString());
+            if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
+                sprite.Update(gameTime.GetElapsedSeconds());
+
+            lastAnimation = animation;
+            lastSpriteEffect = spriteEffect;
         }
     }
 }
