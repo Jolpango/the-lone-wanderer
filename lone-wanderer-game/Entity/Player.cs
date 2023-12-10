@@ -19,6 +19,8 @@ namespace LoneWandererGame.Entity
         private AnimatedSprite sprite;
         private Color colorTint = Color.White;
 
+        public bool godMode = false;
+        private float godModeButtonTimer = 0f;
 
         public enum AnimationState
         {
@@ -57,7 +59,7 @@ namespace LoneWandererGame.Entity
 
         public void Damage(int amount)
         {
-            if (state == State.Alive && damageTimer == 0f)
+            if (!godMode && state == State.Alive && damageTimer == 0f)
             {
                 damageTimer = INVINCIBILITY_TIME;
                 Health -= amount;
@@ -119,6 +121,20 @@ namespace LoneWandererGame.Entity
                 {
                     Damage(20);
                 }
+
+                if (keyboardState.IsKeyDown(Keys.L) && godModeButtonTimer == 0f)
+                {
+                    godMode = !godMode;
+                    godModeButtonTimer = 0.3f;
+                }
+                if (godModeButtonTimer > 0f)
+                {
+                    godModeButtonTimer -= dt;
+                    if (godModeButtonTimer < 0f)
+                    {
+                        godModeButtonTimer = 0f;
+                    }
+                }
                 
 
                 switch (lastAnimation)
@@ -174,18 +190,26 @@ namespace LoneWandererGame.Entity
                 {
                     movementDirection.Normalize();
                     direction = movementDirection;
-                    velocity += direction * acceleration;
+                    float accel = acceleration;
+                    if (godMode)
+                    {
+                        accel *= 5f;
+                    }
+                    velocity += direction * accel;
                 }
 
-                RectangleF playerRect = sprite.GetBoundingRectangle(Position, Rotation, Scale); // This might break if we scale/rotate
-                List<Rectangle> collisions = tileEngine.GetCollisions(playerRect, velocity);
-                if (collisions.Count > 0)
+                if (!godMode)
                 {
-                    TileEngine.CollisionResolution resolution = tileEngine
-                        .ResolveCollisions(collisions, playerRect, Position, sprite.Origin, velocity);
+                    RectangleF playerRect = sprite.GetBoundingRectangle(Position, Rotation, Scale); // This might break if we scale/rotate
+                    List<Rectangle> collisions = tileEngine.GetCollisions(playerRect, velocity);
+                    if (collisions.Count > 0)
+                    {
+                        TileEngine.CollisionResolution resolution = tileEngine
+                            .ResolveCollisions(collisions, playerRect, Position, sprite.Origin, velocity);
 
-                    Position = resolution.position;
-                    velocity = resolution.velocity;
+                        Position = resolution.position;
+                        velocity = resolution.velocity;
+                    }
                 }
 
                 sprite.Play(animation.ToString());

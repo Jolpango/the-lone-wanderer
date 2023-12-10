@@ -80,6 +80,8 @@ namespace LoneWandererGame.Enemy
             {
                 spawnTimer = 1.0f;
                 int enemiesToSpawn = (int)gameTime.TotalGameTime.TotalSeconds / 4;
+                Vector2 edgeSpawnCullDistance = new Vector2(2f, 2f);
+                Vector2 tileMapCullSize = tileEngine.GetMapSize() - edgeSpawnCullDistance;
                 for (int i = 0; i < enemiesToSpawn; i++)
                 {
                     float randomX = (float)randomNumber.NextDouble() * 2.0f;
@@ -91,6 +93,13 @@ namespace LoneWandererGame.Enemy
                     randomPos.Normalize();
 
                     Vector2 spawnPos = _player.Position + randomPos * 700;
+
+                    if (spawnPos.X > tileMapCullSize.X || spawnPos.Y > tileMapCullSize.Y ||
+                        spawnPos.X < edgeSpawnCullDistance.X || spawnPos.Y < edgeSpawnCullDistance.Y)
+                    {
+                        continue;
+                    } 
+
                     if (i % 5 == 0)
                         addEnemyBlue(10.0f, 100.0f, spawnPos);
                     else if (i % 5 == 1)

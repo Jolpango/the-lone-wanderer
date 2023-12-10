@@ -235,6 +235,13 @@ namespace LoneWandererGame.GameScreens
 
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Level: {PlayerScore.Level}", new Vector2(10f, 40f), Color.White);
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Score: {PlayerScore.Score}", new Vector2(10f, 80f), Color.White);
+            float screenWidth = Game.WindowDimensions.X;
+            if (_player.godMode)
+            {
+                string godModeString = "God Mode ON!";
+                Vector2 godModeStrSize = Game.RegularFont.MeasureString(godModeString);
+                Game.SpriteBatch.DrawString(Game.RegularFont, godModeString, new Vector2(screenWidth - godModeStrSize.X - 10f, 100f), Color.Red);
+            }
             playerHealthBar.Draw();
             xpBar.Draw();
 
@@ -242,7 +249,6 @@ namespace LoneWandererGame.GameScreens
             {
                 int frameRate = (int)((1 / gameTime.ElapsedGameTime.TotalSeconds) + 0.01);
                 string fpsString = "FPS: " + frameRate.ToString();
-                float screenWidth = Game.WindowDimensions.X;
                 Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
                 
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);

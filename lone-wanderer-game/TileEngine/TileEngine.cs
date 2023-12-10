@@ -114,6 +114,11 @@ namespace LoneWandererGame.TileEngines
                 layer.Draw(cameraPosition);
         }
 
+        public Vector2 GetMapSize()
+        {
+            return new Vector2((float)layers[0].Height * (float)layers[0].TileWidth, (float)layers[0].Height * (float)layers[0].TileHeight);
+        }
+
         public List<Rectangle> GetCollisions(RectangleF collisionRect, Vector2 velocity)
         {
             int CullIndex(int index, int min, int max)
