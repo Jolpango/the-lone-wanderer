@@ -13,14 +13,17 @@ using Microsoft.Xna.Framework.Audio;
 namespace LoneWandererGame.Enemy
 {
     public class BaseEnemy
-    {
+    { 
+
         private float moveSpeed;
-        private Vector2 position = new Vector2(0.0f, 0.0f);
+        private Vector2 position= new Vector2(0.0f,0.0f);
         private float attackCooldown = 0.0f;
         private TileEngine tileEngine;
         private SoundEffect hitSound;
+        private int damage;
         //animation
         private float distanceToPlayerStop = 30.0f; 
+        
 
         //Animation
         private AnimatedSprite sprite;
@@ -37,7 +40,7 @@ namespace LoneWandererGame.Enemy
             walk_Right
         };
         public float rotation = 0;
-        public Vector2 scale = new Vector2(1, 1);
+        public Vector2 scale;
         private AnimationState lastAnimation;
         private SpriteEffects lastSpriteEffect;
         private Vector2 direction = Vector2.Zero;
@@ -56,7 +59,8 @@ namespace LoneWandererGame.Enemy
             }
         }
 
-        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, TileEngine tileEngine, string spriteName)
+        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, TileEngine tileEngine, 
+            string spriteName, float scaleX=1, float scaleY =1, int damage = 5)
         {
             this.health = health;
             this.moveSpeed = moveSpeed;
@@ -64,6 +68,8 @@ namespace LoneWandererGame.Enemy
             Game = game;
             this.spriteName = spriteName;
             this.tileEngine = tileEngine;
+            this.scale = new Vector2(scaleX, scaleY);
+            this.damage = damage;
         }
         public void LoadContent()
         {
@@ -130,7 +136,7 @@ namespace LoneWandererGame.Enemy
                 if (playerbox.Intersects(enemyBox))
                 {
                     // TODO take damage on player here
-                    //_player.Damage(10);
+                    _player.Damage(this.damage);
                     attackCooldown = 1.0f;
                 }
                 

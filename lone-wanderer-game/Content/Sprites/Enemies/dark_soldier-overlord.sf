@@ -1,0 +1,49 @@
+{
+  "textureAtlas": {
+    "texture": "dark_soldier-overlord.png",
+    "regionWidth": 48,
+    "regionHeight": 64
+  },
+  "cycles": {
+    "walk_Up": {
+      "frames": [0,1,2,1],
+      "isLooping": false,
+      "frameDuration": 0.4
+    },
+    "walk_Right": {
+      "frames": [3,4,5,4],
+      "isLooping": false,
+      "frameDuration": 0.4
+    },
+    "walk_Down": {
+      "frames": [6,7,8,7],
+      "isLooping": false,
+      "frameDuration": 0.3999999
+    },
+    "walk_Left": {
+      "frames": [9,10,11,10],
+      "isLooping": false,
+      "frameDuration": 0.3999999
+    },
+    "idle_Up": {
+      "frames": [1],
+      "isLooping": false,
+      "frameDuration": 0.4
+    },
+    "idle_Right": {
+      "frames": [4],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idle_Down": {
+      "frames": [7],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "animation7": {
+      "frames": [10],
+      "isLooping": false,
+      "frameDuration": 0.2
+    }
+  }
+}
