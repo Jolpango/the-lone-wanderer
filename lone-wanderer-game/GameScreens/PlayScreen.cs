@@ -32,6 +32,7 @@ namespace LoneWandererGame.GameScreens
         public FloatingTextHandler FloatingTextHandler { get; private set; }
 
         private FillableBar playerHealthBar;
+        private FillableBar xpBar;
 
         public PlayScreen(Game1 game) : base(game)
         {
@@ -75,6 +76,20 @@ namespace LoneWandererGame.GameScreens
                 Position = new Vector2((int)(Game.WindowDimensions.X - padding) / 2, padding)
             };
             playerHealthBar.CreateTexture();
+            xpBar = new FillableBar()
+            {
+                BarWidth = (int)Game.WindowDimensions.X - padding,
+                BarHeight = 20,
+                MaxValue = PlayerScore.RequiredXP,
+                Game = Game,
+                BarBackgroundColor = Color.LightBlue,
+                BarForegroundColor = Color.Blue,
+                CurrentValue = PlayerScore.XP,
+                Position = new Vector2((int)(Game.WindowDimensions.X - padding) / 2, padding + 20)
+            };
+            xpBar.CreateTexture();
+            PlayerScore.OnGainXp = GainXpFloatingText;
+            PlayerScore.OnLevelUp = OnLevelUp;
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -106,6 +121,8 @@ namespace LoneWandererGame.GameScreens
             FloatingTextHandler.Update(gameTime);
 
             playerHealthBar.CurrentValue = _player.Health;
+            xpBar.CurrentValue = PlayerScore.XP;
+            xpBar.MaxValue = PlayerScore.RequiredXP;
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -135,6 +152,16 @@ namespace LoneWandererGame.GameScreens
             }
         }
 
+        public void GainXpFloatingText(int xp)
+        {
+            FloatingTextHandler.AddText(xp.ToString(), _player.Position, Color.White);
+        }
+
+        public void OnLevelUp()
+        {
+            FloatingTextHandler.AddText("Level up", _player.Position, Color.Green);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
@@ -158,9 +185,11 @@ namespace LoneWandererGame.GameScreens
             // UI
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-            Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 10f), Color.White);
-
+            Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 150f), Color.White);
+            Game.SpriteBatch.DrawString(Game.RegularFont, $"Level: {PlayerScore.Level}", new Vector2(10f, 40f), Color.White);
+            Game.SpriteBatch.DrawString(Game.RegularFont, $"Score: {PlayerScore.Score}", new Vector2(10f, 80f), Color.White);
             playerHealthBar.Draw();
+            xpBar.Draw();
 
             // FPS Counter
             {
@@ -169,7 +198,7 @@ namespace LoneWandererGame.GameScreens
                 float screenWidth = Game.WindowDimensions.X;
                 Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
                 
-                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 10f), Color.White);
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 150f), Color.White);
             }
 
             Game.SpriteBatch.End();
