@@ -22,6 +22,7 @@ namespace LoneWandererGame.Spells
                     Icon = (string)o.Root["icon"],
                     Speed = (int)o.Root["speed"],
                     TimeToLive = (float)o.Root["timer"],
+                    Sound = (string)o.Root["sound"],
                     SpellType = Type.GetType($"LoneWandererGame.Spells.{(string)o.Root["type"]}"),
                     LevelDefinitions = o.Root["levelDefinitions"].Select(level => new SpellLevelDefinition()
                     {

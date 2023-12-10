@@ -8,7 +8,7 @@ using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using LoneWandererGame.TileEngines;
-
+using Microsoft.Xna.Framework.Audio;
 
 namespace LoneWandererGame.Enemy
 {
@@ -18,6 +18,7 @@ namespace LoneWandererGame.Enemy
         private Vector2 position = new Vector2(0.0f, 0.0f);
         private float attackCooldown = 0.0f;
         private TileEngine tileEngine;
+        private SoundEffect hitSound;
         //animation
         private float distanceToPlayerStop = 30.0f; 
 
@@ -84,6 +85,7 @@ namespace LoneWandererGame.Enemy
                 Position = position
             };
             healthBar.CreateTexture();
+            hitSound = Game.Content.Load<SoundEffect>("Sounds/hit");
         }
 
         public void Update(GameTime gameTime, Player _player)
@@ -146,6 +148,7 @@ namespace LoneWandererGame.Enemy
         public bool TakeDamage(float damage)
         {
             health -= damage;
+            hitSound.Play(0.2f, 1.0f, 1.0f);
             return health > 0;
         }
         public bool IsDead()

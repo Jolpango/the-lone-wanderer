@@ -18,6 +18,7 @@ namespace LoneWandererGame.Spells
         {
             base.LoadContent(content);
             sprite.Play("attack", () => Timer = -1);
+            SoundEffect.Play();
         }
     }
 }

@@ -2,14 +2,15 @@
   "name": "Fireball",
   "type": "ProjectileSpell",
   "asset": "fireball",
-  "speed":  15,
+  "speed": 15,
+  "sound": "foom_0",
   "icon": "fireball",
   "timer": 5,
   "levelDefinitions": [
     {
       "damage": 5,
       "description": "Level1 spell",
-      "specialMultiplier": 1,
+      "specialMultiplier": 3,
       "cooldown": 1
     },
     {

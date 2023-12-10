@@ -4,6 +4,7 @@
   "asset": "icesplosion",
   "speed": 15,
   "icon": "icesplosion",
+  "sound": "swish_4",
   "timer": 5,
   "levelDefinitions": [
     {

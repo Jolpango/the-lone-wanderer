@@ -12,6 +12,7 @@ using LoneWandererGame.Enemy;
 using LoneWandererGame.TileEngines;
 using LoneWandererGame.Spells;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -33,6 +34,8 @@ namespace LoneWandererGame.GameScreens
 
         private FillableBar playerHealthBar;
         private FillableBar xpBar;
+
+        private Song backgroundMusic;
 
         public PlayScreen(Game1 game) : base(game)
         {
@@ -62,7 +65,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.SpellType == typeof(AoESpell))
+                if (spell.Name == "Icesplosion")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
@@ -90,6 +93,8 @@ namespace LoneWandererGame.GameScreens
             xpBar.CreateTexture();
             PlayerScore.OnGainXp = GainXpFloatingText;
             PlayerScore.OnLevelUp = OnLevelUp;
+            backgroundMusic = Game.Content.Load<Song>("Sounds/stage1");
+            MediaPlayer.Play(backgroundMusic);
         }
 
         private void menuactions(object sender, KeyboardEventArgs e)
@@ -185,7 +190,6 @@ namespace LoneWandererGame.GameScreens
             // UI
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-            Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 150f), Color.White);
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Level: {PlayerScore.Level}", new Vector2(10f, 40f), Color.White);
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Score: {PlayerScore.Score}", new Vector2(10f, 80f), Color.White);
             playerHealthBar.Draw();
@@ -198,7 +202,7 @@ namespace LoneWandererGame.GameScreens
                 float screenWidth = Game.WindowDimensions.X;
                 Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
                 
-                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 150f), Color.White);
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);
             }
 
             Game.SpriteBatch.End();

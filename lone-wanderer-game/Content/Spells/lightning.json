@@ -4,6 +4,7 @@
   "asset": "lightning",
   "speed": 5,
   "icon": "lightning",
+  "sound": "swish_4",
   "timer": 0.50,
   "levelDefinitions": [
     {

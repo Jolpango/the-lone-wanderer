@@ -28,6 +28,7 @@ namespace LoneWandererGame.Spells
                 sprite.Play("left");
             }
             Position += Direction * sprite.GetBoundingRectangle(new MonoGame.Extended.Transform2()).Width / 2;
+            SoundEffect.Play();
         }
 
         public override void Update(GameTime gameTime)

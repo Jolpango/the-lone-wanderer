@@ -73,6 +73,7 @@ namespace LoneWandererGame.Spells
         {
             List<Spell> spells = new List<Spell>();
             AoESpell spell = new AoESpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position);
+            spell.Sound = spellDefinition.Sound;
             spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
@@ -83,6 +84,7 @@ namespace LoneWandererGame.Spells
         {
             List<Spell> spells = new List<Spell>();
             MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction);
+            meleeSpell.Sound = spellDefinition.Sound;
             meleeSpell.LoadContent(Game.Content);
             meleeSpell.Timer = spellDefinition.TimeToLive;
             meleeSpell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
@@ -95,9 +97,10 @@ namespace LoneWandererGame.Spells
             List<Spell> spells = new List<Spell>();
             for (int i = 0; i < spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].SpecialMultiplier; i++)
             {
-                var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, spellDefinition.Speed);
+                var spell = new ProjectileSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position + (Player.Direction * 10 * i), Player.Direction, spellDefinition.Speed);
                 spell.Timer = spellDefinition.TimeToLive;
                 spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+                spell.Sound = spellDefinition.Sound;
                 spell.LoadContent(Game.Content);
                 spells.Add(spell);
             }
