@@ -28,7 +28,7 @@ namespace LoneWandererGame.GameScreens
         {
             Game.GraphicsDevice.Clear(Color.Red);
             Game.SpriteBatch.Begin();
-            Game.SpriteBatch.DrawString(Game.RegularFont, "Death Screen", Vector2.Zero, Color.White);
+            Game.SpriteBatch.DrawString(Game.RegularFont, "Death Screen", new Vector2(10f, 10f), Color.White);
             Game.SpriteBatch.End();
         }
     }

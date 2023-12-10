@@ -66,7 +66,7 @@ namespace LoneWandererGame
 
         public void AddText(string text, Vector2 position)
         {
-            this.texts.Add(new FloatingText(text, position, game.RegularFont));
+            this.texts.Add(new FloatingText(text, position, game.SilkscreenRegularFont));
         }
 
         public void Draw(SpriteBatch spriteBatch)

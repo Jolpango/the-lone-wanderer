@@ -124,11 +124,6 @@ namespace LoneWandererGame.GameScreens
         {
             Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
 
-            // UI
-            Game.SpriteBatch.Begin();
-            Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", Vector2.Zero, Color.White);
-            Game.SpriteBatch.End();
-
             // World
             var transformMatrix = _camera.GetViewMatrix();
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
@@ -142,6 +137,24 @@ namespace LoneWandererGame.GameScreens
                 spell.Draw(Game.SpriteBatch, Game);
             }
             FloatingTextHandler.Draw(Game.SpriteBatch);
+
+            Game.SpriteBatch.End();
+
+            // UI
+            Game.SpriteBatch.Begin();
+
+            Game.SpriteBatch.DrawString(Game.RegularFont, "Play Screen", new Vector2(10f, 10f), Color.White);
+
+            // FPS Counter
+            {
+                int frameRate = (int)((1 / gameTime.ElapsedGameTime.TotalSeconds) + 0.01);
+                string fpsString = "FPS: " + frameRate.ToString();
+                float screenWidth = Game.WindowDimensions.X;
+                Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
+                
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 10f), Color.White);
+            }
+
             Game.SpriteBatch.End();
         }
     }

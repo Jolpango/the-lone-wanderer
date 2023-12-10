@@ -28,6 +28,27 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/regular.spritefont
 
+#begin Fonts/silkscreen-bold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/silkscreen-bold.spritefont
+
+#begin Fonts/silkscreen-bold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/silkscreen-bold.spritefont
+
+#begin Fonts/silkscreen-regular.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/silkscreen-regular.spritefont
+
 #begin Sprites/checkerboard.png
 /importer:TextureImporter
 /processor:TextureProcessor

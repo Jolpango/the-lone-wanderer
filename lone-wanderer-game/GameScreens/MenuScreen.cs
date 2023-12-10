@@ -70,38 +70,50 @@ namespace LoneWandererGame.GameScreens
         {
             Game.GraphicsDevice.Clear(Color.Gray);
             Game.SpriteBatch.Begin();
-            Vector2 center = Game.WindowDimensions / 4;
-            for(int i = 0; i < MenuItems.Count; i++ )
+            Vector2 center = Game.WindowDimensions / 2;
+            Color textColor = Color.White;
+            float scale = 1f;
+
+            string menuTitle = "Main Menu";
+            Vector2 size = Game.BoldFont.MeasureString(menuTitle) * scale;
+            Game.SpriteBatch.DrawString(
+                Game.BoldFont,
+                menuTitle,
+                center + new Vector2(-size.X / 2, -100f),
+                textColor,
+                0,
+                Vector2.Zero,
+                scale,
+                SpriteEffects.None,
+                1.0f);
+
+            float menuItemSpacing = size.Y;
+
+            for (int i = 0; i < MenuItems.Count; i++ )
             {
+                
                 if (currentItem == i)
                 {
-                    Vector2 size = Game.RegularFont.MeasureString(MenuItems[i].Title);
-                    Game.SpriteBatch.DrawString(
-                        Game.RegularFont,
-                        MenuItems[i].Title,
-                        center + new Vector2(size.X / 2, size.Y * i),
-                        Color.Red,
-                        0,
-                        Vector2.Zero,
-                        1.0f,
-                        SpriteEffects.None,
-                        1.0f);
-
+                    textColor = Color.Red;
+                    scale = 1.2f;
                 }
                 else
                 {
-                    Vector2 size = Game.RegularFont.MeasureString(MenuItems[i].Title);
-                    Game.SpriteBatch.DrawString(
-                        Game.RegularFont,
-                        MenuItems[i].Title,
-                        center + new Vector2(size.X / 2, size.Y * i),
-                        Color.White,
-                        0,
-                        Vector2.Zero,
-                        1.0f,
-                        SpriteEffects.None,
-                        1.0f);
+                    textColor = Color.White;
+                    scale = 1f;
                 }
+
+                size = Game.SilkscreenRegularFont.MeasureString(MenuItems[i].Title) * scale;
+                Game.SpriteBatch.DrawString(
+                    Game.SilkscreenRegularFont,
+                    MenuItems[i].Title,
+                    center + new Vector2(-size.X / 2, menuItemSpacing * i),
+                    textColor,
+                    0,
+                    Vector2.Zero,
+                    scale,
+                    SpriteEffects.None,
+                    1.0f);
             }
             Game.SpriteBatch.End();
         }

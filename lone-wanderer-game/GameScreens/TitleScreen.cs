@@ -28,7 +28,7 @@ namespace LoneWandererGame.GameScreens
         {
             Game.GraphicsDevice.Clear(Color.Gray);
             Game.SpriteBatch.Begin();
-            Game.SpriteBatch.DrawString(Game.RegularFont, "Title Screen", Vector2.Zero, Color.White);
+            Game.SpriteBatch.DrawString(Game.RegularFont, "Title Screen", new Vector2(10f, 10f), Color.White);
             Game.SpriteBatch.End();
         }
     }

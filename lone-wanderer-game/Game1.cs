@@ -16,13 +16,18 @@ namespace LoneWandererGame
         private readonly MouseListener _mouseListener;
 
         public SpriteBatch SpriteBatch { get; private set; }
+
         public SpriteFont RegularFont { get; private set; }
+        public SpriteFont BoldFont { get; private set; }
+        public SpriteFont SilkscreenBoldFont { get; private set; }
+        public SpriteFont SilkscreenRegularFont { get; private set; }
+
         public MouseListener MouseListener { get { return _mouseListener; } }
         public KeyboardListener KeyboardListener { get { return _keyboardListener; } }
 
         public Vector2 WindowDimensions
         {
-            get { return new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height); }
+            get { return new Vector2((float)GraphicsDevice.Viewport.Width, (float)GraphicsDevice.Viewport.Height); }
         }
 
         public Game1()
@@ -65,13 +70,16 @@ namespace LoneWandererGame
         protected override void Initialize()
         {
             base.Initialize();
-            LoadPlayScreen();// LoadTitleScreen();
+            LoadMenuScreen();// LoadTitleScreen();
         }
 
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             RegularFont = Content.Load<SpriteFont>("Fonts/regular");
+            BoldFont = Content.Load<SpriteFont>("Fonts/bold");
+            SilkscreenBoldFont = Content.Load<SpriteFont>("Fonts/silkscreen-bold");
+            SilkscreenRegularFont = Content.Load<SpriteFont>("Fonts/silkscreen-regular");
         }
 
         protected override void Update(GameTime gameTime)
