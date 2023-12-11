@@ -98,18 +98,18 @@ namespace LoneWandererGame.Enemy
                         spawnPos.X < edgeSpawnCullDistance.X || spawnPos.Y < edgeSpawnCullDistance.Y)
                     {
                         continue;
-                    } 
+                    }
 
                     if (i % 5 == 0)
-                        addEnemyBlue(10.0f, 100.0f, spawnPos);
+                        addEnemyBlue(2.0f, 100.0f, spawnPos);
                     else if (i % 5 == 1)
-                        addEnemyBlack(10.0f, 100.0f, spawnPos);
+                        addEnemyBlack(5.0f, 100.0f, spawnPos);
                     else if (i % 5 == 2)
-                        addEnemyCommander(10.0f, 100.0f, spawnPos);
+                        addEnemyCommander(40.0f, 80.0f, spawnPos);
                     else if (i % 5 == 3)
-                        addEnemyDragonRider(10.0f, 100.0f, spawnPos);
+                        addEnemyDragonRider(5.0f, 250.0f, spawnPos);
                     else if (i % 5 == 4)
-                        addEnemyLord(10.0f, 100.0f, spawnPos);
+                        addEnemyLord(20.0f, 100.0f, spawnPos);
 
                     if ((int)gameTime.TotalGameTime.TotalSeconds >= bossSpawn)
                     {
