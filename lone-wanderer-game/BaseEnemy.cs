@@ -193,11 +193,8 @@ namespace LoneWandererGame.Enemy
                 else if (direction.Y >= 0.5f) animation = AnimationState.walk_Down;
             }
 
-            if (animation != lastAnimation)
-            {
-                sprite.Play(animation.ToString());
-                lastAnimation = animation;
-            }
+            lastAnimation = animation;
+            sprite.Play(animation.ToString());
         }
     }
 }
