@@ -28,8 +28,10 @@ namespace LoneWandererGame
         {
             foreach (Spell spell in spells)
             {
-                foreach(BaseEnemy enemy in enemyHandler.GetEnemyAll())
+                foreach(BaseEnemy enemy in enemyHandler.GetEnemies())
                 {
+                    if (enemy.Dormant) continue;
+
                     if (!spell.HitEnemies.Contains(enemy) && spell.CollisionRectangle.Intersects(enemy.CollisionRectangle))
                     {
                         enemy.TakeDamage(spell.Damage);

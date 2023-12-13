@@ -204,16 +204,17 @@ namespace LoneWandererGame.Spells
         }
         public Vector2 ClosestEnemy()
         {
-            List<BaseEnemy> enemies = EnemyHandler.GetEnemyAll();
-            Vector2 PlayePos = Player.Position;
-            for (int i = 0; i < enemies.Count; i++)
+            List<BaseEnemy> enemies = EnemyHandler.GetEnemies();
+            Vector2 PlayerPos = Player.Position;
+            foreach (BaseEnemy enemy in enemies)
             {
-                Vector2 distance = enemies[i].getPos() - PlayePos;
+                if (enemy.Dormant) continue;
+
+                Vector2 distance = enemy.getPos() - PlayerPos;
                 if (distance.Length() < 200.0f) // distance to close* enemy
-                {
                     return distance;
-                }
             }
+
             return new Vector2(1000000.0f,1000000.0f); // big number to be far away
         }
     }
