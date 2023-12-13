@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
 using System.Collections.Generic;
 using LoneWandererGame.Entity;
-using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Content;
 using LoneWandererGame.TileEngines;
 using Microsoft.Xna.Framework.Audio;
 
@@ -16,10 +13,9 @@ namespace LoneWandererGame.Enemy
     { 
 
         private float moveSpeed;
-        private Vector2 position= new Vector2(0.0f,0.0f);
+        private Vector2 position = new Vector2(0.0f,0.0f);
         private float attackCooldown = 0.0f;
         private TileEngine tileEngine;
-        private SoundEffect hitSound;
         private int damage;
         //animation
         private float distanceToPlayerStop = 30.0f; 
@@ -27,6 +23,7 @@ namespace LoneWandererGame.Enemy
 
         //Animation
         private AnimatedSprite sprite;
+        private Dictionary<string, AnimatedSprite> sprites;
         public enum AnimationState
         {
             none,
@@ -42,14 +39,12 @@ namespace LoneWandererGame.Enemy
         public float rotation = 0;
         public Vector2 scale;
         private AnimationState lastAnimation;
-        private SpriteEffects lastSpriteEffect;
-        private Vector2 direction = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
         private FillableBar healthBar;
+        public bool Dormant { get; set; }
 
         public Game1 Game { get; private set; }
         public float health { get; private set; }
-        String spriteName;
 
         public RectangleF CollisionRectangle
         {
@@ -59,39 +54,45 @@ namespace LoneWandererGame.Enemy
             }
         }
 
-        public BaseEnemy(float health, float moveSpeed, Vector2 position, Game1 game, TileEngine tileEngine, 
-            string spriteName, float scaleX=1, float scaleY =1, int damage = 5)
+        public BaseEnemy(Game1 game, TileEngine tileEngine, Dictionary<string, SpriteSheet> spriteSheets)
+        {
+            Game = game;
+            this.tileEngine = tileEngine;
+            Dormant = true;
+            sprites = new Dictionary<string, AnimatedSprite>();
+
+            // Add a sprite for each spritesheet
+            foreach(KeyValuePair<string, SpriteSheet> element in spriteSheets)
+                sprites.Add(element.Key, new AnimatedSprite(element.Value));
+
+            healthBar = new FillableBar()
+            {
+                Game = Game,
+                BarHeight = 4,
+                BarWidth = 40
+            };
+            healthBar.CreateTexture();
+        }
+
+        public void Initialize(float health, float moveSpeed, Vector2 position, string spriteSheetName, float scaleX = 1, float scaleY = 1, int damage = 5)
         {
             this.health = health;
             this.moveSpeed = moveSpeed;
             this.position = position;
-            Game = game;
-            this.spriteName = spriteName;
-            this.tileEngine = tileEngine;
-            this.scale = new Vector2(scaleX, scaleY);
             this.damage = damage;
-        }
-        public void LoadContent()
-        {
-            var spriteSheet = Game.Content.Load<SpriteSheet>(spriteName, new JsonContentLoader());
-            sprite = new AnimatedSprite(spriteSheet);
+            scale = new Vector2(scaleX, scaleY);
+
+            sprite = sprites[spriteSheetName];
             sprite.Origin = new Vector2(24, 32); // hardcoded, should be calculated but I'm too lazy
             sprite.Depth = 0.25f;
+            sprite.Color = Color.White;
+            sprite.Effect = SpriteEffects.None;
 
-            lastSpriteEffect = SpriteEffects.None;
-            lastAnimation = AnimationState.idle_Down;
-            sprite.Play(lastAnimation.ToString());
-            healthBar = new FillableBar()
-            {
-                MaxValue = (int)health,
-                CurrentValue = (int)health,
-                BarHeight = 4,
-                BarWidth = 40,
-                Game = Game,
-                Position = position
-            };
-            healthBar.CreateTexture();
-            hitSound = Game.Content.Load<SoundEffect>("Sounds/hit");
+            healthBar.MaxValue = (int)health;
+            healthBar.CurrentValue = (int)health;
+            healthBar.Position = position;
+
+            Dormant = false;
         }
 
         public void Update(GameTime gameTime, Player _player)
@@ -125,8 +126,10 @@ namespace LoneWandererGame.Enemy
             healthBar.Position = new Vector2(position.X, position.Y - sprite.Origin.Y);
 
             //Animation
-            animation(gameTime, direction, distanceToPlayer);
+            Animate(direction);
 
+            if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
+                sprite.Update(gameTime.GetElapsedSeconds());
 
             if (attackCooldown <= 0.0f)
             {
@@ -136,7 +139,7 @@ namespace LoneWandererGame.Enemy
                 if (playerbox.Intersects(enemyBox))
                 {
                     // TODO take damage on player here
-                    _player.Damage(this.damage);
+                    _player.Damage(damage);
                     attackCooldown = 1.0f;
                 }
                 
@@ -145,28 +148,27 @@ namespace LoneWandererGame.Enemy
         }
         public void Draw(GameTime gameTime)
         {
-            //RectangleF playerRect = CollisionRectangle;
-            //Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)playerRect.Width, (int)playerRect.Height);
-            //Color[] data = new Color[(int)playerRect.Width * (int)playerRect.Height];
-            //for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
-            //    tempTexture.SetData(data);
-            //Game.SpriteBatch.Draw(tempTexture, new Vector2(playerRect.X, playerRect.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
+            // RectangleF playerRect = CollisionRectangle;
+            // Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)playerRect.Width, (int)playerRect.Height);
+            // Color[] data = new Color[(int)playerRect.Width * (int)playerRect.Height];
+            // for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+            //     tempTexture.SetData(data);
+            // Game.SpriteBatch.Draw(tempTexture, new Vector2(playerRect.X, playerRect.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
             Game.SpriteBatch.Draw(sprite, position, rotation, scale);
             healthBar.Draw();
         }
-        public bool TakeDamage(float damage)
+        public void TakeDamage(float damage)
         {
             health -= damage;
-            return health > 0;
         }
         public bool IsDead()
         {   
             return health <= 0;
         }
         public Vector2 getPos() { return position; }
-        private void animation(GameTime gameTime, Vector2 direction, Vector2 distanceToPlayer)
+        private void Animate(Vector2 direction)
         {
-            AnimationState animation = AnimationState.idle_Up; // idk
+            AnimationState animation = lastAnimation;
             switch (lastAnimation)
             {
                 case AnimationState.walk_Up:
@@ -181,25 +183,21 @@ namespace LoneWandererGame.Enemy
                 case AnimationState.walk_Right:
                     animation = AnimationState.idle_Right;
                     break;
-
             }
-            SpriteEffects spriteEffect = lastSpriteEffect;
-            Color colorTint = Color.White;
-            if (direction.X >= 0.5f) { animation = AnimationState.walk_Right; }
-            else if (direction.X <= -0.5f) { animation = AnimationState.walk_Left; }
-            else if (direction.Y <= -0.5f) { animation = AnimationState.walk_Up; }
-            else if (direction.Y >= 0.5f) { animation = AnimationState.walk_Down; }
 
-            // Sprite
-            sprite.Color = colorTint;
-            sprite.Effect = spriteEffect;
-            sprite.Play(animation.ToString());
-            if (distanceToPlayer.LengthSquared() > distanceToPlayerStop)
-                sprite.Update(gameTime.GetElapsedSeconds());
+            if (direction != Vector2.Zero)
+            {
+                if (direction.X >= 0.5f) animation = AnimationState.walk_Right;
+                else if (direction.X <= -0.5f) animation = AnimationState.walk_Left;
+                else if (direction.Y <= -0.5f) animation = AnimationState.walk_Up;
+                else if (direction.Y >= 0.5f) animation = AnimationState.walk_Down;
+            }
 
-            lastAnimation = animation;
-            lastSpriteEffect = spriteEffect;
+            if (animation != lastAnimation)
+            {
+                sprite.Play(animation.ToString());
+                lastAnimation = animation;
+            }
         }
-   
     }
 }

@@ -84,7 +84,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Tornado")
+                if (spell.Name == "Icesplosion")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;

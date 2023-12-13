@@ -6,6 +6,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
+using LoneWandererGame.Utilities;
 
 namespace LoneWandererGame.Powerups
 {
@@ -83,12 +84,7 @@ namespace LoneWandererGame.Powerups
 
         public void AddPowerup()
         {
-            Vector2 randomDirection = new Vector2(
-                ((float)rng.NextDouble() * 2.0f) - 1,
-                ((float)rng.NextDouble() * 2.0f) - 1
-            );
-            randomDirection.Normalize();
-            Vector2 position = Player.Position + randomDirection * 400;
+            Vector2 position = Player.Position + LWGMath.GetRandomDirection(rng) * 400;
 
             string color = colors[rng.Next(colors.Count)];
             Powerup powerup = new Powerup(Game, position, spriteSheets[color], color, 3f);

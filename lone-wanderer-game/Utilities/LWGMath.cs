@@ -28,5 +28,15 @@ namespace LoneWandererGame.Utilities
         {
             return new Vector2(closestNumber(n.X, m.X), closestNumber(n.Y, m.Y));
         }
+
+        public static Vector2 GetRandomDirection(Random rng)
+        {
+            Vector2 randomDirection = new Vector2(
+                ((float)rng.NextDouble() * 2.0f) - 1,
+                ((float)rng.NextDouble() * 2.0f) - 1
+            );
+            randomDirection.Normalize();
+            return randomDirection;
+        }
     }
 }
