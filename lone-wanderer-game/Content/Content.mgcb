@@ -20,6 +20,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/LightingShader.fx
 
+#begin Effects/LightShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/LightShader.fx
+
 #begin Fonts/bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

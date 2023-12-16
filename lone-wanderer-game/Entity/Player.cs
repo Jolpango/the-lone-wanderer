@@ -47,6 +47,8 @@ namespace LoneWandererGame.Entity
         public float Rotation = 0;
         public Vector2 Scale = new Vector2(1, 1);
 
+        private int lightIndex;
+
         public enum State {
             Alive,
             Dead
@@ -86,6 +88,8 @@ namespace LoneWandererGame.Entity
             Position = spawnPosition;
             Health = MAX_HEALTH;
             state = State.Alive;
+
+            lightIndex = game.LightHandler.AddLight(Position, 100, Color.White, 0.3f);
         }
         public RectangleF getSpriteRectangle()
         {
@@ -204,7 +208,7 @@ namespace LoneWandererGame.Entity
                     float accel = acceleration;
                     if (godMode)
                     {
-                        accel *= 5f;
+                        accel *= 3f;
                     }
                     velocity += direction * accel;
                 }
@@ -247,6 +251,7 @@ namespace LoneWandererGame.Entity
 
             lastAnimation = animation;
             lastSpriteEffect = spriteEffect;
+            game.LightHandler.updatePosition(lightIndex, Position);
         }
 
         public void Draw()

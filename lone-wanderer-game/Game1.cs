@@ -2,7 +2,6 @@
 using LoneWandererGame.Spells;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
@@ -16,7 +15,10 @@ namespace LoneWandererGame
         private readonly KeyboardListener _keyboardListener;
         private readonly MouseListener _mouseListener;
 
+        public Effect SpriteEffect { get; private set; }
+        public Effect LightEffect { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
+        public LightHandler LightHandler { get; private set; }
 
         public SpriteFont RegularFont { get; private set; }
         public SpriteFont BoldFont { get; private set; }
@@ -38,7 +40,11 @@ namespace LoneWandererGame
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            //graphics.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
             graphics.ApplyChanges();
+
+            LightHandler = new LightHandler(this);
 
             _screenManager = new ScreenManager();
             _keyboardListener = new KeyboardListener();
@@ -49,6 +55,9 @@ namespace LoneWandererGame
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
             CustomCursor = new CustomCursor(this);
+
+            SpriteEffect = Content.Load<Effect>("Effects/LightingShader");
+            LightEffect = Content.Load<Effect>("Effects/LightShader");
         }
 
         public void LoadTitleScreen()
@@ -74,7 +83,7 @@ namespace LoneWandererGame
         protected override void Initialize()
         {
             base.Initialize();
-            LoadMenuScreen();// LoadTitleScreen();
+            LoadPlayScreen();// LoadTitleScreen();
         }
 
         protected override void LoadContent()

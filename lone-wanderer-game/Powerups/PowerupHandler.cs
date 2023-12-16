@@ -7,6 +7,7 @@ using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using LoneWandererGame.Utilities;
+using System.Diagnostics;
 
 namespace LoneWandererGame.Powerups
 {
@@ -18,7 +19,8 @@ namespace LoneWandererGame.Powerups
         private Random rng;
         private float spawnTimer = 0f;
         private float spawnTime = 4f;
-        private List<string> colors;
+        private List<string> colorNames;
+        private List<Color> colors;
         private Dictionary<string, SpriteSheet> spriteSheets;
         public PowerupHandler(Game1 game, Player player)
         {
@@ -27,7 +29,7 @@ namespace LoneWandererGame.Powerups
             Game = game;
             Player = player;
             rng = new Random();
-            colors = new List<string>()
+            colorNames = new List<string>()
             {
                 "blue",
                 "green",
@@ -37,12 +39,22 @@ namespace LoneWandererGame.Powerups
                 "yellow",
             };
 
+            colors = new List<Color>()
+            {
+                Color.Blue,
+                Color.Green,
+                Color.Gray,
+                Color.Orange,
+                new Color(255, 55, 55), //Color.Pink,
+                Color.Yellow,
+            };
+
             spawnTimer = spawnTime;
         }
 
         public void LoadContent()
         {
-            foreach (string color in colors)
+            foreach (string color in colorNames)
             {
                 string path = $"Sprites/PowerUps/crystal-small-{color}.sf";
                 spriteSheets.Add(color, Game.Content.Load<SpriteSheet>(path, new JsonContentLoader()));
@@ -62,7 +74,9 @@ namespace LoneWandererGame.Powerups
                 }
             }
             foreach(Powerup powerup in powerupsToRemove)
+            {
                 powerups.Remove(powerup);
+            }
 
             if (spawnTimer <= 0.0f)
             {
@@ -86,8 +100,16 @@ namespace LoneWandererGame.Powerups
         {
             Vector2 position = Player.Position + LWGMath.GetRandomDirection(rng) * 400;
 
-            string color = colors[rng.Next(colors.Count)];
-            Powerup powerup = new Powerup(Game, position, spriteSheets[color], color, 3f);
+            int colorIndex = rng.Next(colors.Count);
+            string colorName = colorNames[colorIndex];
+
+            Color color = colors[colorIndex];
+            int lightIndex = -1;
+            if (Game.LightHandler.hasEmptyLightSlots())
+            {
+                lightIndex = Game.LightHandler.AddLight(position, 50, color, 0.6f);
+            }
+            Powerup powerup = new Powerup(Game, position, spriteSheets[colorName], colorName, 3f, lightIndex);
             powerups.Add(powerup);
         }
 
@@ -97,6 +119,10 @@ namespace LoneWandererGame.Powerups
             {
                 if (!powerup.Active && Player.getSpriteRectangle().Intersects(powerup.CollisionRectangle))
                 {
+                    if (powerup.LightIndex != -1)
+                    {
+                        Game.LightHandler.RemoveLight(powerup.LightIndex);
+                    }
                     powerup.Active = true;
                     AffectPlayer(powerup);
                 }

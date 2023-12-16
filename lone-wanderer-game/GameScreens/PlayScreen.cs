@@ -52,9 +52,6 @@ namespace LoneWandererGame.GameScreens
         List<SpellDefinition> randomSpells;
         List<SpellSelection> spellSelections;
 
-        // Shader
-        Effect _effect;
-
         public PlayScreen(Game1 game) : base(game)
         {
             tileEngine = new TileEngine(Game);
@@ -71,7 +68,6 @@ namespace LoneWandererGame.GameScreens
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
             State = PlayState.Playing;
-            _effect = Content.Load<Effect>("Effects/LightingShader");
         }
         public override void LoadContent()
         {
@@ -118,7 +114,8 @@ namespace LoneWandererGame.GameScreens
             PlayerScore.OnGainXp = GainXpFloatingText;
             PlayerScore.OnLevelUp = OnLevelUp;
             backgroundMusic = Game.Content.Load<Song>("Sounds/stage1");
-            //MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.Volume = 0.01f;
+            MediaPlayer.Play(backgroundMusic);
         }
 
         public override void UnloadContent()
@@ -190,7 +187,10 @@ namespace LoneWandererGame.GameScreens
             xpBar.CurrentValue = PlayerScore.XP;
             xpBar.MaxValue = PlayerScore.RequiredXP;
             if (_player.Health <= 0)
+            {
+                Game.LightHandler.clearLights();
                 State = PlayState.GameOver;
+            }
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -312,10 +312,17 @@ namespace LoneWandererGame.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
+
+            var transformMatrix = _camera.GetViewMatrix();
+            Game.SpriteBatch.Begin(effect: Game.SpriteEffect, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
             DrawWorld(gameTime);
             Game.SpriteBatch.End();
 
-            // UI
+            // Lights
+            Game.SpriteBatch.Begin(effect: Game.LightEffect, sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, transformMatrix: transformMatrix);
+            DrawLights();
+            Game.SpriteBatch.End();
+
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
             DrawUI(gameTime);
 
@@ -325,10 +332,6 @@ namespace LoneWandererGame.GameScreens
 
         private void DrawWorld(GameTime gameTime)
         {
-            // World
-            var transformMatrix = _camera.GetViewMatrix();
-            Game.SpriteBatch.Begin(effect: _effect, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
-
             _player.Draw();
             tileEngine.Draw(_camera.BoundingRectangle);
             powerupHandler.Draw();
@@ -338,6 +341,20 @@ namespace LoneWandererGame.GameScreens
                 spell.Draw(Game.SpriteBatch, Game);
             }
             FloatingTextHandler.Draw(Game.SpriteBatch);
+        }
+
+        private void DrawLights()
+        {
+            List<Light> lights = Game.LightHandler.getLights();
+            for (int i = 0; i < lights.Count; i++)
+            {
+                int lightSize = lights[i].size;
+                Vector2 lightOrigin = new Vector2((float)lights[i].size / 2f, (float)lights[i].size / 2f);
+                Vector2 lightPosition = lights[i].position - lightOrigin;
+                Color lightColor = new Color(lights[i].color, lights[i].intensity);
+
+                Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle((int)lightPosition.X, (int)lightPosition.Y, lightSize, lightSize), lightColor);
+            }
         }
 
         private void DrawUI(GameTime gameTime)

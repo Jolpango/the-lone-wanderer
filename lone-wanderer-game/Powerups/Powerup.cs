@@ -16,10 +16,11 @@ namespace LoneWandererGame.Powerups
         public float ActiveTimer { get; private set; }
         public bool Active { get; set; }
         public int EffectAmount { get; set; }
+        public int LightIndex { get; set; }
 
         public Powerup() {}
 
-        public Powerup(Game1 game, Vector2 position, SpriteSheet spriteSheet, string color, float activeTime)
+        public Powerup(Game1 game, Vector2 position, SpriteSheet spriteSheet, string color, float activeTime, int lightIndex = -1)
         {
             this.game = game;
             Position = position;
@@ -32,6 +33,7 @@ namespace LoneWandererGame.Powerups
             ActiveTimer = activeTime;
             Active = false;
             EffectAmount = 0;
+            LightIndex = lightIndex;
         }
 
         public RectangleF CollisionRectangle
