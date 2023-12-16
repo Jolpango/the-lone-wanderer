@@ -53,7 +53,9 @@ namespace LoneWandererGame.Entity
         };
         private State state;
         private float damageTimer = 0f;
+        private float damagedEffectTimer = 0f;
         private const float INVINCIBILITY_TIME = 0.3f;
+        private const float DAMAGED_EFFECT_TIME = 0.3f;
         public int Health { get; private set; }
         public const int MAX_HEALTH = 100;
 
@@ -61,7 +63,7 @@ namespace LoneWandererGame.Entity
         {
             if (!godMode && state == State.Alive && damageTimer == 0f)
             {
-                //damageTimer = INVINCIBILITY_TIME;
+                damagedEffectTimer = DAMAGED_EFFECT_TIME;
                 Health -= amount;
                 colorTint = Color.Red;
 
@@ -151,6 +153,15 @@ namespace LoneWandererGame.Entity
                     if (damageTimer < 0f)
                     {
                         damageTimer = 0;
+                        colorTint = Color.White;
+                    }
+                }
+                if (damagedEffectTimer > 0f)
+                {
+                    damagedEffectTimer -= dt;
+                    if (damagedEffectTimer < 0f)
+                    {
+                        damagedEffectTimer = 0f;
                         colorTint = Color.White;
                     }
                 }
