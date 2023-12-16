@@ -61,7 +61,7 @@ namespace LoneWandererGame.Entity
         {
             if (!godMode && state == State.Alive && damageTimer == 0f)
             {
-                damageTimer = INVINCIBILITY_TIME;
+                //damageTimer = INVINCIBILITY_TIME;
                 Health -= amount;
                 colorTint = Color.Red;
 
