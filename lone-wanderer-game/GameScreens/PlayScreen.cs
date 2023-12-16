@@ -89,7 +89,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "s")
+                if (spell.Name == "Icesplosion")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
@@ -238,7 +238,7 @@ namespace LoneWandererGame.GameScreens
                 SpellDefinition existingSpell = SpellBook.Spells.Where(s => s.Name == spell.Name).FirstOrDefault();
                 if(existingSpell != null)
                 {
-                    float splitter = 300;
+                    float splitter = 350;
                     Vector2 middle = Game.WindowDimensions / 2;
                     Vector2 startOffset = new Vector2(splitter - (splitter / 4), 256);
                     Vector2 offset = new Vector2(i * splitter, 0);
@@ -253,7 +253,7 @@ namespace LoneWandererGame.GameScreens
                 }
                 else
                 {
-                    float splitter = 300;
+                    float splitter = 350;
                     Vector2 middle = Game.WindowDimensions / 2;
                     Vector2 startOffset = new Vector2(splitter - (splitter / 4), 256);
                     Vector2 offset = new Vector2(i * splitter, 0);
@@ -280,10 +280,12 @@ namespace LoneWandererGame.GameScreens
                     Game.CustomCursor.CursorState = CursorState.select;
                     hasCollide = true;
                     spell.Color = Color.Gold;
+                    spell.ColorBox = Color.Gray;
                 }
                 else
                 {
                     spell.Color = Color.White;
+                    spell.ColorBox = Color.White;
                 }
             }
             if (!hasCollide)
@@ -301,6 +303,7 @@ namespace LoneWandererGame.GameScreens
                         else
                             SpellBook.AddSpell(spell.SpellDefinition);
                         State = PlayState.Playing;
+                        Game.CustomCursor.CursorState = CursorState.pointer;
                     }
                 }
             }
