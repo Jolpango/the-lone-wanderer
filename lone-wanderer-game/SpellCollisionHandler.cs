@@ -26,6 +26,8 @@ namespace LoneWandererGame
         }
         public void Update()
         {
+            int soundTriggerCount = 0;
+            const int MAX_SOUND_TRIGGER_COUNT = 200;
             foreach (Spell spell in spells)
             {
                 foreach(BaseEnemy enemy in enemyHandler.GetEnemies())
@@ -35,7 +37,11 @@ namespace LoneWandererGame
                     if (!spell.HitEnemies.Contains(enemy) && spell.CollisionRectangle.Intersects(enemy.CollisionRectangle))
                     {
                         enemy.TakeDamage(spell.Damage);
-                        hitSound.Play(0.05f, 1.0f, 1.0f);
+                        if (soundTriggerCount < MAX_SOUND_TRIGGER_COUNT)
+                        {
+                            hitSound.Play(0.05f, 1.0f, 1.0f);
+                            soundTriggerCount++;
+                        }
                         floatingTextHandler.AddText(spell.Damage.ToString(), new Vector2(enemy.CollisionRectangle.X, enemy.CollisionRectangle.Y), Color.Red);
                         if (spell.GetType() == typeof(ProjectileSpell))
                             spell.Timer = -1;
