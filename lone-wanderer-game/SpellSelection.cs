@@ -12,13 +12,16 @@ namespace LoneWandererGame
         public Vector2 Position { get; set; }
         private Texture2D texture;
         private Texture2D selectionBox;
+        private Texture2D selectionBox2;
         public Color Color = Color.White;
+        public Color ColorBox = Color.White;
         public bool HasSpell = false;
         public Rectangle Rectangle
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, texture.Width, texture.Height);
+                //return new Rectangle((int)Position.X, (int)Position.Y, selectionBox.Width, selectionBox.Height);
+                return new Rectangle((int)Position.X - selectionBox.Width / 4, (int)Position.Y - 50, selectionBox.Width, selectionBox.Height);
             }
         }
         public SpellSelection() { }
@@ -32,7 +35,9 @@ namespace LoneWandererGame
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             Vector2 boxPos = new Vector2(Position.X - selectionBox.Width / 4, Position.Y - 50);
-            spriteBatch.Draw(selectionBox, boxPos, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.8f);
+           
+            //spriteBatch.Draw(selectionBox, boxPos, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.8f);
+            spriteBatch.Draw(selectionBox, boxPos, null, ColorBox, 0, Vector2.Zero, 1, SpriteEffects.None, 0.8f);
             spriteBatch.Draw(texture, Position, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
             drawStrings(spriteBatch, font);
         }
