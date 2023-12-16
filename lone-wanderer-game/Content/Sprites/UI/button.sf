@@ -1,0 +1,24 @@
+{
+  "textureAtlas": {
+    "texture": "button.png",
+    "regionWidth": 291,
+    "regionHeight": 64
+  },
+  "cycles": {
+    "clicked": {
+      "frames": [2,1],
+      "isLooping": false,
+      "frameDuration": 0.05
+    },
+    "released": {
+      "frames": [0],
+      "isLooping": true,
+      "frameDuration": 0.2
+    },
+    "pressed": {
+      "frames": [2],
+      "isLooping": true,
+      "frameDuration": 0.2
+    }
+  }
+}

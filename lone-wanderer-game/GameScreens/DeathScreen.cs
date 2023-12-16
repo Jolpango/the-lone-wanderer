@@ -20,7 +20,7 @@ namespace LoneWandererGame.GameScreens
             var keyboardState = KeyboardExtended.GetState();
             if (keyboardState.WasKeyJustDown(Microsoft.Xna.Framework.Input.Keys.Enter))
             {
-                Game.LoadTitleScreen();
+                Game.LoadMenuScreen();
             }
         }
 

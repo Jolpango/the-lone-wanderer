@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Content;
+using MonoGame.Extended.Input;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 
@@ -15,6 +16,7 @@ namespace LoneWandererGame
     {
         public Game1 Game { get; set; }
         private CursorState cursorState;
+        public MouseStateExtended MouseState;
         public Vector2 Position { get; set; }
         public CursorState CursorState
         {
@@ -53,13 +55,14 @@ namespace LoneWandererGame
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Depth = 0.99f;
             sprite.Play(cursorState.ToString());
+            sprite.Origin = new Vector2(8, 0);
         }
 
         public void Update(GameTime gameTime)
         {
             sprite.Update(gameTime);
-            MouseState mouseState = Mouse.GetState();
-            Position = new Vector2(mouseState.X, mouseState.Y);
+            MouseState = MouseExtended.GetState();
+            Position = new Vector2(MouseState.X, MouseState.Y);
         }
 
         public void Draw()

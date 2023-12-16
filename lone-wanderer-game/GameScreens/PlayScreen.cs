@@ -19,6 +19,13 @@ using LoneWandererGame.Powerups;
 
 namespace LoneWandererGame.GameScreens
 {
+    public enum PlayState
+    {
+        Playing,
+        Paused,
+        LevelUp,
+        GameOver
+    }
     public class PlayScreen : GameScreen
     {
         private new Game1 Game => (Game1)base.Game;
@@ -29,6 +36,7 @@ namespace LoneWandererGame.GameScreens
         private PowerupHandler powerupHandler;
         private EnemyHandler enemyHandler;
         public SpellBook SpellBook;
+        public PlayState State { get; set; }
         public List<Spell> ActiveSpells;
         public List<SpellDefinition> SpellDefinitions { get; private set; }
         public SpellCollisionHandler SpellCollisionHandler { get; private set; }
@@ -36,7 +44,6 @@ namespace LoneWandererGame.GameScreens
 
         private FillableBar playerHealthBar;
         private FillableBar xpBar;
-        private bool levelUpInProgres;
 
         private Song backgroundMusic;
         private int spellChoices = 2;
@@ -61,16 +68,14 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
-            levelUpInProgres = false;
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
-
+            State = PlayState.Playing;
             _effect = Content.Load<Effect>("Effects/LightingShader");
         }
         public override void LoadContent()
         {
             base.LoadContent();
-            Game.KeyboardListener.KeyPressed += menuactions;
             Vector2 windowDimensions = Game.WindowDimensions;
             _player.LoadContent();
 
@@ -84,7 +89,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Icesplosion")
+                if (spell.Name == "s")
                     SpellBook.AddSpell(spell);
             }
             int padding = 0;
@@ -116,51 +121,76 @@ namespace LoneWandererGame.GameScreens
             //MediaPlayer.Play(backgroundMusic);
         }
 
-        private void menuactions(object sender, KeyboardEventArgs e)
-        {
-            if (e.Key == Keys.Enter)
-            {
-                Game.LoadDeathScreen();
-            }
-        }
-
         public override void UnloadContent()
         {
             base.UnloadContent();
-            Game.KeyboardListener.KeyPressed -= menuactions;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (levelUpInProgres)
+            if (State == PlayState.Playing)
+            {
+                UpdatePlaying(gameTime);
+            }
+            else if (State == PlayState.LevelUp)
             {
                 chooseSpellOnLevelUp();
             }
-            else
+            else if (State == PlayState.Paused)
             {
-                //else
-                var keyboardState = KeyboardExtended.GetState();
-
-                _player.Update(gameTime);
-
-                var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                _camera.LookAt(_player.Position);
-                enemyHandler.Update(gameTime, _player);
-
-                UpdateSpells(gameTime);
-
-                FloatingTextHandler.Update(gameTime);
-
-                playerHealthBar.CurrentValue = _player.Health;
-                xpBar.CurrentValue = PlayerScore.XP;
-                xpBar.MaxValue = PlayerScore.RequiredXP;
+                UpdatePaused(gameTime);
             }
+            else if (State == PlayState.GameOver)
+            {
+                UpdateGameOver(gameTime);
+            }
+        }
+
+        private void UpdatePaused(GameTime gameTime)
+        {
+            KeyboardStateExtended keyboardState = KeyboardExtended.GetState();
+            if (keyboardState.WasKeyJustDown(Keys.P))
+            {
+                State = PlayState.Playing;
+            }
+        }
+
+        private void UpdateGameOver(GameTime gameTime)
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Enter))
+            {
+                Game.LoadDeathScreen(SpellBook);
+            }
+        }
+
+        private void UpdatePlaying(GameTime gameTime)
+        {
+            KeyboardStateExtended keyboardState = KeyboardExtended.GetState();
+            if (keyboardState.WasKeyJustDown(Keys.P))
+            {
+                State = PlayState.Paused;
+            }
+            _player.Update(gameTime);
+
+
+            _camera.LookAt(_player.Position);
+            enemyHandler.Update(gameTime, _player);
+
+            UpdateSpells(gameTime);
+
+            FloatingTextHandler.Update(gameTime);
+
+            playerHealthBar.CurrentValue = _player.Health;
+            xpBar.CurrentValue = PlayerScore.XP;
+            xpBar.MaxValue = PlayerScore.RequiredXP;
             powerupHandler.Update(gameTime);
 
             playerHealthBar.CurrentValue = _player.Health;
             xpBar.CurrentValue = PlayerScore.XP;
             xpBar.MaxValue = PlayerScore.RequiredXP;
+            if (_player.Health <= 0)
+                State = PlayState.GameOver;
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -194,13 +224,13 @@ namespace LoneWandererGame.GameScreens
         public void OnLevelUp()
         {
             FloatingTextHandler.AddText("Level up", _player.Position, Color.Green);
-            levelUpInProgres = true;
             randomSpells = new List<SpellDefinition>();
             randomSpells.AddRange(SpellDefinitions.Where(x => !SpellBook.IsInSpellBookMax(x.Name)).OrderBy(x => rnd.Next()).Take(spellChoices));
             if (randomSpells.Count <= 0)
             {
-                levelUpInProgres = false;
+                return;
             }
+            State = PlayState.LevelUp;
             int i = 0;
             spellSelections = new List<SpellSelection>();
             foreach (var spell in randomSpells)
@@ -241,7 +271,7 @@ namespace LoneWandererGame.GameScreens
 
         private void chooseSpellOnLevelUp()
         {
-            MouseStateExtended mouseState = MouseExtended.GetState();
+            MouseStateExtended mouseState = Game.CustomCursor.MouseState;
             bool hasCollide = false;
             foreach(var spell in spellSelections)
             {
@@ -270,7 +300,7 @@ namespace LoneWandererGame.GameScreens
                             SpellBook.LevelUpSpell(spell.SpellDefinition.Name);
                         else
                             SpellBook.AddSpell(spell.SpellDefinition);
-                        levelUpInProgres = false;
+                        State = PlayState.Playing;
                     }
                 }
             }
@@ -279,7 +309,19 @@ namespace LoneWandererGame.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
+            DrawWorld(gameTime);
+            Game.SpriteBatch.End();
 
+            // UI
+            Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
+            DrawUI(gameTime);
+
+            Game.CustomCursor.Draw();
+            Game.SpriteBatch.End();
+        }
+
+        private void DrawWorld(GameTime gameTime)
+        {
             // World
             var transformMatrix = _camera.GetViewMatrix();
             Game.SpriteBatch.Begin(effect: _effect, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
@@ -288,17 +330,15 @@ namespace LoneWandererGame.GameScreens
             tileEngine.Draw(_camera.BoundingRectangle);
             powerupHandler.Draw();
             enemyHandler.Draw(gameTime);
-            foreach(var spell in ActiveSpells)
+            foreach (var spell in ActiveSpells)
             {
                 spell.Draw(Game.SpriteBatch, Game);
             }
             FloatingTextHandler.Draw(Game.SpriteBatch);
+        }
 
-            Game.SpriteBatch.End();
-
-            // UI
-            Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
-
+        private void DrawUI(GameTime gameTime)
+        {
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Level: {PlayerScore.Level}", new Vector2(10f, 40f), Color.White);
             Game.SpriteBatch.DrawString(Game.RegularFont, $"Score: {PlayerScore.Score}", new Vector2(10f, 80f), Color.White);
             float screenWidth = Game.WindowDimensions.X;
@@ -316,21 +356,48 @@ namespace LoneWandererGame.GameScreens
                 int frameRate = (int)((1 / gameTime.ElapsedGameTime.TotalSeconds) + 0.01);
                 string fpsString = "FPS: " + frameRate.ToString();
                 Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
-                
+
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);
             }
 
             //Level up
-            if (levelUpInProgres)
+            if (State == PlayState.LevelUp)
             {
-                foreach(var spellSelection in spellSelections)
+                foreach (var spellSelection in spellSelections)
                 {
                     spellSelection.Draw(Game.SpriteBatch, Game.SilkscreenRegularFont);
                 }
             }
+            else if (State == PlayState.GameOver)
+            {
+                string text = "Game Over";
+                Vector2 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2, Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                text = "Press [Enter] to continue";
+                origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                
+                Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
+                Color[] data = new Color[(int)Game.WindowDimensions.X * (int)Game.WindowDimensions.Y];
+                for (int i = 0; i < data.Length; ++i) data[i] = Color.Black;
+                    tempTexture.SetData(data);
+                Game.SpriteBatch.Draw(tempTexture, Vector2.Zero, null, Color.White * 0.5f, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.98f);
+            }
+            else if (State == PlayState.Paused)
+            {
+                string text = "Paused";
+                Vector2 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2, Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                text = "Press [P] to continue";
+                origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
 
-            Game.CustomCursor.Draw();
-            Game.SpriteBatch.End();
+                Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
+                Color[] data = new Color[(int)Game.WindowDimensions.X * (int)Game.WindowDimensions.Y];
+                for (int i = 0; i < data.Length; ++i) data[i] = Color.Black;
+                tempTexture.SetData(data);
+                Game.SpriteBatch.Draw(tempTexture, Vector2.Zero, null, Color.White * 0.5f, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.98f);
+            }
         }
     }
 }

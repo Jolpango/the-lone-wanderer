@@ -1,4 +1,5 @@
 ﻿using LoneWandererGame.GameScreens;
+using LoneWandererGame.Spells;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -64,7 +65,7 @@ namespace LoneWandererGame
         {
             _screenManager.LoadScreen(new MenuScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
         }
-        public void LoadDeathScreen()
+        public void LoadDeathScreen(SpellBook spellBook)
         {
             _screenManager.LoadScreen(new DeathScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
         }
@@ -73,7 +74,7 @@ namespace LoneWandererGame
         protected override void Initialize()
         {
             base.Initialize();
-            LoadPlayScreen();// LoadTitleScreen();
+            LoadMenuScreen();// LoadTitleScreen();
         }
 
         protected override void LoadContent()
