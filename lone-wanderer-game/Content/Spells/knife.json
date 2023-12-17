@@ -6,6 +6,12 @@
   "sound": "swish_2",
   "icon": "knife",
   "timer": 3,
+  "light": {
+    "r": 255,
+    "g": 255,
+    "b": 255,
+    "size": 100
+  },
   "levelDefinitions": [
     {
       "damage": 20,

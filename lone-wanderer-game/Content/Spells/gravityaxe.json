@@ -6,6 +6,12 @@
   "icon": "whip",
   "sound": "swish_2",
   "timer": 5,
+  "light": {
+    "r": 255,
+    "g": 255,
+    "b": 255,
+    "size": 100
+  },
   "levelDefinitions": [
     {
       "damage": 10,

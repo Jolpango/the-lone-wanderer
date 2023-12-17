@@ -29,6 +29,8 @@ namespace LoneWandererGame
         public MouseListener MouseListener { get { return _mouseListener; } }
         public KeyboardListener KeyboardListener { get { return _keyboardListener; } }
 
+        public static Game1 Game { get; set; }
+
         public CustomCursor CustomCursor { get; private set; }
 
         public Vector2 WindowDimensions
@@ -66,6 +68,7 @@ namespace LoneWandererGame
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
             tempTexture.SetData(data);
             ParticleEmitter.Shared = new ParticleEmitter(tempTexture);
+            Game = this;
         }
 
         public void LoadTitleScreen()

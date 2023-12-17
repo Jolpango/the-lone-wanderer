@@ -153,6 +153,8 @@ namespace LoneWandererGame.Spells
         {
             GravitySpell spell = new GravitySpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player, spellDefinition.Speed, forceMulti);
             spell.Sound = spellDefinition.Sound;
+            spell.LightColor = spellDefinition.LightColor;
+            spell.LightSize = spellDefinition.LightSize;
             spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
@@ -190,7 +192,8 @@ namespace LoneWandererGame.Spells
             spell.Sound = spellDefinition.Sound;
             spell.LightColor = spellDefinition.LightColor;
             spell.LightSize = spellDefinition.LightSize;
-            spell.ParticleEmitter = spellDefinition.ParticleEmitter;
+            if (spellDefinition.ParticleEmitter is not null)
+                spell.ParticleEmitter = CopyEmitter(spellDefinition.ParticleEmitter);
             spell.ParticleAmount = spellDefinition.ParticleAmount;
             spell.LoadContent(Game.Content);
             ActiveSpells.Add(spell);
@@ -205,6 +208,8 @@ namespace LoneWandererGame.Spells
                 spell.Timer = spellDefinition.TimeToLive;
                 spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
                 spell.Sound = spellDefinition.Sound;
+                spell.LightColor = spellDefinition.LightColor;
+                spell.LightSize = spellDefinition.LightSize;
                 spell.LoadContent(Game.Content);
                 ActiveSpells.Add(spell);
             }
@@ -232,6 +237,29 @@ namespace LoneWandererGame.Spells
                 if(spell.ParticleEmitter is not null)
                     spell.ParticleEmitter.Draw(Game.SpriteBatch);
             }
+        }
+
+        public ParticleEmitter CopyEmitter(ParticleEmitter emitter)
+        {
+            ParticleEmitter newEmitter = new ParticleEmitter(emitter.Texture)
+            {
+                Color = emitter.Color,
+                MaxAlpha = emitter.MaxAlpha,
+                MinAlpha = emitter.MinAlpha,
+                MinRadius = emitter.MinRadius,
+                MaxRadius = emitter.MaxRadius,
+                MinScale = emitter.MinScale,
+                MaxScale = emitter.MaxScale,
+                StartColor = emitter.StartColor,
+                EndColor = emitter.EndColor,
+                LayerDepth = emitter.LayerDepth,
+                TimeToLive = emitter.TimeToLive,
+                MinSpeed = emitter.MinSpeed,
+                MaxSpeed = emitter.MaxSpeed,
+                DirectionFreedom = emitter.DirectionFreedom,
+                Easing = emitter.Easing
+            };
+            return newEmitter;
         }
     }
 }

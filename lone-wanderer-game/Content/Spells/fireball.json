@@ -2,21 +2,21 @@
   "name": "Fireball",
   "type": "ProjectileSpell",
   "asset": "fireball",
-  "speed": 15,
+  "speed": 5,
   "sound": "foom_0",
   "icon": "fireball",
   "timer": 5,
   "particle": {
     "startcolor": {
       "r": 255,
-      "g": 171,
-      "b": 0,
+      "g": 200,
+      "b": 50,
       "a": 255
     },
     "endcolor": {
       "r": 200,
-      "g": 160,
-      "b": 100,
+      "g": 80,
+      "b": 80,
       "a": 255
     },
     "scale": {
@@ -28,26 +28,26 @@
       "max": 10
     },
     "speed": {
-      "min": 0.1,
-      "max": 0.2
+      "min": 1,
+      "max": 2
     },
     "alpha": {
-      "min": 0.0,
-      "max": 0.2
+      "min": 1,
+      "max": 0.0
     },
     "direction": {
-      "x": -1,
+      "x": 1,
       "y": 0,
-      "freedom":  360
+      "freedom":  30
     },
-    "timetolive": 0.2,
+    "timetolive": 0.5,
     "amount": 20
   },
   "light": {
     "r": 255,
-    "g": 255,
-    "b": 255,
-    "size": 5
+    "g": 160,
+    "b": 20,
+    "size": 100
   },
   "levelDefinitions": [
     {

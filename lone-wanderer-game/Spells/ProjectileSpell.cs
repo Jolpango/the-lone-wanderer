@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace LoneWandererGame.Spells
@@ -32,6 +33,19 @@ namespace LoneWandererGame.Spells
         {
             base.Update(gameTime);
             Position = Position + direction * speed;
+            if (ParticleEmitter is not null)
+            {
+                ParticleEmitter.Direction = direction;
+                ParticleEmitter.Emit(Position, ParticleAmount ?? 1);
+                ParticleEmitter.Update(gameTime);
+            }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Game1 game)
+        {
+            base.Draw(spriteBatch, game);
+            if (ParticleEmitter is not null)
+                ParticleEmitter.Draw(spriteBatch);
         }
     }
 }

@@ -91,7 +91,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells(Game);
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Fireball")
+                if (spell.Name == "Gravity Axe")
                     SpellBook.AddSpell(spell);
             }
 
@@ -214,7 +214,10 @@ namespace LoneWandererGame.GameScreens
             }
 
             foreach (var spell in spellsToRemove)
+            {
+                spell.UnloadContent();
                 ActiveSpells.Remove(spell);
+            }
 
             if (_player.Health != 0)
                 SpellBook.Update(gameTime);

@@ -54,6 +54,8 @@ namespace LoneWandererGame.Spells
                     spell.ParticleAmount = (int)o.Root["particle"]["amount"];
                     spell.ParticleEmitter.StartColor = new Color((int)o.Root["particle"]["startcolor"]["r"], (int)o.Root["particle"]["startcolor"]["g"], (int)o.Root["particle"]["startcolor"]["b"]);
                     spell.ParticleEmitter.EndColor = new Color((int)o.Root["particle"]["endcolor"]["r"], (int)o.Root["particle"]["endcolor"]["g"], (int)o.Root["particle"]["endcolor"]["b"]);
+                    spell.ParticleEmitter.StartColor = Color.Orange;
+                    spell.ParticleEmitter.EndColor = Color.Gray;
                     spell.ParticleEmitter.MinRadius = (int)o.Root["particle"]["radius"]["min"];
                     spell.ParticleEmitter.MaxRadius = (int)o.Root["particle"]["radius"]["max"];
                     spell.ParticleEmitter.MinSpeed = (float)o.Root["particle"]["speed"]["min"];
@@ -65,7 +67,8 @@ namespace LoneWandererGame.Spells
                     spell.ParticleEmitter.MaxAlpha = (float)o.Root["particle"]["alpha"]["max"];
                     spell.ParticleEmitter.Direction = new Vector2((float)o.Root["particle"]["direction"]["x"], (float)o.Root["particle"]["direction"]["y"]);
                     spell.ParticleEmitter.DirectionFreedom = (float)o.Root["particle"]["direction"]["freedom"];
-                    spell.ParticleEmitter.Easing = EasingFunction.EaseOutBack;
+                    spell.ParticleEmitter.LayerDepth = 0.25f;
+                    spell.ParticleEmitter.Easing = EasingFunction.EaseInOutQuad;
                 }
 
                 spells.Add(spell);
