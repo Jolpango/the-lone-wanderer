@@ -107,7 +107,7 @@ namespace LoneWandererGame.Powerups
             int lightIndex = -1;
             if (Game.LightHandler.hasEmptyLightSlots())
             {
-                lightIndex = Game.LightHandler.AddLight(position, 100, color, 0.6f);
+                lightIndex = Game.LightHandler.AddLight(position, new Vector2(100), color, 0.6f);
             }
             Powerup powerup = new Powerup(Game, position, spriteSheets[colorName], colorName, 3f, lightIndex);
             powerups.Add(powerup);

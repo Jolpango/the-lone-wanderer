@@ -19,7 +19,8 @@ namespace LoneWandererGame.Spells
         public ParticleEmitter ParticleEmitter { get; set; }
         public int ParticleAmount { get; set; }
         public Color? LightColor { get; set; }
-        public int? LightSize { get; set; }
+        public Vector2? LightSize { get; set; }
+        public float? LightIntensity { get; set; }
         public List<SpellLevelDefinition> LevelDefinitions { get; set; }
     }
 }

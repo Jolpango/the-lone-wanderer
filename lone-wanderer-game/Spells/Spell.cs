@@ -27,7 +27,8 @@ namespace LoneWandererGame.Spells
         public SoundEffect SoundEffect { get; set; }
         public int? ParticleAmount { get; set; }
         public Color? LightColor { get; set; }
-        public int? LightSize { get; set; }
+        public Vector2? LightSize { get; set; }
+        public float? LightIntensity { get; set; }
         public ParticleEmitter ParticleEmitter { get; set; }
         private int lightIndex = -1;
         public Spell(string name, string icon, string asset, Vector2 origin)
@@ -47,7 +48,7 @@ namespace LoneWandererGame.Spells
             SoundEffect = content.Load<SoundEffect>($"Sounds/{Sound}");
             if (LightSize is not null && LightColor is not null)
             {
-                lightIndex = Game1.Game.LightHandler.AddLight(CenterPosition, LightSize ?? 0, LightColor ?? Color.White, 0.5f);
+                lightIndex = Game1.Game.LightHandler.AddLight(CenterPosition, LightSize ?? Vector2.Zero, LightColor ?? Color.White, 0.5f);
             }
         }
         public RectangleF CollisionRectangle

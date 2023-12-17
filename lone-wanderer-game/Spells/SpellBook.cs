@@ -129,6 +129,9 @@ namespace LoneWandererGame.Spells
         {
             MeleeSpell meleeSpell = new MeleeSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, Player.Direction, Player);
             meleeSpell.Sound = spellDefinition.Sound;
+            meleeSpell.LightColor = spellDefinition.LightColor;
+            meleeSpell.LightSize = spellDefinition.LightSize;
+            meleeSpell.LightIntensity = spellDefinition.LightIntensity;
             meleeSpell.LoadContent(Game.Content);
             meleeSpell.Timer = spellDefinition.TimeToLive;
             meleeSpell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
@@ -155,6 +158,7 @@ namespace LoneWandererGame.Spells
             spell.Sound = spellDefinition.Sound;
             spell.LightColor = spellDefinition.LightColor;
             spell.LightSize = spellDefinition.LightSize;
+            spell.LightIntensity = spellDefinition.LightIntensity;
             spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
@@ -192,6 +196,7 @@ namespace LoneWandererGame.Spells
             spell.Sound = spellDefinition.Sound;
             spell.LightColor = spellDefinition.LightColor;
             spell.LightSize = spellDefinition.LightSize;
+            spell.LightIntensity = spellDefinition.LightIntensity;
             if (spellDefinition.ParticleEmitter is not null)
                 spell.ParticleEmitter = CopyEmitter(spellDefinition.ParticleEmitter);
             spell.ParticleAmount = spellDefinition.ParticleAmount;
@@ -210,6 +215,7 @@ namespace LoneWandererGame.Spells
                 spell.Sound = spellDefinition.Sound;
                 spell.LightColor = spellDefinition.LightColor;
                 spell.LightSize = spellDefinition.LightSize;
+                spell.LightIntensity = spellDefinition.LightIntensity;
                 spell.LoadContent(Game.Content);
                 ActiveSpells.Add(spell);
             }

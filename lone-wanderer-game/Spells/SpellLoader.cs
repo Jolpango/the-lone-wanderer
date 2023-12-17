@@ -40,8 +40,9 @@ namespace LoneWandererGame.Spells
 
                 if (o.Root["light"] is not null)
                 {
-                    spell.LightSize = (int)o.Root["light"]["size"];
+                    spell.LightSize = new Vector2((int)o.Root["light"]["size"]["x"], (int)o.Root["light"]["size"]["y"]);
                     spell.LightColor = new Color((int)o.Root["light"]["r"], (int)o.Root["light"]["g"], (int)o.Root["light"]["b"]);
+                    spell.LightIntensity = (float)o.Root["light"]["intensity"];
                 }
                 if (o.Root["particle"] is not null)
                 {

@@ -9,7 +9,7 @@ namespace LoneWandererGame
     public struct Light
     {
         public Vector2 position;
-        public int size;
+        public Vector2 size;
         public Color color;
         public float intensity; // 0 -> 1
         public bool used;
@@ -17,12 +17,12 @@ namespace LoneWandererGame
         public Light()
         {
             this.position = Vector2.Zero;
-            this.size = 0;
+            this.size = Vector2.Zero;
             this.color = Color.White;
             this.intensity = 1f;
             this.used = false;
         }
-        public Light(Vector2 position, int size, Color color, float intensity)
+        public Light(Vector2 position, Vector2 size, Color color, float intensity)
         {
             this.position = position;
             this.size = size;
@@ -60,7 +60,7 @@ namespace LoneWandererGame
             return freeList.Count != 0;
         }
 
-        public int AddLight(Vector2 position, int size, Color color, float intensity)
+        public int AddLight(Vector2 position, Vector2 size, Color color, float intensity)
         {
             // If you hit this, YOU GOT TO MANY LIGHTS!
             Debug.Assert(freeList.Count != 0);
@@ -82,7 +82,7 @@ namespace LoneWandererGame
             lights[index].position = position;
         }
 
-        public void updateSize(int index, int size)
+        public void updateSize(int index, Vector2 size)
         {
             Debug.Assert(lights[index].used); // Checking if light is actually used
             lights[index].size = size;

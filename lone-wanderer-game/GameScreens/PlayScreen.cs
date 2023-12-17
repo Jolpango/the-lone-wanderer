@@ -91,7 +91,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells(Game);
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Gravity Axe")
+                if (spell.Name == "Knife")
                     SpellBook.AddSpell(spell);
             }
 
@@ -204,7 +204,7 @@ namespace LoneWandererGame.GameScreens
 
         private void UpdateSpells(GameTime gameTime)
         {
-            SpellCollisionHandler.Update();
+            SpellCollisionHandler.Update(gameTime);
             List<Spell> spellsToRemove = new List<Spell>();
             foreach (var spell in ActiveSpells)
             {
@@ -375,6 +375,7 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.Draw(gameTime);
             ParticleEmitter.Shared.Draw(Game.SpriteBatch);
             SpellBook.Draw();
+            SpellCollisionHandler.Draw(Game.SpriteBatch);
             foreach (var spell in ActiveSpells)
             {
                 spell.Draw(Game.SpriteBatch, Game);
@@ -387,12 +388,12 @@ namespace LoneWandererGame.GameScreens
             List<Light> lights = Game.LightHandler.getLights();
             for (int i = 0; i < lights.Count; i++)
             {
-                int lightSize = lights[i].size;
-                Vector2 lightOrigin = new Vector2((float)lights[i].size / 2f, (float)lights[i].size / 2f);
+                Vector2 lightSize = lights[i].size;
+                Vector2 lightOrigin = new Vector2((float)lights[i].size.X / 2f, (float)lights[i].size.Y / 2f);
                 Vector2 lightPosition = lights[i].position - lightOrigin;
                 Color lightColor = new Color(lights[i].color, lights[i].intensity);
 
-                Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle((int)lightPosition.X, (int)lightPosition.Y, lightSize, lightSize), lightColor);
+                Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle((int)lightPosition.X, (int)lightPosition.Y, (int)lightSize.X, (int)lightSize.Y), lightColor);
             }
         }
 
