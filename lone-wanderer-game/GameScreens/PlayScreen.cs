@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
-using LoneWandererGame.Powerups
+using LoneWandererGame.Powerups;
 using MonoGame.Jolpango.Graphics;
 
 namespace LoneWandererGame.GameScreens
