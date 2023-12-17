@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
 using LoneWandererGame.Powerups;
+using MonoGame.Extended.Timers;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -47,6 +48,8 @@ namespace LoneWandererGame.GameScreens
 
         private Song backgroundMusic;
         private int spellChoices = 2;
+        private float uiScoreCooldown = 1.0f;
+        private int savedShowExp = 0;
 
         private Random rnd;
         List<SpellDefinition> randomSpells;
@@ -183,14 +186,17 @@ namespace LoneWandererGame.GameScreens
             xpBar.MaxValue = PlayerScore.RequiredXP;
             powerupHandler.Update(gameTime);
 
-            playerHealthBar.CurrentValue = _player.Health;
-            xpBar.CurrentValue = PlayerScore.XP;
-            xpBar.MaxValue = PlayerScore.RequiredXP;
+         //   playerHealthBar.CurrentValue = _player.Health;
+          //  xpBar.CurrentValue = PlayerScore.XP;
+          //  xpBar.MaxValue = PlayerScore.RequiredXP;
             if (_player.Health <= 0)
             {
                 Game.LightHandler.clearLights();
                 State = PlayState.GameOver;
             }
+
+            if (uiScoreCooldown>0f)
+                uiScoreCooldown -= gameTime.GetElapsedSeconds();           
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -218,7 +224,13 @@ namespace LoneWandererGame.GameScreens
 
         public void GainXpFloatingText(int xp)
         {
-            FloatingTextHandler.AddText(xp.ToString(), _player.Position, Color.White);
+            savedShowExp += xp; 
+            if (uiScoreCooldown <= 0f)
+            {
+                FloatingTextHandler.AddText(savedShowExp.ToString(), _player.Position, Color.White);
+                uiScoreCooldown = 1f;
+                savedShowExp = 0;
+            }
         }
 
         public void OnLevelUp()
