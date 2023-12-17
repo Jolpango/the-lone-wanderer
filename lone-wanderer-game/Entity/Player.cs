@@ -89,7 +89,7 @@ namespace LoneWandererGame.Entity
             Health = MAX_HEALTH;
             state = State.Alive;
 
-            lightIndex = game.LightHandler.AddLight(Position, 100, Color.White, 0.3f);
+            lightIndex = game.LightHandler.AddLight(Position, 300, Color.White, 0.3f);
         }
         public RectangleF getSpriteRectangle()
         {

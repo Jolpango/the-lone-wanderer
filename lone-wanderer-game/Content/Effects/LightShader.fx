@@ -28,7 +28,6 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float2 lightPosition = (input.TexCoord * 2.f) - 1.f;
     float lightDistance = length(lightPosition);
-    //float2 lightDirection = lightPosition / lightDistance;
     float intensity = 1.f - lightDistance;
     float lightRadius = 1.f;
 

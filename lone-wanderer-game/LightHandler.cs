@@ -20,7 +20,7 @@ namespace LoneWandererGame
             this.size = 0;
             this.color = Color.White;
             this.intensity = 1f;
-            used = false;
+            this.used = false;
         }
         public Light(Vector2 position, int size, Color color, float intensity)
         {

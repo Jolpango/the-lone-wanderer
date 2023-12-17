@@ -56,7 +56,7 @@ namespace LoneWandererGame
             IsMouseVisible = false;
             CustomCursor = new CustomCursor(this);
 
-            SpriteEffect = Content.Load<Effect>("Effects/LightingShader");
+            SpriteEffect = Content.Load<Effect>("Effects/SpriteShader");
             LightEffect = Content.Load<Effect>("Effects/LightShader");
         }
 

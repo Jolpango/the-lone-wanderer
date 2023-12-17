@@ -14,17 +14,17 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Effects/LightingShader.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/LightingShader.fx
-
 #begin Effects/LightShader.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/LightShader.fx
+
+#begin Effects/SpriteShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/SpriteShader.fx
 
 #begin Fonts/bold.spritefont
 /importer:FontDescriptionImporter

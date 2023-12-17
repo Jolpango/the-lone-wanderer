@@ -7,6 +7,8 @@
     #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
+float4 ambient_intensity;
+
 Texture2D SpriteTexture;
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -26,8 +28,9 @@ struct VertexShaderOutput
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    float intensity = 0.5f;
-    float4 color = tex2D(SpriteTextureSampler, input.TexCoord) * input.Color;
+    float intensity = ambient_intensity.a;
+    float4 ambient = float4(ambient_intensity.rgb, 1.f);
+    float4 color = tex2D(SpriteTextureSampler, input.TexCoord) * input.Color * ambient;
     return float4(color.rgb * intensity, color.a);
 }
 

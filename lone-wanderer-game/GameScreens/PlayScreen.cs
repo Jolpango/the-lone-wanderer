@@ -319,7 +319,8 @@ namespace LoneWandererGame.GameScreens
             Game.SpriteBatch.End();
 
             // Lights
-            Game.SpriteBatch.Begin(effect: Game.LightEffect, sortMode: SpriteSortMode.Immediate, blendState: BlendState.Additive, transformMatrix: transformMatrix);
+            Game.SpriteEffect.Parameters["ambient_intensity"].SetValue(new Vector4(1f, 1f, 1f, 0.3f));
+            Game.SpriteBatch.Begin(effect: Game.LightEffect, sortMode: SpriteSortMode.FrontToBack, blendState: BlendState.Additive, transformMatrix: transformMatrix);
             DrawLights();
             Game.SpriteBatch.End();
 
