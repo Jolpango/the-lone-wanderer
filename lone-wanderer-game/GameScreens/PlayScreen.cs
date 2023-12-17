@@ -54,9 +54,14 @@ namespace LoneWandererGame.GameScreens
         List<SpellDefinition> randomSpells;
         List<SpellSelection> spellSelections;
 
+        private RenderTarget2D lightRT;
+
         public PlayScreen(Game1 game) : base(game)
         {
-            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
+            Vector2 windowDimensions = Game.WindowDimensions;
+            lightRT = new RenderTarget2D(GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
+
+            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
             _camera = new OrthographicCamera(viewportAdapter);
             _camera.ZoomIn(0.5f);
 
@@ -74,12 +79,12 @@ namespace LoneWandererGame.GameScreens
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
             State = PlayState.Playing;
+
         }
         public override void LoadContent()
         {
             base.LoadContent();
             _player.LoadContent();
-
             enemyHandler.LoadContent();
             tileEngine.LoadContent();
             powerupHandler.LoadContent();
@@ -316,22 +321,45 @@ namespace LoneWandererGame.GameScreens
 
         public override void Draw(GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
-
             var transformMatrix = _camera.GetViewMatrix();
+
+            // Rendertarget set to Lighting rendertarget
+            Game.GraphicsDevice.SetRenderTarget(lightRT);
+            Game.GraphicsDevice.Clear(new Color(0, 0, 0, 255));
+
+            // Lights
+            Game.SpriteBatch.Begin(effect: Game.LightEffect, blendState: BlendState.Additive, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
+            DrawLights();
+            Game.SpriteBatch.End();
+
+            // Rendertarget set to Backbuffer
+            Game.GraphicsDevice.SetRenderTarget(null);
+            Game.GraphicsDevice.Clear(new Color(new Vector3(0.23f, 0.42f, 0.12f)));
+            
+            // World
+            Game.SpriteEffect.Parameters["ambient_intensity"].SetValue(new Vector4(1f, 1f, 1f, 1f));
             Game.SpriteBatch.Begin(effect: Game.SpriteEffect, sortMode: SpriteSortMode.FrontToBack, transformMatrix: transformMatrix);
             DrawWorld(gameTime);
             Game.SpriteBatch.End();
 
-            // Lights
-            Game.SpriteEffect.Parameters["ambient_intensity"].SetValue(new Vector4(1f, 1f, 1f, 0.3f));
-            Game.SpriteBatch.Begin(effect: Game.LightEffect, sortMode: SpriteSortMode.FrontToBack, blendState: BlendState.Additive, transformMatrix: transformMatrix);
-            DrawLights();
+            // Lighting pass
+            var blend = new BlendState
+            {
+                AlphaBlendFunction = BlendFunction.Add,
+                AlphaDestinationBlend = Blend.Zero,
+                AlphaSourceBlend = Blend.DestinationAlpha,
+
+                ColorBlendFunction = BlendFunction.Add,
+                ColorSourceBlend = Blend.DestinationColor,
+                ColorDestinationBlend = Blend.Zero
+            };
+            Game.SpriteBatch.Begin(blendState: blend);
+            Game.SpriteBatch.Draw(lightRT, Vector2.Zero, Color.White);
             Game.SpriteBatch.End();
 
+            // UI
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
             DrawUI(gameTime);
-
             Game.CustomCursor.Draw();
             Game.SpriteBatch.End();
         }

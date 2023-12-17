@@ -9,8 +9,8 @@
 
 float4 ambient_intensity;
 
-Texture2D SpriteTexture;
-sampler2D SpriteTextureSampler = sampler_state
+texture SpriteTexture;
+sampler SpriteTextureSampler = sampler_state
 {
     Texture = <SpriteTexture>;
     MinFilter = Point;
@@ -29,9 +29,10 @@ struct VertexShaderOutput
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float intensity = ambient_intensity.a;
-    float4 ambient = float4(ambient_intensity.rgb, 1.f);
-    float4 color = tex2D(SpriteTextureSampler, input.TexCoord) * input.Color * ambient;
-    return float4(color.rgb * intensity, color.a);
+    float4 ambient = float4(ambient_intensity.rgb * intensity, 1.f);
+    float4 diffues = tex2D(SpriteTextureSampler, input.TexCoord) * input.Color;
+    
+    return diffues * ambient;
 }
 
 technique SpriteDrawing
