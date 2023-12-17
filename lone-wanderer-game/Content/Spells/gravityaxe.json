@@ -10,7 +10,11 @@
     "r": 255,
     "g": 255,
     "b": 255,
-    "size": 100
+    "size": {
+      "x": 100,
+      "y": 100
+    },
+    "intensity": 0.2
   },
   "levelDefinitions": [
     {

@@ -6,6 +6,16 @@
   "icon": "lightning",
   "sound": "swish_4",
   "timer": 0.50,
+  "light": {
+    "r": 50,
+    "g": 50,
+    "b": 255,
+    "size": {
+      "x": 500,
+      "y": 500
+    },
+    "intensity":  1
+  },
   "levelDefinitions": [
     {
       "damage": 20,
