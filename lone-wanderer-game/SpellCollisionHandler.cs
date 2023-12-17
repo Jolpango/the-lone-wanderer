@@ -56,8 +56,7 @@ namespace LoneWandererGame
                 if (velocity == Vector2.Zero)
                     continue;
 
-                List<Rectangle> collisions = tileEngine.GetCollisions(spell.CollisionRectangle, velocity);
-                if (collisions.Count != 0)
+                if (tileEngine.GetCollisions(spell.CollisionRectangle, velocity).Count != 0)
                     spell.Timer = -1;
             }
         }

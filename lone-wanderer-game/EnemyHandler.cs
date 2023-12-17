@@ -174,13 +174,6 @@ namespace LoneWandererGame.Enemy
             spawnTimer -= gameTime.GetElapsedSeconds();
 
             spatialHashGrid.Bounds = _camera.BoundingRectangle;
-            // spatialHashGrid.Bounds = new RectangleF(
-            //     _camera.BoundingRectangle.X,
-            //     _camera.BoundingRectangle.Y,
-            //     _camera.BoundingRectangle.Width,
-            //     _camera.BoundingRectangle.Height
-            // );
-
             for (int i = 0; i < aliveEnemyIndices.Count; i++)
             {
                 int index = aliveEnemyIndices[i];
