@@ -41,8 +41,8 @@ namespace LoneWandererGame
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
-            //graphics.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
+            // graphics.SynchronizeWithVerticalRetrace = false;
+            // IsFixedTimeStep = false;
             graphics.ApplyChanges();
 
             LightHandler = new LightHandler(this);

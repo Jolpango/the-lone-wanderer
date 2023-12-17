@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Serialization;
 using LoneWandererGame.TileEngines;
 using LoneWandererGame.Utilities;
-using System.Linq;
+using LoneWandererGame.SpatialHashGrids;
 
 namespace LoneWandererGame.Enemy
 {
@@ -21,19 +21,31 @@ namespace LoneWandererGame.Enemy
         //Just to disable enemies (1/2)
         private bool disableEnemies = false;
         private List<BaseEnemy> enemies;
+        private List<int> aliveEnemyIndices;
+        private Dictionary<int, List<Point>> enemySpatialIndices;
+        private SpatialHashGrid spatialHashGrid;
         private List<string> enemyNames;
         private Queue<int> freeList = new Queue<int>();
         private Dictionary<string, SpriteSheet> spriteSheets = new Dictionary<string, SpriteSheet>();
         private float spawnTimer = 0;
         private TileEngine tileEngine;
+        private OrthographicCamera _camera;
         Random randomNumber;
         public Game1 Game { get; private set; }
 
-        public EnemyHandler(Game1 game, TileEngine tileEngine)
+        public EnemyHandler(Game1 game, TileEngine tileEngine, OrthographicCamera _camera)
         {
+            Console.WriteLine($"Camera: {new Vector2(_camera.BoundingRectangle.Width, _camera.BoundingRectangle.Height)}");
             Game = game;
             this.tileEngine = tileEngine;
+            this._camera = _camera;
             randomNumber = new Random();
+            spatialHashGrid = new SpatialHashGrid(
+                (Rectangle)_camera.BoundingRectangle,
+                new Vector2(_camera.BoundingRectangle.Width / 64, _camera.BoundingRectangle.Height / 64)
+            );
+            enemySpatialIndices = new Dictionary<int, List<Point>>();
+            aliveEnemyIndices = new List<int>();
         }
 
         public void LoadContent()
@@ -57,7 +69,8 @@ namespace LoneWandererGame.Enemy
             enemies = new List<BaseEnemy>(enemyCapacity);
             for (int i = 0; i < enemyCapacity; i++)
             {
-                enemies.Add(new BaseEnemy(Game, tileEngine, spriteSheets));
+                BaseEnemy enemy = new BaseEnemy(Game, tileEngine, spriteSheets);
+                enemies.Add(enemy);
                 freeList.Enqueue(i);
             }
         }
@@ -93,6 +106,7 @@ namespace LoneWandererGame.Enemy
                     PlayerScore.Score++;
                     enemy.Dormant = true;
                     freeList.Enqueue(i);
+                    aliveEnemyIndices.Remove(i);
                 }
             }
 
@@ -104,9 +118,10 @@ namespace LoneWandererGame.Enemy
                 Vector2 tileMapCullSize = tileEngine.GetMapSize() - edgeSpawnCullDistance;
                 Queue<int> enemyIndices = new Queue<int>();
 
-                // Enqueue to new queue to give boss creation precedence over enemy creation
-                foreach(int index in freeList.Take(enemiesToSpawn).ToList()) // safely take enemiesToSpawn or freeList.Queue indices
-                    enemyIndices.Enqueue(index);
+                if (enemiesToSpawn > freeList.Count)
+                    enemiesToSpawn = freeList.Count;
+                for (int i = 0; i < enemiesToSpawn; i++)
+                    enemyIndices.Enqueue(freeList.Dequeue());
 
                 // Only needs to check this once instead of in every iteration
                 if (gameTime.TotalGameTime.TotalSeconds >= bossSpawn && enemyIndices.Count != 0)
@@ -114,22 +129,24 @@ namespace LoneWandererGame.Enemy
                     Vector2 spawnPos = _player.Position + LWGMath.GetRandomDirection(randomNumber) * 700;
                     if (!OutOfBounds(spawnPos, tileMapCullSize, edgeSpawnCullDistance))
                     {
-                        BaseEnemy boss = enemies[enemyIndices.Dequeue()];
-                        boss.Initialize(50.0f * bossNr, 50.0f, spawnPos, "dark_soldier-overlord", 5 + (5 * bossNr));
+                        int index = enemyIndices.Dequeue();
+                        BaseEnemy boss = enemies[index];
+                        boss.Initialize(50.0f * bossNr, 50.0f, spawnPos, "dark_soldier-overlord", 4f, 4f, 5 + (5 * bossNr));
                         bossNr++;
                         bossSpawn = bossNr * 25;
+                        enemySpatialIndices[index] = spatialHashGrid.NewItem(boss.CollisionRectangle, index);
+                        aliveEnemyIndices.Add(index);
                     }
                 }
 
                 while (enemyIndices.Count != 0)
                 {
-                    int index = enemyIndices.Dequeue();
-
                     Vector2 spawnPos = _player.Position + LWGMath.GetRandomDirection(randomNumber) * 700;
                     if (OutOfBounds(spawnPos, tileMapCullSize, edgeSpawnCullDistance))
                         continue;
 
-                    BaseEnemy enemy = enemies[freeList.Dequeue()];
+                    int index = enemyIndices.Dequeue();
+                    BaseEnemy enemy = enemies[index];
                     switch (index % 5)
                     {
                         case 0:
@@ -148,11 +165,33 @@ namespace LoneWandererGame.Enemy
                             enemy.Initialize(20.0f, 100.0f, spawnPos, "dark_soldier-lord");
                             break;
                     }
+
+                    enemySpatialIndices[index] = spatialHashGrid.NewItem(enemy.CollisionRectangle, index);
+                    aliveEnemyIndices.Add(index);
                 }
             }
 
             spawnTimer -= gameTime.GetElapsedSeconds();
+
+            spatialHashGrid.Bounds = _camera.BoundingRectangle;
+            // spatialHashGrid.Bounds = new RectangleF(
+            //     _camera.BoundingRectangle.X,
+            //     _camera.BoundingRectangle.Y,
+            //     _camera.BoundingRectangle.Width,
+            //     _camera.BoundingRectangle.Height
+            // );
+
+            for (int i = 0; i < aliveEnemyIndices.Count; i++)
+            {
+                int index = aliveEnemyIndices[i];
+                enemySpatialIndices[index] = spatialHashGrid.UpdateItem(
+                    enemySpatialIndices[index],
+                    enemies[index].CollisionRectangle,
+                    index
+                );
+            }
         }
+
         public void Draw(GameTime gameTime)
         {
             foreach (BaseEnemy enemy in enemies)
@@ -161,5 +200,14 @@ namespace LoneWandererGame.Enemy
         }
 
         public List<BaseEnemy> GetEnemies() { return enemies; }
+
+        public List<BaseEnemy> GetNearbyEnemies(RectangleF rect)
+        {
+            List<int> indices = spatialHashGrid.FindNear(rect);
+            List<BaseEnemy> nearbyEnemies = new List<BaseEnemy>(indices.Count);
+            foreach (int index in indices)
+                nearbyEnemies.Add(enemies[index]);
+            return nearbyEnemies;
+        }
     }
 }

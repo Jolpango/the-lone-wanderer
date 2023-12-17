@@ -52,14 +52,16 @@ namespace LoneWandererGame.TileEngines
 
         public void AddTile(Vector2 position, int sheetIndex)
         {
-            if (sheetIndex == 0) {
+            int tileSetTilesWide = textures[0].Width / TileWidth;
+            int tileCount = tileSetTilesWide * tileSetTilesWide;
+            int tileIndex = sheetIndex % tileCount;
+            if (tileIndex == 0)
+            {
                 nonEmptyTileIndices.Add(-1);
                 return;
             }
-            int tileSetTilesWide = textures[0].Width / TileWidth;
-            int tileCount = tileSetTilesWide * tileSetTilesWide;
+
             int textureIndex = sheetIndex / tileCount;
-            int tileIndex = sheetIndex % tileCount;
             
             Rectangle rect = new Rectangle(
                 (tileIndex - 1) % tileSetTilesWide,

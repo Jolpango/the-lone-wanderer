@@ -7,7 +7,7 @@
   "cycles": {
     "flying": {
       "frames": [ 49, 39, 29, 19, 9 ],
-      "isLooping": false,
+      "isLooping": true,
       "frameDuration": 0.2
     }
   }

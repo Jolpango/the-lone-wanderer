@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using LoneWandererGame.Entity;
 using MonoGame.Extended.Sprites;
 using LoneWandererGame.TileEngines;
-using Microsoft.Xna.Framework.Audio;
 
 namespace LoneWandererGame.Enemy
 {

@@ -24,13 +24,15 @@ namespace LoneWandererGame
             this.floatingTextHandler = floatingTextHandler;
             hitSound = game.Content.Load<SoundEffect>("Sounds/hit");
         }
+
         public void Update()
         {
             int soundTriggerCount = 0;
-            const int MAX_SOUND_TRIGGER_COUNT = 200;
+            const int MAX_SOUND_TRIGGER_COUNT = 50;
             foreach (Spell spell in spells)
             {
-                foreach(BaseEnemy enemy in enemyHandler.GetEnemies())
+                List<BaseEnemy> nearbyEnemies = enemyHandler.GetNearbyEnemies(spell.CollisionRectangle);
+                foreach(BaseEnemy enemy in nearbyEnemies)
                 {
                     if (enemy.Dormant) continue;
 
@@ -43,26 +45,20 @@ namespace LoneWandererGame
                             soundTriggerCount++;
                         }
                         floatingTextHandler.AddText(spell.Damage.ToString(), new Vector2(enemy.CollisionRectangle.X, enemy.CollisionRectangle.Y), Color.Red);
+                        spell.HitEnemies.Add(enemy);
+
                         if (spell.GetType() == typeof(ProjectileSpell))
                             spell.Timer = -1;
-                        spell.HitEnemies.Add(enemy);
                     }
                 }
 
-                if (spell.GetType() == typeof(ProjectileSpell))
-                {
-                    Vector2 velocity = ((ProjectileSpell)spell).GetVelocity;
-                    List<Rectangle> collisions = tileEngine.GetCollisions(spell.CollisionRectangle, velocity);
-                    if (collisions.Count != 0)
-                        spell.Timer = -1;
-                }
-                if (spell.GetType() == typeof(PiercingSpell))
-                {
-                    Vector2 velocity = ((PiercingSpell)spell).GetVelocity;
-                    List<Rectangle> collisions = tileEngine.GetCollisions(spell.CollisionRectangle, velocity);
-                    if (collisions.Count != 0)
-                        spell.Timer = -1;
-                }
+                Vector2 velocity = spell.GetVelocity();
+                if (velocity == Vector2.Zero)
+                    continue;
+
+                List<Rectangle> collisions = tileEngine.GetCollisions(spell.CollisionRectangle, velocity);
+                if (collisions.Count != 0)
+                    spell.Timer = -1;
             }
         }
     }

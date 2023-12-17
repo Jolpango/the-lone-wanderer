@@ -13,15 +13,11 @@ namespace LoneWandererGame.Spells
         {
             this.direction = direction;
             this.speed = speed;
-           // this.Rotation = (float)(Math.Atan2(direction.Y, direction.X) / (2 * Math.PI));
         }
 
-        public Vector2 GetVelocity
-        { 
-            get
-            {
-                return speed * direction;
-            }
+        public override Vector2 GetVelocity()
+        {
+            return speed * direction;
         }
 
         public override void LoadContent(ContentManager content)
