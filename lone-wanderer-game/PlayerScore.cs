@@ -42,7 +42,7 @@ namespace LoneWandererGame
             if (xp >= RequiredXP)
             {
                 xp = 0;
-                RequiredXP = RequiredXP + (int)(RequiredXP * 1.3f);
+                RequiredXP = RequiredXP + (int)(RequiredXP * 0.666f) + 4;
                 Level++;
                 OnLevelUp();
             }

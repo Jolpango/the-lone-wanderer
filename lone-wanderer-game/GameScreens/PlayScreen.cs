@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended.Input.InputListeners;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens;
-using MonoGame.Extended.Sprites;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using LoneWandererGame.Entity;
@@ -16,7 +14,6 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
 using LoneWandererGame.Powerups;
-using MonoGame.Extended.Timers;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -50,6 +47,7 @@ namespace LoneWandererGame.GameScreens
         private int spellChoices = 2;
         private float uiScoreCooldown = 1.0f;
         private int savedShowExp = 0;
+        private Queue<int> frameTimes = new Queue<int>();
 
         private Random rnd;
         List<SpellDefinition> randomSpells;
@@ -57,12 +55,16 @@ namespace LoneWandererGame.GameScreens
 
         public PlayScreen(Game1 game) : base(game)
         {
+            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
+            _camera = new OrthographicCamera(viewportAdapter);
+            _camera.ZoomIn(0.5f);
+
             tileEngine = new TileEngine(Game);
             // Assumed map width and height is 512
             float tilemapCenter = (512 * 32) / 2f;
             _player = new Player(Game, tileEngine, new Vector2(tilemapCenter, tilemapCenter));
             powerupHandler = new PowerupHandler(Game, _player);
-            enemyHandler = new EnemyHandler(Game, tileEngine);
+            enemyHandler = new EnemyHandler(Game, tileEngine, _camera);
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player, ActiveSpells, enemyHandler);
             SpellDefinitions = new List<SpellDefinition>();
@@ -75,43 +77,41 @@ namespace LoneWandererGame.GameScreens
         public override void LoadContent()
         {
             base.LoadContent();
-            Vector2 windowDimensions = Game.WindowDimensions;
             _player.LoadContent();
-
-            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
-            _camera = new OrthographicCamera(viewportAdapter);
-            _camera.ZoomIn(0.5f);
 
             enemyHandler.LoadContent();
             tileEngine.LoadContent();
             powerupHandler.LoadContent();
+
             SpellDefinitions = SpellLoader.LoadSpells();
             foreach(var spell in SpellDefinitions)
             {
                 if (spell.Name == "Icesplosion")
                     SpellBook.AddSpell(spell);
             }
+
+            Vector2 windowDimensions = Game.WindowDimensions;
             int padding = 0;
             playerHealthBar = new FillableBar()
             {
-                BarWidth = (int)Game.WindowDimensions.X - padding,
+                BarWidth = (int)windowDimensions.X - padding,
                 BarHeight = 20,
                 MaxValue = Player.MAX_HEALTH,
                 Game = Game,
                 CurrentValue = _player.Health,
-                Position = new Vector2((int)(Game.WindowDimensions.X - padding) / 2, padding)
+                Position = new Vector2((int)(windowDimensions.X - padding) / 2, padding)
             };
             playerHealthBar.CreateTexture();
             xpBar = new FillableBar()
             {
-                BarWidth = (int)Game.WindowDimensions.X - padding,
+                BarWidth = (int)windowDimensions.X - padding,
                 BarHeight = 20,
                 MaxValue = PlayerScore.RequiredXP,
                 Game = Game,
                 BarBackgroundColor = Color.LightBlue,
                 BarForegroundColor = Color.Blue,
                 CurrentValue = PlayerScore.XP,
-                Position = new Vector2((int)(Game.WindowDimensions.X - padding) / 2, padding + 20)
+                Position = new Vector2((int)(windowDimensions.X - padding) / 2, padding + 20)
             };
             xpBar.CreateTexture();
             PlayerScore.OnGainXp = GainXpFloatingText;
@@ -186,9 +186,6 @@ namespace LoneWandererGame.GameScreens
             xpBar.MaxValue = PlayerScore.RequiredXP;
             powerupHandler.Update(gameTime);
 
-         //   playerHealthBar.CurrentValue = _player.Health;
-          //  xpBar.CurrentValue = PlayerScore.XP;
-          //  xpBar.MaxValue = PlayerScore.RequiredXP;
             if (_player.Health <= 0)
             {
                 Game.LightHandler.clearLights();
@@ -196,7 +193,7 @@ namespace LoneWandererGame.GameScreens
             }
 
             if (uiScoreCooldown>0f)
-                uiScoreCooldown -= gameTime.GetElapsedSeconds();           
+                uiScoreCooldown -= gameTime.GetElapsedSeconds();
         }
 
         private void UpdateSpells(GameTime gameTime)
@@ -207,19 +204,14 @@ namespace LoneWandererGame.GameScreens
             {
                 spell.Update(gameTime);
                 if (spell.Timer < 0)
-                {
                     spellsToRemove.Add(spell);
-                }
-            }
-            foreach (var spell in spellsToRemove)
-            {
-                ActiveSpells.Remove(spell);
             }
 
+            foreach (var spell in spellsToRemove)
+                ActiveSpells.Remove(spell);
+
             if (_player.Health != 0)
-            {
                 SpellBook.Update(gameTime);
-            }
         }
 
         public void GainXpFloatingText(int xp)
@@ -386,8 +378,17 @@ namespace LoneWandererGame.GameScreens
 
             // FPS Counter
             {
-                int frameRate = (int)((1 / gameTime.ElapsedGameTime.TotalSeconds) + 0.01);
-                string fpsString = "FPS: " + frameRate.ToString();
+                while (frameTimes.Count > 100)
+                    frameTimes.Dequeue();
+
+                frameTimes.Enqueue((int)((1 / gameTime.ElapsedGameTime.TotalSeconds) + 0.01));
+
+                int averageFps = 0;
+                foreach (int frametime in frameTimes)
+                    averageFps += frametime;
+                averageFps /= frameTimes.Count;
+
+                string fpsString = $"FPS: {averageFps}";
                 Vector2 size = Game.SilkscreenRegularFont.MeasureString(fpsString);
 
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, fpsString, new Vector2(screenWidth - size.X - 10f, 40f), Color.White);

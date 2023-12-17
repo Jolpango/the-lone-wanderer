@@ -62,5 +62,10 @@ namespace LoneWandererGame.Spells
             //spriteBatch.Draw(tempTexture, new Vector2(CollisionRectangle.X, CollisionRectangle.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
             sprite.Draw(spriteBatch, Position, Rotation, Vector2.One);
         }
+
+        public virtual Vector2 GetVelocity()
+        {
+            return Vector2.Zero;
+        }
     }
 }
