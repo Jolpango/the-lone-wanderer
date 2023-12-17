@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens;
+using MonoGame.Jolpango.Graphics;
 using System.Collections.Generic;
 
 namespace LoneWandererGame.GameScreens
@@ -64,6 +65,7 @@ namespace LoneWandererGame.GameScreens
             backgroundMusic = Game.Content.Load<Song>("Sounds/menuchip");
             MediaPlayer.Play(backgroundMusic);
             background = Game.Content.Load<Texture2D>("Sprites/menubackground");
+            ParticleEmitter.Shared.LayerDepth = 0.98f;
         }
 
         public override void Update(GameTime gameTime)
@@ -72,6 +74,7 @@ namespace LoneWandererGame.GameScreens
             {
                 item.Update(gameTime);
             }
+            ParticleEmitter.Shared.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -84,6 +87,7 @@ namespace LoneWandererGame.GameScreens
             {
                 button.Draw();
             }
+            ParticleEmitter.Shared.Draw(Game.SpriteBatch);
             Game.SpriteBatch.End();
         }
     }

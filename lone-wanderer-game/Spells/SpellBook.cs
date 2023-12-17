@@ -10,6 +10,7 @@ using LoneWandererGame.Entity;
 using LoneWandererGame.Enemy;
 using Autofac.Core.Activators.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using MonoGame.Jolpango.Graphics;
 
 namespace LoneWandererGame.Spells
 {
@@ -83,6 +84,8 @@ namespace LoneWandererGame.Spells
             foreach (var spell in Spells)
             {
                 spell.Timer -= gameTime.GetElapsedSeconds();
+                if(spell.ParticleEmitter is not null)
+                    spell.ParticleEmitter.Update(gameTime);
                 if (spell.Timer < 0)
                 {
                     spell.Timer = spell.LevelDefinitions[spell.CurrentLevel].Cooldown;
@@ -185,6 +188,10 @@ namespace LoneWandererGame.Spells
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
             spell.Sound = spellDefinition.Sound;
+            spell.LightColor = spellDefinition.LightColor;
+            spell.LightSize = spellDefinition.LightSize;
+            spell.ParticleEmitter = spellDefinition.ParticleEmitter;
+            spell.ParticleAmount = spellDefinition.ParticleAmount;
             spell.LoadContent(Game.Content);
             ActiveSpells.Add(spell);
         }
@@ -216,6 +223,15 @@ namespace LoneWandererGame.Spells
             }
 
             return new Vector2(1000000.0f,1000000.0f); // big number to be far away
+        }
+
+        public void Draw()
+        {
+            foreach(SpellDefinition spell in Spells)
+            {
+                if(spell.ParticleEmitter is not null)
+                    spell.ParticleEmitter.Draw(Game.SpriteBatch);
+            }
         }
     }
 }

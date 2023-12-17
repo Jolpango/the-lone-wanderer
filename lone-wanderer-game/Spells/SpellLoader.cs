@@ -3,12 +3,17 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using MonoGame.Jolpango.Graphics;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tweening;
+using Microsoft.Xna.Framework;
+using MonoGame.Jolpango.Utilities;
 
 namespace LoneWandererGame.Spells
 {
     public class SpellLoader
     {
-        public static List<SpellDefinition> LoadSpells()
+        public static List<SpellDefinition> LoadSpells(Game1 game)
         {
             var spells = new List<SpellDefinition>();
             var files = Directory.GetFiles("Content/Spells");
@@ -32,6 +37,37 @@ namespace LoneWandererGame.Spells
                         SpecialMultiplier = (int)level["specialMultiplier"]
                     }).ToList()
                 };
+
+                if (o.Root["light"] is not null)
+                {
+                    spell.LightSize = (int)o.Root["light"]["size"];
+                    spell.LightColor = new Color((int)o.Root["light"]["r"], (int)o.Root["light"]["g"], (int)o.Root["light"]["b"]);
+                }
+                if (o.Root["particle"] is not null)
+                {
+
+                    Texture2D tempTexture = new Texture2D(game.GraphicsDevice, 2, 2);
+                    Color[] data = new Color[2 * 2];
+                    for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
+                    tempTexture.SetData(data);
+                    spell.ParticleEmitter = new ParticleEmitter(tempTexture);
+                    spell.ParticleAmount = (int)o.Root["particle"]["amount"];
+                    spell.ParticleEmitter.StartColor = new Color((int)o.Root["particle"]["startcolor"]["r"], (int)o.Root["particle"]["startcolor"]["g"], (int)o.Root["particle"]["startcolor"]["b"]);
+                    spell.ParticleEmitter.EndColor = new Color((int)o.Root["particle"]["endcolor"]["r"], (int)o.Root["particle"]["endcolor"]["g"], (int)o.Root["particle"]["endcolor"]["b"]);
+                    spell.ParticleEmitter.MinRadius = (int)o.Root["particle"]["radius"]["min"];
+                    spell.ParticleEmitter.MaxRadius = (int)o.Root["particle"]["radius"]["max"];
+                    spell.ParticleEmitter.MinSpeed = (float)o.Root["particle"]["speed"]["min"];
+                    spell.ParticleEmitter.MaxSpeed = (float)o.Root["particle"]["speed"]["max"];
+                    spell.ParticleEmitter.MinScale = (float)o.Root["particle"]["scale"]["min"];
+                    spell.ParticleEmitter.MaxScale = (float)o.Root["particle"]["scale"]["max"];
+                    spell.ParticleEmitter.TimeToLive = (float)o.Root["particle"]["timetolive"];
+                    spell.ParticleEmitter.MinAlpha = (float)o.Root["particle"]["alpha"]["min"];
+                    spell.ParticleEmitter.MaxAlpha = (float)o.Root["particle"]["alpha"]["max"];
+                    spell.ParticleEmitter.Direction = new Vector2((float)o.Root["particle"]["direction"]["x"], (float)o.Root["particle"]["direction"]["y"]);
+                    spell.ParticleEmitter.DirectionFreedom = (float)o.Root["particle"]["direction"]["freedom"];
+                    spell.ParticleEmitter.Easing = EasingFunction.EaseOutBack;
+                }
+
                 spells.Add(spell);
             }
             return spells;
