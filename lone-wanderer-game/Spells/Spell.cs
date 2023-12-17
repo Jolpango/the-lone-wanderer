@@ -7,6 +7,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
+using MonoGame.Jolpango.Graphics;
 using System.Collections.Generic;
 
 namespace LoneWandererGame.Spells
@@ -24,6 +25,10 @@ namespace LoneWandererGame.Spells
         public int Damage { get; set; }
         public List<BaseEnemy> HitEnemies { get; set; }
         public SoundEffect SoundEffect { get; set; }
+        public int? ParticleAmount { get; set; }
+        public Color? LightColor { get; set; }
+        public int? LightSize { get; set; }
+        public ParticleEmitter ParticleEmitter { get; set; }
         public Spell(string name, string icon, string asset, Vector2 origin)
         {
             Name = name;
@@ -51,6 +56,10 @@ namespace LoneWandererGame.Spells
         {
             sprite.Update(gameTime);
             Timer -= gameTime.GetElapsedSeconds();
+            if (ParticleAmount is not null && ParticleAmount > 0)
+            {
+                ParticleEmitter.Emit(Position, ParticleAmount ?? 1);
+            }
         } 
         public virtual void Draw(SpriteBatch spriteBatch, Game1 game)
         {

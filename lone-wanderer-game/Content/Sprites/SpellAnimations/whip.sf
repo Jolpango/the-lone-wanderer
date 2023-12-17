@@ -1,8 +1,8 @@
 {
   "textureAtlas": {
     "texture": "whip.png",
-    "regionWidth": 64,
-    "regionHeight": 16
+    "regionWidth": 128,
+    "regionHeight": 32
   },
   "cycles": {
     "right": {

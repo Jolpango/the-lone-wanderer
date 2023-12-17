@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
+using MonoGame.Jolpango.Graphics;
 
 namespace LoneWandererGame
 {
@@ -58,6 +59,13 @@ namespace LoneWandererGame
 
             SpriteEffect = Content.Load<Effect>("Effects/SpriteShader");
             LightEffect = Content.Load<Effect>("Effects/LightShader");
+
+
+            Texture2D tempTexture = new Texture2D(GraphicsDevice, 2, 2);
+            Color[] data = new Color[2 * 2];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
+            tempTexture.SetData(data);
+            ParticleEmitter.Shared = new ParticleEmitter(tempTexture);
         }
 
         public void LoadTitleScreen()
@@ -83,7 +91,7 @@ namespace LoneWandererGame
         protected override void Initialize()
         {
             base.Initialize();
-            LoadPlayScreen();// LoadTitleScreen();
+            LoadMenuScreen();// LoadTitleScreen();
         }
 
         protected override void LoadContent()

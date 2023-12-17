@@ -6,23 +6,66 @@
   "sound": "foom_0",
   "icon": "fireball",
   "timer": 5,
+  "particle": {
+    "startcolor": {
+      "r": 255,
+      "g": 171,
+      "b": 0,
+      "a": 255
+    },
+    "endcolor": {
+      "r": 200,
+      "g": 160,
+      "b": 100,
+      "a": 255
+    },
+    "scale": {
+      "min": 1,
+      "max": 2
+    },
+    "radius": {
+      "min": 1,
+      "max": 10
+    },
+    "speed": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "alpha": {
+      "min": 0.0,
+      "max": 0.2
+    },
+    "direction": {
+      "x": -1,
+      "y": 0,
+      "freedom":  360
+    },
+    "timetolive": 0.2,
+    "amount": 20
+  },
+  "light": {
+    "r": 255,
+    "g": 255,
+    "b": 255,
+    "size": 5
+  },
   "levelDefinitions": [
     {
-      "damage": 5,
+      "damage": 10,
       "description": "Level1 spell",
-      "specialMultiplier": 3,
+      "specialMultiplier": 1,
       "cooldown": 1
     },
     {
-      "damage": 10,
+      "damage": 20,
       "description": "Level2 spell",
       "specialMultiplier": 1,
       "cooldown": 0.8
     },
     {
-      "damage": 10,
+      "damage": 40,
       "description": "Level3 spell",
-      "specialMultiplier": 2,
+      "specialMultiplier": 1,
       "cooldown": 0.8
     }
   ]

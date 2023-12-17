@@ -13,7 +13,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
-using LoneWandererGame.Powerups;
+using LoneWandererGame.Powerups
+using MonoGame.Jolpango.Graphics;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -82,11 +83,10 @@ namespace LoneWandererGame.GameScreens
             enemyHandler.LoadContent();
             tileEngine.LoadContent();
             powerupHandler.LoadContent();
-
-            SpellDefinitions = SpellLoader.LoadSpells();
+            SpellDefinitions = SpellLoader.LoadSpells(Game);
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Icesplosion")
+                if (spell.Name == "Fireball")
                     SpellBook.AddSpell(spell);
             }
 
@@ -119,6 +119,7 @@ namespace LoneWandererGame.GameScreens
             backgroundMusic = Game.Content.Load<Song>("Sounds/stage1");
             MediaPlayer.Volume = 0.01f;
             MediaPlayer.Play(backgroundMusic);
+
         }
 
         public override void UnloadContent()
@@ -173,7 +174,7 @@ namespace LoneWandererGame.GameScreens
             }
             _player.Update(gameTime);
 
-
+            ParticleEmitter.Shared.Update(gameTime);
             _camera.LookAt(_player.Position);
             enemyHandler.Update(gameTime, _player);
 
@@ -341,6 +342,8 @@ namespace LoneWandererGame.GameScreens
             tileEngine.Draw(_camera.BoundingRectangle);
             powerupHandler.Draw();
             enemyHandler.Draw(gameTime);
+            ParticleEmitter.Shared.Draw(Game.SpriteBatch);
+            SpellBook.Draw();
             foreach (var spell in ActiveSpells)
             {
                 spell.Draw(Game.SpriteBatch, Game);

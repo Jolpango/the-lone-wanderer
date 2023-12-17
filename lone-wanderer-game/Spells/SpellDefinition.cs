@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using MonoGame.Jolpango.Graphics;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoneWandererGame.Spells
 {
@@ -17,6 +16,10 @@ namespace LoneWandererGame.Spells
         public float TimeToLive { get; set; }
         public float Speed { get; set; }
         public string Sound { get; set; }
+        public ParticleEmitter ParticleEmitter { get; set; }
+        public int ParticleAmount { get; set; }
+        public Color? LightColor { get; set; }
+        public int? LightSize { get; set; }
         public List<SpellLevelDefinition> LevelDefinitions { get; set; }
     }
 }
