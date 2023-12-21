@@ -14,12 +14,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
 using LoneWandererGame.Powerups;
-<<<<<<< HEAD
 using MonoGame.Jolpango.Graphics;
-=======
-using MonoGame.Extended.Timers;
-using LoneWandererGame.UI;
->>>>>>> 2921966 (Talents each level)
 
 namespace LoneWandererGame.GameScreens
 {
@@ -85,11 +80,8 @@ namespace LoneWandererGame.GameScreens
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
             State = PlayState.Playing;
-<<<<<<< HEAD
-
-=======
             talent = new Talent(game, _player, SpellBook);
->>>>>>> 2921966 (Talents each level)
+
         }
         public override void LoadContent()
         {
@@ -135,11 +127,7 @@ namespace LoneWandererGame.GameScreens
             MediaPlayer.Volume = 0.01f;
             MediaPlayer.Play(backgroundMusic);
 
-<<<<<<< HEAD
-=======
-
             talent.LoadContent();
->>>>>>> 2921966 (Talents each level)
         }
 
         public override void UnloadContent()
@@ -151,7 +139,6 @@ namespace LoneWandererGame.GameScreens
         {
             if (State == PlayState.Playing)
             {
-                PlayerScore.GainXP(50);
                 UpdatePlaying(gameTime);
             }
             else if (State == PlayState.LevelUp)

@@ -237,7 +237,6 @@ namespace LoneWandererGame.Spells
 
             return new Vector2(1000000.0f,1000000.0f); // big number to be far away
         }
-<<<<<<< HEAD
 
         public void Draw()
         {
@@ -270,7 +269,7 @@ namespace LoneWandererGame.Spells
             };
             return newEmitter;
         }
-=======
+
         public void cooldwonReductionMultiply(float reduce)
         {
             cooldownReduction *= reduce;
@@ -285,8 +284,5 @@ namespace LoneWandererGame.Spells
             float tempReduction = (int)(cooldownReduction * 100);
             return tempReduction / 100;
         }
-
-
->>>>>>> 2921966 (Talents each level)
     }
 }
