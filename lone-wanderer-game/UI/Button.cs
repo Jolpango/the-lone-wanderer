@@ -51,6 +51,10 @@ namespace LoneWandererGame.UI
             TextSize = Game.SilkscreenRegularFont.MeasureString(Text);
         }
 
+        public void changeColour (Color color)
+        {
+            Sprite.Color = color;
+        }
         public void Update(GameTime gameTime)
         {
             Sprite.Update(gameTime);

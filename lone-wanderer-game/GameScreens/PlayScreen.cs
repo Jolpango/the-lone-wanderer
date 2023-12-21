@@ -53,6 +53,7 @@ namespace LoneWandererGame.GameScreens
         private Random rnd;
         List<SpellDefinition> randomSpells;
         List<SpellSelection> spellSelections;
+        private Talent talent;
 
         private RenderTarget2D lightRT;
 
@@ -79,6 +80,7 @@ namespace LoneWandererGame.GameScreens
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
             State = PlayState.Playing;
+            talent = new Talent(game, _player, SpellBook);
 
         }
         public override void LoadContent()
@@ -101,7 +103,7 @@ namespace LoneWandererGame.GameScreens
             {
                 BarWidth = (int)windowDimensions.X - padding,
                 BarHeight = 20,
-                MaxValue = Player.MAX_HEALTH,
+                MaxValue = _player.MAX_HEALTH,
                 Game = Game,
                 CurrentValue = _player.Health,
                 Position = new Vector2((int)(windowDimensions.X - padding) / 2, padding)
@@ -125,6 +127,7 @@ namespace LoneWandererGame.GameScreens
             MediaPlayer.Volume = 0.01f;
             MediaPlayer.Play(backgroundMusic);
 
+            talent.LoadContent();
         }
 
         public override void UnloadContent()
@@ -141,6 +144,7 @@ namespace LoneWandererGame.GameScreens
             else if (State == PlayState.LevelUp)
             {
                 chooseSpellOnLevelUp();
+                talent.chooseTalentOnLevelUp(Game, gameTime);
             }
             else if (State == PlayState.Paused)
             {
@@ -244,6 +248,8 @@ namespace LoneWandererGame.GameScreens
                 return;
             }
             State = PlayState.LevelUp;
+            talent.OnLevelUp();
+
             int i = 0;
             spellSelections = new List<SpellSelection>();
             foreach (var spell in randomSpells)
@@ -436,6 +442,7 @@ namespace LoneWandererGame.GameScreens
                 {
                     spellSelection.Draw(Game.SpriteBatch, Game.SilkscreenRegularFont);
                 }
+                talent.DrawUI(Game, gameTime);
             }
             else if (State == PlayState.GameOver)
             {

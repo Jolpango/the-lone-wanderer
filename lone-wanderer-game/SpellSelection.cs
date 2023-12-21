@@ -49,12 +49,14 @@ namespace LoneWandererGame
                 spriteBatch.DrawString(font, $"{SpellDefinition.Name} {SpellDefinition.CurrentLevel + 2}", new Vector2(Position.X, Position.Y + texture.Height), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
                 spriteBatch.DrawString(font, $"Multiplier:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].SpecialMultiplier} -> {SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel + 1].SpecialMultiplier}", new Vector2(Position.X, Position.Y + texture.Height + 20), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
                 spriteBatch.DrawString(font, $"Damage:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].Damage} -> {SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel + 1].Damage}", new Vector2(Position.X, Position.Y + texture.Height + 40), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
+                spriteBatch.DrawString(font, $"Cooldown:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].Cooldown} -> {SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel + 1].Cooldown}", new Vector2(Position.X, Position.Y + texture.Height + 60), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
             }
             else
             {
                 spriteBatch.DrawString(font, $"{SpellDefinition.Name} {SpellDefinition.CurrentLevel + 1}", new Vector2(Position.X, Position.Y + texture.Height), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
                 spriteBatch.DrawString(font, $"Multiplier:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].SpecialMultiplier}", new Vector2(Position.X, Position.Y + texture.Height + 20), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
                 spriteBatch.DrawString(font, $"Damage:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].Damage}", new Vector2(Position.X, Position.Y + texture.Height + 40), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
+                spriteBatch.DrawString(font, $"Cooldown:{SpellDefinition.LevelDefinitions[SpellDefinition.CurrentLevel].Cooldown}", new Vector2(Position.X, Position.Y + texture.Height + 60), Color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
             }
         }
     }

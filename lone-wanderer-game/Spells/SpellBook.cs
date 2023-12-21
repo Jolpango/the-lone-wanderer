@@ -28,6 +28,7 @@ namespace LoneWandererGame.Spells
         public List<ProjectileSpawner> ProjectileSpawners { get; private set; }
         public List<Spell> ActiveSpells { get; private set; }
         public EnemyHandler EnemyHandler;
+        public float cooldownReduction { get; private set; }
         public SpellBook(Game1 game, Player player, List<Spell> activeSpells, EnemyHandler enemyhandler)
         {
             Spells = new List<SpellDefinition>();
@@ -36,6 +37,7 @@ namespace LoneWandererGame.Spells
             ProjectileSpawners = new List<ProjectileSpawner>();
             ActiveSpells = activeSpells;
             EnemyHandler = enemyhandler;
+            cooldownReduction = 1.0f;
         }
         public void AddSpell(SpellDefinition spell)
         {
@@ -88,7 +90,7 @@ namespace LoneWandererGame.Spells
                     spell.ParticleEmitter.Update(gameTime);
                 if (spell.Timer < 0)
                 {
-                    spell.Timer = spell.LevelDefinitions[spell.CurrentLevel].Cooldown;
+                    spell.Timer = spell.LevelDefinitions[spell.CurrentLevel].Cooldown * cooldownReduction;
                     ConstructSpell(spell);
                 }
             }
@@ -266,6 +268,21 @@ namespace LoneWandererGame.Spells
                 Easing = emitter.Easing
             };
             return newEmitter;
+        }
+
+        public void cooldwonReductionMultiply(float reduce)
+        {
+            cooldownReduction *= reduce;
+        }
+        public float getCooldwonReductionNextLevel(float reduce)
+        { 
+            float tempReduction = (int)(cooldownReduction * reduce * 100);
+            return tempReduction/100;
+        }
+        public float getCooldwonReduction()
+        {
+            float tempReduction = (int)(cooldownReduction * 100);
+            return tempReduction / 100;
         }
     }
 }
