@@ -14,7 +14,12 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
 using LoneWandererGame.Powerups;
+<<<<<<< HEAD
 using MonoGame.Jolpango.Graphics;
+=======
+using MonoGame.Extended.Timers;
+using LoneWandererGame.UI;
+>>>>>>> 2921966 (Talents each level)
 
 namespace LoneWandererGame.GameScreens
 {
@@ -53,6 +58,7 @@ namespace LoneWandererGame.GameScreens
         private Random rnd;
         List<SpellDefinition> randomSpells;
         List<SpellSelection> spellSelections;
+        private Talent talent;
 
         private RenderTarget2D lightRT;
 
@@ -79,7 +85,11 @@ namespace LoneWandererGame.GameScreens
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
             State = PlayState.Playing;
+<<<<<<< HEAD
 
+=======
+            talent = new Talent(game, _player, SpellBook);
+>>>>>>> 2921966 (Talents each level)
         }
         public override void LoadContent()
         {
@@ -101,7 +111,7 @@ namespace LoneWandererGame.GameScreens
             {
                 BarWidth = (int)windowDimensions.X - padding,
                 BarHeight = 20,
-                MaxValue = Player.MAX_HEALTH,
+                MaxValue = _player.MAX_HEALTH,
                 Game = Game,
                 CurrentValue = _player.Health,
                 Position = new Vector2((int)(windowDimensions.X - padding) / 2, padding)
@@ -125,6 +135,11 @@ namespace LoneWandererGame.GameScreens
             MediaPlayer.Volume = 0.01f;
             MediaPlayer.Play(backgroundMusic);
 
+<<<<<<< HEAD
+=======
+
+            talent.LoadContent();
+>>>>>>> 2921966 (Talents each level)
         }
 
         public override void UnloadContent()
@@ -136,11 +151,13 @@ namespace LoneWandererGame.GameScreens
         {
             if (State == PlayState.Playing)
             {
+                PlayerScore.GainXP(50);
                 UpdatePlaying(gameTime);
             }
             else if (State == PlayState.LevelUp)
             {
                 chooseSpellOnLevelUp();
+                talent.chooseTalentOnLevelUp(Game, gameTime);
             }
             else if (State == PlayState.Paused)
             {
@@ -244,6 +261,8 @@ namespace LoneWandererGame.GameScreens
                 return;
             }
             State = PlayState.LevelUp;
+            talent.OnLevelUp();
+
             int i = 0;
             spellSelections = new List<SpellSelection>();
             foreach (var spell in randomSpells)
@@ -436,6 +455,7 @@ namespace LoneWandererGame.GameScreens
                 {
                     spellSelection.Draw(Game.SpriteBatch, Game.SilkscreenRegularFont);
                 }
+                talent.DrawUI(Game, gameTime);
             }
             else if (State == PlayState.GameOver)
             {

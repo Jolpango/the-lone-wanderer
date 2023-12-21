@@ -59,7 +59,7 @@ namespace LoneWandererGame.Entity
         private const float INVINCIBILITY_TIME = 0.3f;
         private const float DAMAGED_EFFECT_TIME = 0.3f;
         public int Health { get; private set; }
-        public const int MAX_HEALTH = 100;
+        public int MAX_HEALTH = 100;
 
         public void Damage(int amount)
         {
@@ -265,11 +265,36 @@ namespace LoneWandererGame.Entity
             if (Health >= MAX_HEALTH)
                 Health = MAX_HEALTH;
         }
+        public void IncreaseMaxHealthAdd(int amount)
+        {
+            Health += amount;
+            MAX_HEALTH += amount;
+        }
+
+        public void IncreaseMaxHealthMultiply(float amount)
+        {
+            float tempHealth = Health * amount;
+            Health = (int)(tempHealth+0.5);
+
+            float tempMaxHealth = MAX_HEALTH * amount;
+            MAX_HEALTH = (int)(tempMaxHealth + 0.5);
+        }
 
         public void SpeedUp(int amount)
         {
             float percentage = 1 + (amount / 100f);
             acceleration *= percentage;
+        }
+        public float getAcceleration() {  return acceleration; }
+        
+        //Gets the next acceleration that the player will get x.xx
+        public float getAccelerationNextLevel(int amount)
+        {
+            float tempAcceleration = acceleration;
+            float percentage = 1 + (amount / 100f);
+            tempAcceleration *= percentage;
+            tempAcceleration = tempAcceleration * 100.0f / 100;
+            return tempAcceleration; 
         }
 
         public void SlowDown(int amount)
