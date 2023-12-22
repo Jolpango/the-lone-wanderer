@@ -1,5 +1,6 @@
 ﻿using LoneWandererGame.GameScreens;
 using LoneWandererGame.Spells;
+using LoneWandererGame.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input.InputListeners;
@@ -11,11 +12,14 @@ namespace LoneWandererGame
 {
     public class Game1 : Game
     {
+
         private GraphicsDeviceManager graphics;
         private readonly ScreenManager _screenManager;
         private readonly KeyboardListener _keyboardListener;
         private readonly MouseListener _mouseListener;
 
+        public SettingsHandler SettingsHandler { get; private set; }
+        public SettingsData Settings { get; private set; }
         public Effect SpriteEffect { get; private set; }
         public Effect LightEffect { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
@@ -40,9 +44,12 @@ namespace LoneWandererGame
 
         public Game1()
         {
+            SettingsHandler = new SettingsHandler();
+            Settings = SettingsHandler.Load();
+
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = (int)Settings.Resolution.X;
+            graphics.PreferredBackBufferHeight = (int)Settings.Resolution.X;
             // graphics.SynchronizeWithVerticalRetrace = false;
             // IsFixedTimeStep = false;
             graphics.ApplyChanges();
