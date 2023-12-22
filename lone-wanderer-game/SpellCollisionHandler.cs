@@ -27,6 +27,7 @@ namespace LoneWandererGame
             this.tileEngine = tileEngine;
             this.floatingTextHandler = floatingTextHandler;
             hitSound = game.Content.Load<SoundEffect>("Sounds/hit");
+            hitSound.MasterVolume = Game1.Game.Settings.Volume;
             Texture2D tempTexture = new Texture2D(game.GraphicsDevice, 2, 2);
             Color[] data = new Color[2 * 2];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White;
