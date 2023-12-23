@@ -3,7 +3,7 @@
   "type": "GravitySpell",
   "asset": "gravityaxe",
   "speed": 5,
-  "icon": "whip",
+  "icon": "Axe",
   "sound": "swish_2",
   "timer": 5,
   "light": {

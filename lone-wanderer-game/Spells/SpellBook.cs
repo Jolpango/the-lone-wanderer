@@ -151,7 +151,6 @@ namespace LoneWandererGame.Spells
                     TimerEnd = () => { GravitySpellCallback(spellDefinition, multi); }
                 });
             }
-
         }
 
         private void GravitySpellCallback(SpellDefinition spellDefinition, float forceMulti)
