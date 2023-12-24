@@ -210,27 +210,35 @@ namespace LoneWandererGame.Spells
             if (closestEnemy.Length() < 200.0f)
             {
                 closestEnemy.Normalize();
-                var spell = new PiercingSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, closestEnemy, spellDefinition.Speed);
-                spell.Timer = spellDefinition.TimeToLive;
-                spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
-                spell.Sound = spellDefinition.Sound;
-                spell.LightColor = spellDefinition.LightColor;
-                spell.LightSize = spellDefinition.LightSize;
-                spell.LightIntensity = spellDefinition.LightIntensity;
+                var spell = new PiercingSpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position, closestEnemy, spellDefinition.Speed)
+                {
+                    Timer = spellDefinition.TimeToLive,
+                    Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage,
+                    Sound = spellDefinition.Sound,
+                    LightColor = spellDefinition.LightColor,
+                    LightSize = spellDefinition.LightSize,
+                    LightIntensity = spellDefinition.LightIntensity
+                };
                 spell.LoadContent(Game.Content);
                 ActiveSpells.Add(spell);
             }
         }
         public Vector2 ClosestEnemy()
         {
-            List<BaseEnemy> enemies = EnemyHandler.GetEnemies();
-            Vector2 PlayerPos = Player.Position;
+            Vector2 playerPos = Player.Position;
+            float range = 200f;
+            float halfRange = range / 2;
+            RectangleF rangeRect = new RectangleF(
+                playerPos.X - halfRange,
+                playerPos.Y - halfRange,
+                range,
+                range
+            );
+            List<BaseEnemy> enemies = EnemyHandler.GetNearbyEnemies(rangeRect);
             foreach (BaseEnemy enemy in enemies)
             {
-                if (enemy.Dormant) continue;
-
-                Vector2 distance = enemy.getPos() - PlayerPos;
-                if (distance.Length() < 200.0f) // distance to close* enemy
+                Vector2 distance = enemy.getPos() - playerPos;
+                if (distance.Length() < range) // distance to close* enemy
                     return distance;
             }
 
