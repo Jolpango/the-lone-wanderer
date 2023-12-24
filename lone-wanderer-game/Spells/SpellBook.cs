@@ -226,23 +226,24 @@ namespace LoneWandererGame.Spells
         public Vector2 ClosestEnemy()
         {
             Vector2 playerPos = Player.Position;
-            float range = 200f;
-            float halfRange = range / 2;
-            RectangleF rangeRect = new RectangleF(
-                playerPos.X - halfRange,
-                playerPos.Y - halfRange,
-                range,
-                range
-            );
+            Vector2 range = new Vector2(200f, 200f);
+            RectangleF rangeRect = new RectangleF(playerPos - range/2, range);
+            Vector2 closest = new Vector2(1000000.0f,1000000.0f);
+            float closestLength = closest.LengthSquared();
+
             List<BaseEnemy> enemies = EnemyHandler.GetNearbyEnemies(rangeRect);
             foreach (BaseEnemy enemy in enemies)
             {
                 Vector2 distance = enemy.getPos() - playerPos;
-                if (distance.Length() < range) // distance to close* enemy
-                    return distance;
+                float distanceLength = distance.LengthSquared();
+                if (distanceLength < closestLength) // distance to closest enemy
+                {
+                    closest = distance;
+                    closestLength = distanceLength;
+                }
             }
 
-            return new Vector2(1000000.0f,1000000.0f); // big number to be far away
+            return closest;
         }
 
         public void Draw()
