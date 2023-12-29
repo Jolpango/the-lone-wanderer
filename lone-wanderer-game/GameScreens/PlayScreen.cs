@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
 using LoneWandererGame.Powerups;
+using LoneWandererGame.MongoDBManagers;
 using MonoGame.Jolpango.Graphics;
 
 namespace LoneWandererGame.GameScreens
@@ -200,6 +201,9 @@ namespace LoneWandererGame.GameScreens
             {
                 Game.LightHandler.clearLights();
                 State = PlayState.GameOver;
+
+                if (_player.Name.Length != 0)
+                    _ = MongoDBManager.Instance.UpdatePlayerScore(_player.Name, PlayerScore.Score);
             }
 
             if (uiScoreCooldown>0f)

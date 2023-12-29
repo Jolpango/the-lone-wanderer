@@ -60,6 +60,7 @@ namespace LoneWandererGame.Entity
         private const float DAMAGED_EFFECT_TIME = 0.3f;
         public int Health { get; private set; }
         public int MAX_HEALTH = 100;
+        public string Name { get; private set; } = "";
 
         public void Damage(int amount)
         {
@@ -88,6 +89,7 @@ namespace LoneWandererGame.Entity
             Position = spawnPosition;
             Health = MAX_HEALTH;
             state = State.Alive;
+            Name = "admin";
 
             lightIndex = game.LightHandler.AddLight(Position, new Vector2(700), Color.White, 0.6f);
         }

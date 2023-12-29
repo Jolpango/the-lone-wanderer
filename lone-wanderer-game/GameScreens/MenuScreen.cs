@@ -1,13 +1,11 @@
-﻿using LoneWandererGame.UI;
+﻿using LoneWandererGame.MongoDBManagers;
+using LoneWandererGame.UI;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using MonoGame.Extended.Input;
-using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Screens;
 using MonoGame.Jolpango.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace LoneWandererGame.GameScreens
@@ -33,7 +31,11 @@ namespace LoneWandererGame.GameScreens
                 new Button(Game)
                 {
                     Text = "HiScores",
-                    OnClick = () => {},
+                    OnClick = async () => {
+                        List<string> highscores = await MongoDBManager.Instance.GetHighScores();
+                        foreach (var highscore in highscores)
+                            Console.WriteLine(highscore.ToString());
+                    },
                     OnPress = () => {},
                     OnRelease = () => {},
                     Position = center + new Vector2(0, 80)
