@@ -35,7 +35,6 @@ namespace LoneWandererGame.Enemy
 
         public EnemyHandler(Game1 game, TileEngine tileEngine, OrthographicCamera _camera)
         {
-            Console.WriteLine($"Camera: {new Vector2(_camera.BoundingRectangle.Width, _camera.BoundingRectangle.Height)}");
             Game = game;
             this.tileEngine = tileEngine;
             this._camera = _camera;
