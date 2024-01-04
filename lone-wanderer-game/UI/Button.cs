@@ -1,17 +1,10 @@
 ﻿using LoneWandererGame.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoneWandererGame.UI
 {
@@ -21,7 +14,8 @@ namespace LoneWandererGame.UI
         {
             Pressed,
             Released,
-            Clicked
+            Clicked,
+            Disabled
         }
         public ButtonState State { get; set; }
         public AnimatedSprite Sprite { get; set; }
@@ -38,6 +32,8 @@ namespace LoneWandererGame.UI
             }
         }
         public Vector2 TextSize { get; set; }
+        private Color spriteColor = Color.White;
+        private Color textColor = Color.White;
         
         public Button(Game1 game) { Game = game; }
         public void LoadContent(string path)
@@ -46,21 +42,41 @@ namespace LoneWandererGame.UI
             Sprite = new AnimatedSprite(spriteSheet);
             State = ButtonState.Released;
             Sprite.Play(State.ToString().ToLower());
-            Sprite.Depth = 0.90f;
             //Sprite.Origin = new Vector2(Rectangle.Width / 2, Rectangle.Height / 2);
             TextSize = Game.SilkscreenRegularFont.MeasureString(Text);
         }
 
-        public void changeColour (Color color)
+        public void setEnabled(bool enabled)
         {
-            Sprite.Color = color;
+            if (enabled)
+            {
+                State = ButtonState.Released;
+                Sprite.Play(State.ToString().ToLower());
+                Sprite.Color = spriteColor;
+            }
+            else
+            {
+                State = ButtonState.Disabled;
+                Sprite.Play(ButtonState.Pressed.ToString().ToLower());
+                Sprite.Color = Color.DarkGray;
+            }
+
+        }
+        public void setSpriteColor(Color color)
+        {
+            spriteColor = color;
+            Sprite.Color = spriteColor;
+        }
+        public void setTextColor(Color color)
+        {
+            textColor = color;
         }
         public void Update(GameTime gameTime)
         {
             Sprite.Update(gameTime);
 
-            // Prevent stuff from happening if clicking is being done
-            if (State == ButtonState.Clicked)
+            // Prevent stuff from happening if clicking is being done or not enabled
+            if (State == ButtonState.Clicked || State == ButtonState.Disabled)
                 return;
             if (Game.CustomCursor.MouseState.WasButtonJustUp(MouseButton.Left) && State != ButtonState.Clicked)
             {
@@ -70,6 +86,10 @@ namespace LoneWandererGame.UI
                     Sprite.Play(State.ToString().ToLower(), () =>
                     {
                         OnClick();
+                        if (State == ButtonState.Disabled)
+                        {
+                            return;
+                        }
                         State = ButtonState.Released;
                         Sprite.Play(State.ToString().ToLower());
                     });
@@ -80,6 +100,10 @@ namespace LoneWandererGame.UI
                 if (Game.CustomCursor.Rectangle.Intersects(Rectangle))
                 {
                     OnPress();
+                    if (State == ButtonState.Disabled)
+                    {
+                        return;
+                    }
                     State = ButtonState.Pressed;
                     Sprite.Play(State.ToString().ToLower());
 
@@ -91,15 +115,16 @@ namespace LoneWandererGame.UI
                 Sprite.Play(State.ToString().ToLower());
 
             }
-            if (!Game.CustomCursor.Rectangle.Intersects(Rectangle))
+            if (State != ButtonState.Disabled && !Game.CustomCursor.Rectangle.Intersects(Rectangle))
             {
                 State = ButtonState.Released;
                 Sprite.Play(State.ToString().ToLower());
             }
         }
 
-        public void Draw()
+        public void Draw(float depth = 0.90f)
         {
+            Sprite.Depth = depth;
             Game.SpriteBatch.Draw(Sprite, Position, Rotation, Scale);
             var offset = new Vector2(0, 2);
             var pos = Position;
@@ -107,7 +132,7 @@ namespace LoneWandererGame.UI
             {
                 pos += offset;
             }
-            Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, Text, pos, Color.White, 0, TextSize / 2, 1, SpriteEffects.None, 0.91f);
+            Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, Text, pos, textColor, 0, TextSize / 2, 1, SpriteEffects.None, depth + 0.01f);
         }
     }
 }

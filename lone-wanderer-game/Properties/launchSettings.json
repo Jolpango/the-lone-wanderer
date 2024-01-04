@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LoneWandererGame": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "MONGODB_URI": "mongodb+srv://test:test@thelonewanderercluster.9focyrd.mongodb.net/?retryWrites=true&w=majority"
+      }
+    }
+  }
+}

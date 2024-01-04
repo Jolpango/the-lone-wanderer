@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MonoGame.Extended;
 
-namespace LoneWandererGame.SpatialHashGrids
+namespace LoneWandererGame.Utilities
 {
     public class SpatialHashGrid
     {
@@ -62,7 +62,7 @@ namespace LoneWandererGame.SpatialHashGrids
                 for (int y = i1.Y; y <= yn; ++y)
                     cells[Key(x, y)].Add(index);
 
-            return new List<Point>(){ i1, i2 };
+            return new List<Point>() { i1, i2 };
         }
 
         public List<int> FindNear(RectangleF bounds)

@@ -1,4 +1,4 @@
-﻿using LoneWandererGame.Enemy;
+﻿using LoneWandererGame.Entity;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;

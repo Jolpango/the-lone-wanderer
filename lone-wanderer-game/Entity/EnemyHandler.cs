@@ -2,7 +2,6 @@
 using MonoGame.Extended.Input;
 using System;
 using System.Collections.Generic;
-using LoneWandererGame.Entity;
 using MonoGame.Extended;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
@@ -10,9 +9,9 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Serialization;
 using LoneWandererGame.TileEngines;
 using LoneWandererGame.Utilities;
-using LoneWandererGame.SpatialHashGrids;
+using LoneWandererGame.Progression;
 
-namespace LoneWandererGame.Enemy
+namespace LoneWandererGame.Entity
 {
     public class EnemyHandler
     {
@@ -84,15 +83,6 @@ namespace LoneWandererGame.Enemy
                     || position.Y < edgeSpawnCullDistance.Y;
             };
 
-            //Just to disable enemies (2/2)
-            var keyboardState = KeyboardExtended.GetState();
-
-            if (keyboardState.IsKeyDown(Keys.P))
-                disableEnemies = true;
-            if (keyboardState.IsKeyDown(Keys.O))
-                disableEnemies = false;
-            if (disableEnemies) return;
-
             for (int i = 0; i < enemies.Count; i++)
             {
                 BaseEnemy enemy = enemies[i];
@@ -130,7 +120,7 @@ namespace LoneWandererGame.Enemy
                     {
                         int index = enemyIndices.Dequeue();
                         BaseEnemy boss = enemies[index];
-                        boss.Initialize(50.0f * bossNr, 50.0f, spawnPos, "dark_soldier-overlord", 4f, 4f, 5 + (5 * bossNr));
+                        boss.Initialize(50.0f * bossNr, 50.0f, spawnPos, "dark_soldier-overlord", 4f, 4f, 5 + 5 * bossNr);
                         bossNr++;
                         bossSpawn = bossNr * 25;
                         enemySpatialIndices[index] = spatialHashGrid.NewItem(boss.CollisionRectangle, index);

@@ -19,6 +19,11 @@
       "frames": [2],
       "isLooping": true,
       "frameDuration": 0.2
+    },
+    "disabled": {
+      "frames": [],
+      "isLooping": false,
+      "frameDuration": 0.2
     }
   }
 }

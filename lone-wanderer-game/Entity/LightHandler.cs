@@ -1,10 +1,9 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace LoneWandererGame
+namespace LoneWandererGame.Entity
 {
     public struct Light
     {
@@ -16,11 +15,11 @@ namespace LoneWandererGame
 
         public Light()
         {
-            this.position = Vector2.Zero;
-            this.size = Vector2.Zero;
-            this.color = Color.White;
-            this.intensity = 1f;
-            this.used = false;
+            position = Vector2.Zero;
+            size = Vector2.Zero;
+            color = Color.White;
+            intensity = 1f;
+            used = false;
         }
         public Light(Vector2 position, Vector2 size, Color color, float intensity)
         {
@@ -64,7 +63,7 @@ namespace LoneWandererGame
         {
             // If you hit this, YOU GOT TO MANY LIGHTS!
             Debug.Assert(freeList.Count != 0);
-            
+
             int index = freeList.Dequeue();
             Light light = new Light(position, size, color, intensity);
             lights[index] = light;

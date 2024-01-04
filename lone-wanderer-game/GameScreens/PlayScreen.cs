@@ -6,7 +6,6 @@ using MonoGame.Extended.Input;
 using LoneWandererGame.Entity;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
-using LoneWandererGame.Enemy;
 using LoneWandererGame.TileEngines;
 using LoneWandererGame.Spells;
 using System.Collections.Generic;
@@ -16,6 +15,9 @@ using System.Linq;
 using LoneWandererGame.Powerups;
 using LoneWandererGame.MongoDBManagers;
 using MonoGame.Jolpango.Graphics;
+using LoneWandererGame.UI;
+using LoneWandererGame.Progression;
+using MongoDB.Driver;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -45,6 +47,13 @@ namespace LoneWandererGame.GameScreens
         private FillableBar playerHealthBar;
         private FillableBar xpBar;
 
+        private OptionsMenu optionsMenu;
+        private const float OPTIONS_MENU_OFFSET_Y = 90f;
+
+        private Button optionsResumeButton;
+        private Button optionsMainMenuButton;
+        private const float OPTIONS_MENU_BUTTON_Y_OFFSET = (64f / 2f) + 10f;
+
         private Song backgroundMusic;
         private int spellChoices = 2;
         private float uiScoreCooldown = 1.0f;
@@ -63,7 +72,7 @@ namespace LoneWandererGame.GameScreens
             Vector2 windowDimensions = Game.WindowDimensions;
             lightRT = new RenderTarget2D(GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
 
-            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
+            var viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, 1280, 720);
             _camera = new OrthographicCamera(viewportAdapter);
             _camera.ZoomIn(0.5f);
 
@@ -83,6 +92,31 @@ namespace LoneWandererGame.GameScreens
             State = PlayState.Playing;
             talent = new Talent(game, _player, SpellBook);
 
+            // Options menu on Pause screen
+            Vector2 optionsMenuOrigin = new Vector2(windowDimensions.X / 2, OPTIONS_MENU_OFFSET_Y);
+            optionsMenu = new OptionsMenu(Game, optionsMenuOrigin);
+
+            optionsResumeButton = new Button(game)
+            {
+                Text = "Resume",
+                OnClick = () => { State = PlayState.Playing; },
+                OnPress = () => { },
+                OnRelease = () => { }
+            };
+            optionsResumeButton.LoadContent("Sprites/UI/button.sf");
+            optionsMainMenuButton = new Button(game)
+            {
+                Text = "Main Menu",
+                OnClick = () => { Game.LoadMenuScreen(); },
+                OnPress = () => { },
+                OnRelease = () => { }
+            };
+            optionsMainMenuButton.LoadContent("Sprites/UI/button.sf");
+
+            Vector2 buttonPosition = optionsMenuOrigin + new Vector2(0f, optionsMenu.getMenuDimensions().Y + OPTIONS_MENU_BUTTON_Y_OFFSET);
+            float buttonOffsetFromCenter = (optionsResumeButton.Rectangle.Width / 2f) + 5f;
+            optionsResumeButton.Position = buttonPosition + new Vector2(-buttonOffsetFromCenter, 0f);
+            optionsMainMenuButton.Position = buttonPosition + new Vector2(buttonOffsetFromCenter, 0f);
         }
         public override void LoadContent()
         {
@@ -125,7 +159,6 @@ namespace LoneWandererGame.GameScreens
             PlayerScore.OnGainXp = GainXpFloatingText;
             PlayerScore.OnLevelUp = OnLevelUp;
             backgroundMusic = Game.Content.Load<Song>("Sounds/stage1");
-            MediaPlayer.Volume = 0.01f;
             MediaPlayer.Play(backgroundMusic);
 
             talent.LoadContent();
@@ -159,6 +192,33 @@ namespace LoneWandererGame.GameScreens
 
         private void UpdatePaused(GameTime gameTime)
         {
+            if (Game.SettingsUpdated)
+            {
+                Vector2 windowDimensions = Game.WindowDimensions;
+
+                playerHealthBar.BarWidth = (int)windowDimensions.X;
+                playerHealthBar.Position = new Vector2((int)(windowDimensions.X) / 2, 0f);
+                xpBar.BarWidth = (int)windowDimensions.X;
+                xpBar.Position = new Vector2((int)(windowDimensions.X) / 2, playerHealthBar.BarHeight);
+
+                lightRT.Dispose();
+                lightRT = new RenderTarget2D(GraphicsDevice, (int)windowDimensions.X, (int)windowDimensions.Y);
+
+                Vector2 optionsMenuOrigin = new Vector2(windowDimensions.X / 2, OPTIONS_MENU_OFFSET_Y);
+                optionsMenu.centerChanged(optionsMenuOrigin);
+
+                Vector2 buttonPosition = optionsMenuOrigin + new Vector2(0f, optionsMenu.getMenuDimensions().Y + OPTIONS_MENU_BUTTON_Y_OFFSET);
+                float buttonOffsetFromCenter = (optionsResumeButton.Rectangle.Width / 2f) + 5f;
+                optionsResumeButton.Position = buttonPosition + new Vector2(-buttonOffsetFromCenter, 0f);
+                optionsMainMenuButton.Position = buttonPosition + new Vector2(buttonOffsetFromCenter, 0f);
+
+                Game.SettingsUpdated = false;
+            }
+
+            optionsMenu.Update(gameTime);
+            optionsResumeButton.Update(gameTime);
+            optionsMainMenuButton.Update(gameTime);
+
             KeyboardStateExtended keyboardState = KeyboardExtended.GetState();
             if (keyboardState.WasKeyJustDown(Keys.P))
             {
@@ -171,7 +231,7 @@ namespace LoneWandererGame.GameScreens
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Enter))
             {
-                Game.LoadDeathScreen(SpellBook);
+                Game.LoadMenuScreen();
             }
         }
 
@@ -197,7 +257,7 @@ namespace LoneWandererGame.GameScreens
             xpBar.MaxValue = PlayerScore.RequiredXP;
             powerupHandler.Update(gameTime);
 
-            if (_player.Health <= 0)
+            if (_player.isDead())
             {
                 Game.LightHandler.clearLights();
                 State = PlayState.GameOver;
@@ -206,7 +266,7 @@ namespace LoneWandererGame.GameScreens
                     _ = MongoDBManager.Instance.UpdatePlayerScore(_player.Name, PlayerScore.Score);
             }
 
-            if (uiScoreCooldown>0f)
+            if (uiScoreCooldown > 0f)
                 uiScoreCooldown -= gameTime.GetElapsedSeconds();
         }
 
@@ -456,27 +516,19 @@ namespace LoneWandererGame.GameScreens
                 text = "Press [Enter] to continue";
                 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
-                
-                Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
-                Color[] data = new Color[(int)Game.WindowDimensions.X * (int)Game.WindowDimensions.Y];
-                for (int i = 0; i < data.Length; ++i) data[i] = Color.Black;
-                    tempTexture.SetData(data);
-                Game.SpriteBatch.Draw(tempTexture, Vector2.Zero, null, Color.White * 0.5f, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.98f);
+                Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle(0, 0, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y), null, new Color(Color.Black, 0.5f), 0f, Vector2.Zero, SpriteEffects.None, 0.98f);
             }
             else if (State == PlayState.Paused)
             {
                 string text = "Paused";
                 Vector2 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
-                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2, Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
-                text = "Press [P] to continue";
-                origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
-                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                Vector2 textPosition = new Vector2(Game.WindowDimensions.X / 2, OPTIONS_MENU_OFFSET_Y * 0.75f);
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, textPosition, Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle(0, 0, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y), null, Color.White * 0.5f, 0f, Vector2.Zero,SpriteEffects.None, 0.9f);
 
-                Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y);
-                Color[] data = new Color[(int)Game.WindowDimensions.X * (int)Game.WindowDimensions.Y];
-                for (int i = 0; i < data.Length; ++i) data[i] = Color.Black;
-                tempTexture.SetData(data);
-                Game.SpriteBatch.Draw(tempTexture, Vector2.Zero, null, Color.White * 0.5f, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.98f);
+                optionsMenu.Draw(0.91f);
+                optionsResumeButton.Draw(0.93f);
+                optionsMainMenuButton.Draw(0.93f);
             }
         }
     }
