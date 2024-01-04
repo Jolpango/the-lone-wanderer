@@ -1,19 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.Serialization;
 using System.IO;
-using System.Text.Json;
-using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace LoneWandererGame.Settings
 {
     public class SettingsData
     {
-        public float Volume { get; set; } // 0 -> 1
+        public int Volume { get; set; } // 0 -> 10
         public Vector2 Resolution { get; set; }
         public bool Fullscreen { get; set; } // false = windowed, true = fullscreen
 
         public SettingsData() 
         {
-            Volume = 0.5f;
+            Volume = 5;
             Resolution = new Vector2(1280, 720);
             Fullscreen = false;
         }
@@ -31,12 +31,14 @@ namespace LoneWandererGame.Settings
             if (File.Exists(PATH))
             {
                 var settingsDeserialized = File.ReadAllText(PATH);
-                settings = JsonSerializer.Deserialize<SettingsData>(settingsDeserialized);
+                settings = JsonConvert.DeserializeObject<SettingsData>(settingsDeserialized,
+                    new Vector2JsonConverter()
+                );
             }
             else
             {
                 settings = new SettingsData();
-                string settingsSerialized = JsonSerializer.Serialize<SettingsData>(settings);
+                string settingsSerialized = JsonConvert.SerializeObject(settings);
                 File.WriteAllText(PATH, settingsSerialized);
             }
 
@@ -45,7 +47,7 @@ namespace LoneWandererGame.Settings
 
         public void Save(SettingsData settings)
         {
-            string settingsSerialized = JsonSerializer.Serialize<SettingsData>(settings);
+            string settingsSerialized = JsonConvert.SerializeObject(settings);
             File.WriteAllText(PATH, settingsSerialized);
         }
     }

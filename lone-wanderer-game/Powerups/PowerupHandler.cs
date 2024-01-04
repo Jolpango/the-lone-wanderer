@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using LoneWandererGame.Entity;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using LoneWandererGame.Utilities;
-using System.Diagnostics;
+using LoneWandererGame.Entity;
 
 namespace LoneWandererGame.Powerups
 {

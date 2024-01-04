@@ -49,14 +49,15 @@ namespace LoneWandererGame.Entity
 
         private int lightIndex;
 
-        public enum State {
+        public enum State
+        {
             Alive,
+            Dying,
             Dead
         };
         private State state;
         private float damageTimer = 0f;
         private float damagedEffectTimer = 0f;
-        private const float INVINCIBILITY_TIME = 0.3f;
         private const float DAMAGED_EFFECT_TIME = 0.3f;
         public int Health { get; private set; }
         public int MAX_HEALTH = 100;
@@ -78,13 +79,17 @@ namespace LoneWandererGame.Entity
                 }
             }
         }
-        
+        public bool isDead()
+        {
+            return state == State.Dead;
+        }
 
-        public Player(Game1 game, TileEngine tileEngine, Vector2 spawnPosition) {
+        public Player(Game1 game, TileEngine tileEngine, Vector2 spawnPosition)
+        {
             this.game = game;
             lastSpriteEffect = SpriteEffects.None;
             lastAnimation = AnimationState.idle_up_down;
-            
+
             this.tileEngine = tileEngine;
             Position = spawnPosition;
             Health = MAX_HEALTH;
@@ -96,6 +101,15 @@ namespace LoneWandererGame.Entity
         public RectangleF getSpriteRectangle()
         {
             return sprite.GetBoundingRectangle(Position, Rotation, Scale);
+        }
+
+        private void OnDeathAnimationDone()
+        {
+            if (state == State.Dying)
+            {
+                state = State.Dead;
+                Debug.WriteLine("Player Died!");
+            }
         }
 
         public void LoadContent()
@@ -116,7 +130,7 @@ namespace LoneWandererGame.Entity
             AnimationState animation = AnimationState.idle_up_down;
             SpriteEffects spriteEffect = lastSpriteEffect;
 
-            if (keyboardState.IsKeyDown(Keys.T) && state == State.Dead)
+            if (keyboardState.IsKeyDown(Keys.T) && (state == State.Dying || state == State.Dead))
             {
                 Health = MAX_HEALTH;
                 state = State.Alive;
@@ -143,7 +157,7 @@ namespace LoneWandererGame.Entity
                         godModeButtonTimer = 0f;
                     }
                 }
-                
+
 
                 switch (lastAnimation)
                 {
@@ -235,11 +249,11 @@ namespace LoneWandererGame.Entity
             {
                 if (state == State.Alive)
                 {
-                    state = State.Dead;
+                    state = State.Dying;
                     colorTint = Color.White;
                     velocity = Vector2.Zero;
-                    sprite.Play(AnimationState.death.ToString());
-                    Debug.WriteLine("Player Died!");
+                    sprite.Play(AnimationState.death.ToString(), OnDeathAnimationDone);
+                    Debug.WriteLine("Player Dying!");
                 }
             }
 
@@ -276,7 +290,7 @@ namespace LoneWandererGame.Entity
         public void IncreaseMaxHealthMultiply(float amount)
         {
             float tempHealth = Health * amount;
-            Health = (int)(tempHealth+0.5);
+            Health = (int)(tempHealth + 0.5);
 
             float tempMaxHealth = MAX_HEALTH * amount;
             MAX_HEALTH = (int)(tempMaxHealth + 0.5);
@@ -284,24 +298,24 @@ namespace LoneWandererGame.Entity
 
         public void SpeedUp(int amount)
         {
-            float percentage = 1 + (amount / 100f);
+            float percentage = 1 + amount / 100f;
             acceleration *= percentage;
         }
-        public float getAcceleration() {  return acceleration; }
-        
+        public float getAcceleration() { return acceleration; }
+
         //Gets the next acceleration that the player will get x.xx
         public float getAccelerationNextLevel(int amount)
         {
             float tempAcceleration = acceleration;
-            float percentage = 1 + (amount / 100f);
+            float percentage = 1 + amount / 100f;
             tempAcceleration *= percentage;
             tempAcceleration = tempAcceleration * 100.0f / 100;
-            return tempAcceleration; 
+            return tempAcceleration;
         }
 
         public void SlowDown(int amount)
         {
-            float percentage = 1 + (amount / 100f);
+            float percentage = 1 + amount / 100f;
             acceleration /= percentage;
         }
 

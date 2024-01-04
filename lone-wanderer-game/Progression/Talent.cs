@@ -3,15 +3,13 @@ using LoneWandererGame.Spells;
 using LoneWandererGame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using MonoGame.Extended.Input;
-using MonoGame.Extended.Timers;
 using System;
 using System.Collections.Generic;
 
 
 
-namespace LoneWandererGame
+namespace LoneWandererGame.Progression
 {
     public class Talent
     {
@@ -47,7 +45,7 @@ namespace LoneWandererGame
             talentSelections.Add("HP", () => { _player.IncreaseMaxHealthMultiply(healthIncrease); talentPoints--; });
             talentSelections.Add("Speed", () => { _player.SpeedUp(speedIncrease); talentPoints--; });
             talentSelections.Add("Cooldown", () => { spellBook.cooldwonReductionMultiply(cooldownReduction); talentPoints--; });
-           
+
 
 
             talentXPos = game.WindowDimensions.X / (talentSelections.Count + 5);
@@ -77,7 +75,7 @@ namespace LoneWandererGame
             }
 
         }
-            public void chooseTalentOnLevelUp(Game1 game, GameTime gameTime)
+        public void chooseTalentOnLevelUp(Game1 game, GameTime gameTime)
         {
             MouseStateExtended mouseState = game.CustomCursor.MouseState;
             bool hasCollide = false;
@@ -95,28 +93,28 @@ namespace LoneWandererGame
                 game.CustomCursor.CursorState = CursorState.pointer;
             }
 
-            // if talents was zero change colour back.
-            if (talentWasZero) 
+            // if talents was zero change color back.
+            if (talentWasZero)
             {
                 talentWasZero = false;
                 foreach (var talentbutton in talentButtons)
                 {
-                    talentbutton.changeColour(Color.White);
+                    talentbutton.setSpriteColor(Color.White);
                 }
             }
 
-            // change colour if we have zero talents left
-            if (talentPoints <= 0) 
+            // change color if we have zero talents left
+            if (talentPoints <= 0)
             {
                 talentWasZero = true;
                 foreach (var talentbutton in talentButtons)
                 {
-                    talentbutton.changeColour(new Color(30, 30, 30));
+                    talentbutton.setSpriteColor(new Color(30, 30, 30));
                 }
                 return;
             } //return if no talents
 ;
-           
+
 
             foreach (var talentbutton in talentButtons)
             {
@@ -125,7 +123,7 @@ namespace LoneWandererGame
 
         }
 
-     
+
 
         public void OnLevelUp()
         {
@@ -157,7 +155,7 @@ namespace LoneWandererGame
             //SPEED
             string speedText = $"Speed: {_player.getAcceleration()} -> {_player.getAccelerationNextLevel(speedIncrease)}";
             thirdTextSize = game.RegularFont.MeasureString(speedText).X / 3;
-                                                                                            
+
             game.SpriteBatch.DrawString(game.RegularFont, speedText, new Vector2(talentXPos * xOffset - thirdTextSize,
                  talentYPos + 30), Color.White, 0, Vector2.Zero, 0.5f, SpriteEffects.None, 0.5f);
 
@@ -180,7 +178,7 @@ namespace LoneWandererGame
             Vector2 size = game.SilkscreenRegularFont.MeasureString(talentPointsString);
             talentPointsString += talentPoints;
 
-            Vector2 pos = new Vector2(game.WindowDimensions.X / 2 - (size.X / 2), talentYPos - 50);
+            Vector2 pos = new Vector2(game.WindowDimensions.X / 2 - size.X / 2, talentYPos - 50);
             game.SpriteBatch.DrawString(game.SilkscreenRegularFont, talentPointsString, pos, Color.White);
 
         }

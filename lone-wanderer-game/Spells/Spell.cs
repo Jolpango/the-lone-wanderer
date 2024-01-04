@@ -1,4 +1,4 @@
-﻿using LoneWandererGame.Enemy;
+﻿using LoneWandererGame.Entity;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -46,7 +46,6 @@ namespace LoneWandererGame.Spells
             sprite = new AnimatedSprite(spriteSheet);
             sprite.Depth = 0.26f;
             SoundEffect = content.Load<SoundEffect>($"Sounds/{Sound}");
-            SoundEffect.MasterVolume = Game1.Game.Settings.Volume;
             if (LightSize is not null && LightColor is not null)
             {
                 lightIndex = Game1.Game.LightHandler.AddLight(CenterPosition, LightSize ?? Vector2.Zero, LightColor ?? Color.White, 0.5f);

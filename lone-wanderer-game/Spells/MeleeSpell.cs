@@ -1,6 +1,4 @@
-﻿
-
-using LoneWandererGame.Entity;
+﻿using LoneWandererGame.Entity;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
