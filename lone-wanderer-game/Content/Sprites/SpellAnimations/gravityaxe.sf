@@ -6,9 +6,9 @@
   },
   "cycles": {
     "flying": {
-      "frames": [0,1,2,3],
+      "frames": [0,1,2,3,4,5],
       "isLooping": true,
-      "frameDuration": 0.2
+      "frameDuration": 0.05
     }
   }
 }
