@@ -15,7 +15,7 @@ namespace LoneWandererGame.Entity
 {
     public class EnemyHandler
     {
-        private float bossSpawn = 25.0f;
+        private float bossSpawn = 250.0f;
         private int bossNr = 1;
         //Just to disable enemies (1/2)
         private bool disableEnemies = false;
@@ -101,7 +101,7 @@ namespace LoneWandererGame.Entity
 
             if (spawnTimer <= 0f)
             {
-                spawnTimer = 1f;
+                spawnTimer = 10f;
                 int enemiesToSpawn = (int)gameTime.TotalGameTime.TotalSeconds / 4;
                 Vector2 edgeSpawnCullDistance = new Vector2(2f, 2f);
                 Vector2 tileMapCullSize = tileEngine.GetMapSize() - edgeSpawnCullDistance;
@@ -139,19 +139,19 @@ namespace LoneWandererGame.Entity
                     switch (index % 5)
                     {
                         case 0:
-                            enemy.Initialize(2.0f, 100.0f, spawnPos, "dark_soldier");
+                            enemy.Initialize(2.0f, 30.0f, spawnPos, "dark_soldier");
                             break;
                         case 1:
-                            enemy.Initialize(5.0f, 100.0f, spawnPos, "dark_soldier-black");
+                            enemy.Initialize(5.0f, 30.0f, spawnPos, "dark_soldier-black");
                             break;
                         case 2:
-                            enemy.Initialize(40.0f, 80.0f, spawnPos, "dark_soldier-commander");
+                            enemy.Initialize(40.0f, 8.0f, spawnPos, "dark_soldier-commander");
                             break;
                         case 3:
-                            enemy.Initialize(5.0f, 250.0f, spawnPos, "dark_soldier-dragonrider");
+                            enemy.Initialize(5.0f, 25.0f, spawnPos, "dark_soldier-dragonrider");
                             break;
                         case 4:
-                            enemy.Initialize(20.0f, 100.0f, spawnPos, "dark_soldier-lord");
+                            enemy.Initialize(20.0f, 30.0f, spawnPos, "dark_soldier-lord");
                             break;
                     }
 
