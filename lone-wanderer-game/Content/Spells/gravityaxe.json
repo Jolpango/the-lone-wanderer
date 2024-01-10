@@ -2,7 +2,7 @@
   "name": "Gravity Axe",
   "type": "GravitySpell",
   "asset": "gravityaxe",
-  "speed": 5,
+  "speed": 3,
   "icon": "Axe",
   "sound": "swish_2",
   "timer": 5,
@@ -14,7 +14,7 @@
       "x": 100,
       "y": 100
     },
-    "intensity": 0.2
+    "intensity": 0.1
   },
   "levelDefinitions": [
     {

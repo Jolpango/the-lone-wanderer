@@ -2,7 +2,7 @@
   "name": "Knife",
   "type": "ProjectileSpell",
   "asset": "knife",
-  "speed": 10,
+  "speed": 4,
   "sound": "swish_2",
   "icon": "knife",
   "timer": 3,
@@ -14,26 +14,26 @@
       "x": 100,
       "y": 100
     },
-    "intensity": 0.2
+    "intensity": 0.1
   },
   "levelDefinitions": [
     {
       "damage": 5,
       "description": "Level1 spell",
-      "specialMultiplier": 2,
-      "cooldown": 1
+      "specialMultiplier": 1,
+      "cooldown": 2
     },
     {
       "damage": 10,
       "description": "Level2 spell",
       "specialMultiplier": 3,
-      "cooldown": 0.8
+      "cooldown": 1.5
     },
     {
       "damage": 12,
       "description": "Level3 spell",
       "specialMultiplier": 5,
-      "cooldown": 0.8
+      "cooldown": 1.4
     }
   ]
 }
