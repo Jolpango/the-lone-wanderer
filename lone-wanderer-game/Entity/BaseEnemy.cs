@@ -147,12 +147,9 @@ namespace LoneWandererGame.Entity
         }
         public void Draw(GameTime gameTime)
         {
-            // RectangleF playerRect = CollisionRectangle;
-            // Texture2D tempTexture = new Texture2D(Game.GraphicsDevice, (int)playerRect.Width, (int)playerRect.Height);
-            // Color[] data = new Color[(int)playerRect.Width * (int)playerRect.Height];
-            // for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
-            //     tempTexture.SetData(data);
-            // Game.SpriteBatch.Draw(tempTexture, new Vector2(playerRect.X, playerRect.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
+#if DEBUG
+            Game.SpriteBatch.DrawRectangle(sprite.GetBoundingRectangle(position, 0, Vector2.One * scale), Color.Red * 0.8f, 1, 0.9f);
+#endif
             Game.SpriteBatch.Draw(sprite, position, rotation, scale);
             healthBar.Draw();
         }

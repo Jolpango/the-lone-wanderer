@@ -48,7 +48,7 @@ namespace LoneWandererGame.Spells
             SoundEffect = content.Load<SoundEffect>($"Sounds/{Sound}");
             if (LightSize is not null && LightColor is not null)
             {
-                lightIndex = Game1.Game.LightHandler.AddLight(CenterPosition, LightSize ?? Vector2.Zero, LightColor ?? Color.White, 0.5f);
+                lightIndex = Game1.Game.LightHandler.AddLight(CenterPosition, LightSize ?? Vector2.Zero, LightColor ?? Color.White, LightIntensity ?? 0);
             }
         }
         public RectangleF CollisionRectangle

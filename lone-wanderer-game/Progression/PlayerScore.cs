@@ -29,7 +29,7 @@ namespace LoneWandererGame.Progression
                 }
             }
         }
-        public static int RequiredXP { get; set; } = 1;
+        public static int RequiredXP { get; set; } = 5;
         private static int xp = 0;
         public static int Level { get; set; } = 1;
         public static OnAction OnLevelUp { get; set; }

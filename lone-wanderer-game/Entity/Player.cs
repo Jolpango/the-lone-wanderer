@@ -40,8 +40,8 @@ namespace LoneWandererGame.Entity
 
         public float LastXDirection { get; private set; } = 1f;
 
-        public float acceleration = 1.6f;
-        public float decceleration = 0.75f;
+        public float acceleration = 1f;
+        public float decceleration = 0.5f;
         public Vector2 Direction { get { return direction; } }
         public Vector2 Position = Vector2.Zero;
         public float Rotation = 0;
@@ -272,6 +272,9 @@ namespace LoneWandererGame.Entity
 
         public void Draw()
         {
+#if DEBUG
+            game.SpriteBatch.DrawRectangle(sprite.GetBoundingRectangle(Position, 0, Vector2.One), Color.Red * 0.8f, 1, 0.9f);
+#endif
             game.SpriteBatch.Draw(sprite, Position, Rotation, Scale);
         }
 
