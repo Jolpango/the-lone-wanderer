@@ -74,6 +74,8 @@ namespace LoneWandererGame.Spells
             {
                 Game1.Game.LightHandler.updatePosition(lightIndex, CenterPosition);
             }
+            if (ParticleEmitter is not null)
+                ParticleEmitter.Update(gameTime);
         }
         public void UnloadContent()
         {
@@ -89,6 +91,11 @@ namespace LoneWandererGame.Spells
             //tempTexture.SetData(data);
             //spriteBatch.Draw(tempTexture, new Vector2(CollisionRectangle.X, CollisionRectangle.Y), null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.76f);
             sprite.Draw(spriteBatch, Position, Rotation, Vector2.One);
+            if (ParticleEmitter is not null)
+                ParticleEmitter.Draw(spriteBatch);
+#if DEBUG
+            spriteBatch.DrawRectangle(sprite.GetBoundingRectangle(Position, 0, Vector2.One), Color.Red, 1, 1);
+#endif
         }
 
         public virtual Vector2 GetVelocity()

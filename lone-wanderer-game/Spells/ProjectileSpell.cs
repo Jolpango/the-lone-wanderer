@@ -37,15 +37,7 @@ namespace LoneWandererGame.Spells
             {
                 ParticleEmitter.Direction = direction;
                 ParticleEmitter.Emit(Position, ParticleAmount ?? 1);
-                ParticleEmitter.Update(gameTime);
             }
-        }
-
-        public override void Draw(SpriteBatch spriteBatch, Game1 game)
-        {
-            base.Draw(spriteBatch, game);
-            if (ParticleEmitter is not null)
-                ParticleEmitter.Draw(spriteBatch);
         }
     }
 }
