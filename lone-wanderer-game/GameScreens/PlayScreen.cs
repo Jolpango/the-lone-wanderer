@@ -18,6 +18,7 @@ using MonoGame.Jolpango.Graphics;
 using LoneWandererGame.UI;
 using LoneWandererGame.Progression;
 using MongoDB.Driver;
+using System.Threading;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -128,7 +129,7 @@ namespace LoneWandererGame.GameScreens
             SpellDefinitions = SpellLoader.LoadSpells(Game);
             foreach(var spell in SpellDefinitions)
             {
-                if (spell.Name == "Knife")
+                if (spell.Name == "Icesplosion")
                     SpellBook.AddSpell(spell);
             }
 
@@ -228,9 +229,11 @@ namespace LoneWandererGame.GameScreens
 
         private void UpdateGameOver(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Enter))
+            KeyboardStateExtended keyboardState = KeyboardExtended.GetState();
+            if (keyboardState.WasKeyJustDown(Keys.Enter))
             {
+                Thread thread = new Thread(async () => await MongoDBManager.Instance.UpdatePlayerScore(PlayerScore.Name, PlayerScore.Score));
+                thread.Start();
                 Game.LoadMenuScreen();
             }
         }
@@ -511,11 +514,14 @@ namespace LoneWandererGame.GameScreens
             else if (State == PlayState.GameOver)
             {
                 string text = "Game Over";
+                string scoreText = "Score: " + PlayerScore.Score;
                 Vector2 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
+                Vector2 scoreOrign = Game.SilkscreenRegularFont.MeasureString(scoreText) / 2;
                 Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2, Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, scoreText, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, scoreOrign, 1, SpriteEffects.None, 0.99f);
                 text = "Press [Enter] to continue";
                 origin = Game.SilkscreenRegularFont.MeasureString(text) / 2;
-                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 50), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
+                Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, text, Game.WindowDimensions / 2 + new Vector2(0, 100), Color.White, 0, origin, 1, SpriteEffects.None, 0.99f);
                 Game.SpriteBatch.Draw(Game.LightHandler._blankTexture, new Rectangle(0, 0, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y), null, new Color(Color.Black, 0.5f), 0f, Vector2.Zero, SpriteEffects.None, 0.98f);
             }
             else if (State == PlayState.Paused)

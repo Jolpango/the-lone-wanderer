@@ -1,4 +1,5 @@
 ﻿using LoneWandererGame.MongoDBManagers;
+using LoneWandererGame.Progression;
 using LoneWandererGame.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +8,8 @@ using MonoGame.Extended.Screens;
 using MonoGame.Jolpango.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 
 namespace LoneWandererGame.GameScreens
 {
@@ -15,6 +18,7 @@ namespace LoneWandererGame.GameScreens
         private new Game1 Game => (Game1)base.Game;
         private Song backgroundMusic;
         private const float BUTTON_DISTANCE = 80;
+
         public MenuScreen(Game1 game) : base(game)
         {
             Vector2 center = Game.WindowDimensions / 2;
@@ -34,10 +38,8 @@ namespace LoneWandererGame.GameScreens
                 new Button(Game)
                 {
                     Text = "HiScores",
-                    OnClick = async () => {
-                        List<string> highscores = await MongoDBManager.Instance.GetHighScores();
-                        foreach (var highscore in highscores)
-                            Console.WriteLine(highscore.ToString());
+                    OnClick = () => {
+                        Game.LoadHiscoreScreen();
                     },
                     OnPress = () => {},
                     OnRelease = () => {},
@@ -157,6 +159,7 @@ namespace LoneWandererGame.GameScreens
             Game.GraphicsDevice.Clear(Color.Gray);
             Game.SpriteBatch.Begin(SpriteSortMode.FrontToBack);
             Game.CustomCursor.Draw();
+            Game.SpriteBatch.DrawString(Game.SilkscreenRegularFont, "Player: " + PlayerScore.Name, new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.9f);
             Game.SpriteBatch.Draw(background, new Rectangle(0, 0, (int)Game.WindowDimensions.X, (int)Game.WindowDimensions.Y), null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.8f);
             if (!showOptions)
             {
