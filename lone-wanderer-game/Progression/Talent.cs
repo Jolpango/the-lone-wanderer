@@ -38,7 +38,7 @@ namespace LoneWandererGame.Progression
             talentWasZero = false;
 
             healthIncrease = 1.1f;
-            speedIncrease = 20;
+            speedIncrease = 5;
             cooldownReduction = 0.98f;
 
             //What each talent do     
