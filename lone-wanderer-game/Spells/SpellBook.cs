@@ -116,9 +116,12 @@ namespace LoneWandererGame.Spells
         {
             AoESpell spell = new AoESpell(spellDefinition.Name, spellDefinition.Icon, spellDefinition.Asset, Player.Position);
             spell.Sound = spellDefinition.Sound;
-            spell.LoadContent(Game.Content);
             spell.Timer = spellDefinition.TimeToLive;
             spell.Damage = spellDefinition.LevelDefinitions[spellDefinition.CurrentLevel].Damage;
+            spell.ParticleAmount = spellDefinition.ParticleAmount;
+            if (spellDefinition.ParticleEmitter is not null)
+                spell.ParticleEmitter = CopyEmitter(spellDefinition.ParticleEmitter);
+            spell.LoadContent(Game.Content);
             ActiveSpells.Add(spell);
         }
         private void ConstructMeleeSpell(SpellDefinition spellDefinition)

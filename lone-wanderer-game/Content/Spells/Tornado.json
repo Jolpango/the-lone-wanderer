@@ -9,21 +9,33 @@
   "levelDefinitions": [
     {
       "damage": 5,
-      "description": "Level1 spell",
+      "description": "Creates a tornado that moves toward closest enemy",
       "specialMultiplier": 1,
-      "cooldown": 2
+      "cooldown": 4
     },
     {
-      "damage": 10,
-      "description": "Level2 spell",
+      "damage": 15,
+      "description": "Increased damage",
       "specialMultiplier": 1,
-      "cooldown": 1.5
+      "cooldown": 4
     },
     {
-      "damage": 10,
-      "description": "Level3 spell",
+      "damage": 15,
+      "description": "Creates an additional tornado",
       "specialMultiplier": 2,
-      "cooldown": 1.0
+      "cooldown": 4
+    },
+    {
+      "damage": 15,
+      "description": "Cooldown reduced",
+      "specialMultiplier": 2,
+      "cooldown": 3
+    },
+    {
+      "damage": 30,
+      "description": "Three tornadoes each with increased damage",
+      "specialMultiplier": 3,
+      "cooldown": 3
     }
   ]
 }

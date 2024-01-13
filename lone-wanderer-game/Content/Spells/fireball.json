@@ -55,22 +55,34 @@
   },
   "levelDefinitions": [
     {
-      "damage": 10,
-      "description": "Level1 spell",
+      "damage": 15,
+      "description": "Slow moving fireball projectile with high damage",
       "specialMultiplier": 1,
       "cooldown": 3
     },
     {
-      "damage": 20,
-      "description": "Level2 spell",
+      "damage": 40,
+      "description": "Increased damage",
       "specialMultiplier": 1,
-      "cooldown": 1.4
+      "cooldown": 3
     },
     {
-      "damage": 40,
-      "description": "Level3 spell",
+      "damage": 60,
+      "description": "Increased damage",
       "specialMultiplier": 1,
-      "cooldown": 1.2
+      "cooldown": 3
+    },
+    {
+      "damage": 60,
+      "description": "Reduced cooldown",
+      "specialMultiplier": 1,
+      "cooldown": 2
+    },
+    {
+      "damage": 70,
+      "description": "Reduced cooldown and increased damage",
+      "specialMultiplier": 1,
+      "cooldown": 1.6
     }
   ]
 }

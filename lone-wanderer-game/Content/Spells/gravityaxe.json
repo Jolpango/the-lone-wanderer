@@ -19,21 +19,39 @@
   "levelDefinitions": [
     {
       "damage": 10,
-      "description": "Level1 spell",
+      "description": "Throws an axe up in the air",
       "specialMultiplier": 1,
-      "cooldown": 2
+      "cooldown": 4
     },
     {
       "damage": 15,
-      "description": "Level2 spell",
+      "description": "Increases damage by 5",
+      "specialMultiplier": 1,
+      "cooldown": 4
+    },
+    {
+      "damage": 15,
+      "description": "Throws an additional axe",
       "specialMultiplier": 2,
-      "cooldown": 1.8
+      "cooldown": 4
+    },
+    {
+      "damage": 15,
+      "description": "Reduces cooldown by 1.5 seconds",
+      "specialMultiplier": 2,
+      "cooldown": 2.5
     },
     {
       "damage": 20,
-      "description": "Level3 spell",
+      "description": "Increases damage per axe by 5",
       "specialMultiplier": 3,
-      "cooldown": 1.2
+      "cooldown": 2.5
+    },
+    {
+      "damage": 20,
+      "description": "Throws an additional axe",
+      "specialMultiplier": 3,
+      "cooldown": 2.5
     }
   ]
 }

@@ -11,6 +11,7 @@ using LoneWandererGame.UI;
 using LoneWandererGame.Entity;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using LoneWandererGame.Progression;
 
 namespace LoneWandererGame
 {
@@ -144,14 +145,25 @@ namespace LoneWandererGame
         }
         public void LoadDeathScreen()
         {
-            _screenManager.LoadScreen(new DeathScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+            _screenManager.LoadScreen(new NewPlayerScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+        public void LoadHiscoreScreen()
+        {
+            _screenManager.LoadScreen(new HiScoreScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
+        }
+        public void LoadNewPlayerScreen()
+        {
+            _screenManager.LoadScreen(new NewPlayerScreen(this), new FadeTransition(GraphicsDevice, Color.Black));
         }
 
 
         protected override void Initialize()
         {
             base.Initialize();
-            LoadMenuScreen();
+            PlayerScore.LoadName();
+            if (PlayerScore.Name is null)
+                LoadNewPlayerScreen();
+            else LoadMenuScreen();
         }
 
         protected override void LoadContent()

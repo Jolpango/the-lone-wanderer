@@ -19,19 +19,31 @@
   "levelDefinitions": [
     {
       "damage": 20,
-      "description": "Level1 spell",
+      "description": "Lightning arcs from the WanDDer dealing high damage",
       "specialMultiplier": 1,
       "cooldown": 5
     },
     {
-      "damage": 30,
-      "description": "Level2 spell",
+      "damage": 40,
+      "description": "Increased damage",
+      "specialMultiplier": 1,
+      "cooldown": 5
+    },
+    {
+      "damage": 40,
+      "description": "Reduced cooldown by 1 second",
       "specialMultiplier": 1,
       "cooldown": 4
     },
     {
       "damage": 40,
-      "description": "Level3 spell",
+      "description": "Reduced cooldown by 1 second",
+      "specialMultiplier": 1,
+      "cooldown": 3
+    },
+    {
+      "damage": 50,
+      "description": "Increased damage",
       "specialMultiplier": 1,
       "cooldown": 3
     }

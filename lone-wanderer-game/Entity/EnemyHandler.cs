@@ -145,7 +145,7 @@ namespace LoneWandererGame.Entity
                             enemy.Initialize(5.0f, 30.0f, spawnPos, "dark_soldier-black");
                             break;
                         case 2:
-                            enemy.Initialize(40.0f, 8.0f, spawnPos, "dark_soldier-commander");
+                            enemy.Initialize(40.0f, 15.0f, spawnPos, "dark_soldier-commander");
                             break;
                         case 3:
                             enemy.Initialize(5.0f, 25.0f, spawnPos, "dark_soldier-dragonrider");
