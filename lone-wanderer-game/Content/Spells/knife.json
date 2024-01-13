@@ -19,21 +19,39 @@
   "levelDefinitions": [
     {
       "damage": 5,
-      "description": "Level1 spell",
+      "description": "Throws a knife in direction youre facing",
       "specialMultiplier": 1,
       "cooldown": 2
     },
     {
       "damage": 10,
-      "description": "Level2 spell",
-      "specialMultiplier": 3,
-      "cooldown": 1.5
+      "description": "Increases damage by 5",
+      "specialMultiplier": 1,
+      "cooldown": 2
     },
     {
-      "damage": 12,
-      "description": "Level3 spell",
-      "specialMultiplier": 5,
-      "cooldown": 1.4
+      "damage": 10,
+      "description": "Throws an additional knife",
+      "specialMultiplier": 2,
+      "cooldown": 2
+    },
+    {
+      "damage": 10,
+      "description": "Throws 2 additional knives",
+      "specialMultiplier": 4,
+      "cooldown": 2
+    },
+    {
+      "damage": 10,
+      "description": "Cooldown reduced by 1 second",
+      "specialMultiplier": 4,
+      "cooldown": 1
+    },
+    {
+      "damage": 15,
+      "description": "Throws total of 5 knives and deal 5 more damage per knife",
+      "specialMultiplier": 4,
+      "cooldown": 1
     }
   ]
 }

@@ -9,21 +9,33 @@
   "levelDefinitions": [
     {
       "damage": 10,
-      "description": "Level1 spell",
+      "description": "Close range melee attack",
       "specialMultiplier": 1,
       "cooldown": 2
     },
     {
-      "damage": 15,
-      "description": "Level2 spell",
+      "damage": 20,
+      "description": "Double the damage",
       "specialMultiplier": 1,
-      "cooldown": 1.8
+      "cooldown": 2
     },
     {
-      "damage": 20,
-      "description": "Level3 spell",
+      "damage": 40,
+      "description": "Double the damage again",
       "specialMultiplier": 1,
-      "cooldown": 1.2
+      "cooldown": 2
+    },
+    {
+      "damage": 40,
+      "description": "Reduced cooldown",
+      "specialMultiplier": 1,
+      "cooldown": 1.7
+    },
+    {
+      "damage": 60,
+      "description": "Reduced cooldown and increased damage",
+      "specialMultiplier": 1,
+      "cooldown": 1.3
     }
   ]
 }

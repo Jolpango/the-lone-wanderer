@@ -6,24 +6,83 @@
   "icon": "icesplosion",
   "sound": "swish_4",
   "timer": 5,
+  "particle": {
+    "startcolor": {
+      "r": 100,
+      "g": 100,
+      "b": 255,
+      "a": 255
+    },
+    "endcolor": {
+      "r": 200,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "scale": {
+      "min": 1,
+      "max": 2
+    },
+    "radius": {
+      "min": 1,
+      "max": 100
+    },
+    "speed": {
+      "min": 1,
+      "max": 3
+    },
+    "alpha": {
+      "min": 1,
+      "max": 0.0
+    },
+    "direction": {
+      "x": 1,
+      "y": 0,
+      "freedom": 360
+    },
+    "timetolive": 0.5,
+    "amount": 2000
+  },
+  "light": {
+    "r": 0,
+    "g": 0,
+    "b": 255,
+    "size": {
+      "x": 250,
+      "y": 250
+    },
+    "intensity": 1
+  },
   "levelDefinitions": [
     {
       "damage": 5,
-      "description": "Level1 spell",
+      "description": "AoE Spell",
       "specialMultiplier": 1,
-      "cooldown": 1
+      "cooldown": 5
     },
     {
       "damage": 10,
-      "description": "Level2 spell",
+      "description": "Increases damage by 5",
       "specialMultiplier": 1,
-      "cooldown": 0.8
+      "cooldown": 5
     },
     {
       "damage": 10,
-      "description": "Level3 spell",
-      "specialMultiplier": 2,
-      "cooldown": 0.8
+      "description": "Reduces cooldown by 1 second",
+      "specialMultiplier": 0,
+      "cooldown": 4
+    },
+    {
+      "damage": 14,
+      "description": "Increases damage by 4",
+      "specialMultiplier": 0,
+      "cooldown": 4
+    },
+    {
+      "damage": 14,
+      "description": "Reduces cooldown by 1 second",
+      "specialMultiplier": 0,
+      "cooldown": 3
     }
   ]
 }
