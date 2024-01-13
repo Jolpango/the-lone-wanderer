@@ -102,6 +102,25 @@ namespace LoneWandererGame.Entity
         {
             return sprite.GetBoundingRectangle(Position, Rotation, Scale);
         }
+        public RectangleF TerrainCollisionRectangle
+        {
+            get
+            {
+                var rec = sprite.GetBoundingRectangle(Position, Rotation, new Vector2(0.7f, 1.0f) * Scale);
+                rec.Height /= 2;
+                rec.Y += rec.Height;
+                return rec;
+            }
+        }
+        public Vector2 TerrainOrigin
+        {
+            get
+            {
+                var rec = TerrainCollisionRectangle;
+                Vector2 o = new Vector2(rec.Width / 2, rec.Height / 2);
+                return o;
+            }
+        }
 
         private void OnDeathAnimationDone()
         {
@@ -231,13 +250,14 @@ namespace LoneWandererGame.Entity
 
                 if (!godMode)
                 {
-                    RectangleF playerRect = sprite.GetBoundingRectangle(Position, Rotation, Scale); // This might break if we scale/rotate
-                    List<Rectangle> collisions = tileEngine.GetCollisions(playerRect, velocity);
+                    //RectangleF playerRect = sprite.GetBoundingRectangle(Position, Rotation, Scale); // This might break if we scale/rotate
+                    //Vector2 offset = new Vector2(TerrainCollisionRectangle.Width, TerrainCollisionRectangle.Height);
+                    List<Rectangle> collisions = tileEngine.GetCollisions(getSpriteRectangle(), velocity);
                     if (collisions.Count > 0)
                     {
                         TileEngine.CollisionResolution resolution = tileEngine
-                            .ResolveCollisions(collisions, playerRect, Position, sprite.Origin, velocity);
-
+                            .ResolveCollisions(collisions, getSpriteRectangle(), Position, sprite.Origin, velocity);
+                        
                         Position = resolution.position;
                         velocity = resolution.velocity;
                     }
@@ -273,7 +293,8 @@ namespace LoneWandererGame.Entity
         public void Draw()
         {
 #if DEBUG
-            game.SpriteBatch.DrawRectangle(sprite.GetBoundingRectangle(Position, 0, Vector2.One), Color.Red * 0.8f, 1, 0.9f);
+            game.SpriteBatch.DrawRectangle(getSpriteRectangle(), Color.Red * 0.8f, 1, 0.9f);
+            game.SpriteBatch.DrawRectangle(TerrainCollisionRectangle, Color.Blue * 0.8f, 1, 0.9f);
 #endif
             game.SpriteBatch.Draw(sprite, Position, Rotation, Scale);
         }

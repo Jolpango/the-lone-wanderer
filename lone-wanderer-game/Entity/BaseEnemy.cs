@@ -52,6 +52,32 @@ namespace LoneWandererGame.Entity
                 return sprite.GetBoundingRectangle(position, rotation, scale);
             }
         }
+        public Vector2 CollisionOrigin
+        {
+            get
+            {
+                var rec = CollisionRectangle;
+                return new Vector2(rec.Width / 2, rec.Height / 2);
+            }
+        }
+        public RectangleF TerrainRectangle
+        {
+            get
+            {
+                var rec = sprite.GetBoundingRectangle(position, rotation, new Vector2(0.7f, 1) * scale);
+                rec.Height /= 2;
+                rec.Y += rec.Height;
+                return rec;
+            }
+        }
+        public Vector2 TerrainOrigin
+        {
+            get
+            {
+                var rec = TerrainRectangle;
+                return new Vector2(rec.Width / 2, rec.Height / 2);
+            }
+        }
 
         public BaseEnemy(Game1 game, TileEngine tileEngine, Dictionary<string, SpriteSheet> spriteSheets)
         {
@@ -133,7 +159,7 @@ namespace LoneWandererGame.Entity
             if (attackCooldown <= 0.0f)
             {
                 RectangleF playerbox = _player.getSpriteRectangle();
-                RectangleF enemyBox = sprite.GetBoundingRectangle(position, rotation, scale);
+                RectangleF enemyBox = sprite.GetBoundingRectangle(position, rotation, new Vector2(0.7f, 1f) * scale);
 
                 if (playerbox.Intersects(enemyBox))
                 {
@@ -148,7 +174,8 @@ namespace LoneWandererGame.Entity
         public void Draw(GameTime gameTime)
         {
 #if DEBUG
-            Game.SpriteBatch.DrawRectangle(sprite.GetBoundingRectangle(position, 0, Vector2.One * scale), Color.Red * 0.8f, 1, 0.9f);
+            Game.SpriteBatch.DrawRectangle(CollisionRectangle, Color.Red * 0.8f, 1, 0.9f);
+            Game.SpriteBatch.DrawRectangle(TerrainRectangle, Color.Blue * 0.8f, 1, 0.9f);
 #endif
             Game.SpriteBatch.Draw(sprite, position, rotation, scale);
             healthBar.Draw();
