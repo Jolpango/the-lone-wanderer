@@ -80,12 +80,12 @@ namespace LoneWandererGame.GameScreens
             // Assumed map width and height is 512
             float tilemapCenter = (512 * 32) / 2f;
             _player = new Player(Game, tileEngine, new Vector2(tilemapCenter, tilemapCenter));
-            powerupHandler = new PowerupHandler(Game, _player);
             enemyHandler = new EnemyHandler(Game, tileEngine, _camera);
             ActiveSpells = new List<Spell>();
             SpellBook = new SpellBook(Game, _player, ActiveSpells, enemyHandler);
             SpellDefinitions = new List<SpellDefinition>();
             FloatingTextHandler = new FloatingTextHandler(Game);
+            powerupHandler = new PowerupHandler(Game, _player, FloatingTextHandler);
             SpellCollisionHandler = new SpellCollisionHandler(Game, tileEngine, enemyHandler, ActiveSpells, FloatingTextHandler);
             rnd = new Random();
             spellSelections = new List<SpellSelection>();
@@ -296,7 +296,7 @@ namespace LoneWandererGame.GameScreens
             savedShowExp += xp; 
             if (uiScoreCooldown <= 0f)
             {
-                FloatingTextHandler.AddText(savedShowExp.ToString(), _player.Position, Color.White);
+                FloatingTextHandler.AddText(savedShowExp.ToString(), _player.Position+new Vector2(0f,20f), Color.White);
                 uiScoreCooldown = 1f;
                 savedShowExp = 0;
             }

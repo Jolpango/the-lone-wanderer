@@ -7,6 +7,9 @@ using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
 using LoneWandererGame.Utilities;
 using LoneWandererGame.Entity;
+using LoneWandererGame.TileEngines;
+using LoneWandererGame.UI;
+using LoneWandererGame.Progression;
 
 namespace LoneWandererGame.Powerups
 {
@@ -21,7 +24,12 @@ namespace LoneWandererGame.Powerups
         private List<string> colorNames;
         private List<Color> colors;
         private Dictionary<string, SpriteSheet> spriteSheets;
-        public PowerupHandler(Game1 game, Player player)
+        private bool activatePowerupText = false;
+        private string powerupText;
+        private Color colour;
+        public FloatingTextHandler FloatingTextHandler { get; private set; }
+        private Vector2 powerupTextPos = new Vector2(0f,0f);
+        public PowerupHandler(Game1 game, Player player, FloatingTextHandler floatingTextHandler)
         {
             powerups = new List<Powerup>();
             spriteSheets = new Dictionary<string, SpriteSheet>();
@@ -30,25 +38,26 @@ namespace LoneWandererGame.Powerups
             rng = new Random();
             colorNames = new List<string>()
             {
-                "blue",
+               // "blue",
                 "green",
                 "grey",
                 "orange",
-                "pink",
-                "yellow",
+               // "pink",
+               // "yellow",
             };
 
             colors = new List<Color>()
             {
-                Color.Blue,
+                //Color.Blue,
                 Color.Green,
                 Color.Gray,
                 Color.Orange,
-                new Color(255, 55, 55), //Color.Pink,
-                Color.Yellow,
+                //new Color(255, 55, 55), //Color.Pink,
+               // Color.Yellow,
             };
 
             spawnTimer = spawnTime;
+            FloatingTextHandler = floatingTextHandler;
         }
 
         public void LoadContent()
@@ -86,13 +95,21 @@ namespace LoneWandererGame.Powerups
             spawnTimer -= gameTime.GetElapsedSeconds();
 
             CheckPlayerPickup();
+
+            if (activatePowerupText == true)
+            {
+                FloatingTextHandler.AddText(powerupText, powerupTextPos, colour);
+                activatePowerupText = false;
+            }
         }
 
         public void Draw()
         {
-            foreach(Powerup powerup in powerups)
+            foreach (Powerup powerup in powerups)
                 if (!powerup.Active)
                     powerup.Draw(Game.SpriteBatch, Game);
+            
+            
         }
 
         public void AddPowerup()
@@ -136,19 +153,27 @@ namespace LoneWandererGame.Powerups
                     break;
                 case "green":
                     powerup.EffectAmount = rng.Next(10, 50);
-                    Player.SpeedUp(powerup.EffectAmount);
+                    Player.SpeedUp(powerup.EffectAmount);             
+                    powerupText = "Speed UP";
+                    colour = Color.GreenYellow;
                     break;
                 case "grey":
                     powerup.EffectAmount = rng.Next(2, 6);
                     Player.MakeInvincible(powerup.EffectAmount);
+                    powerupText = "Invincible";
+                    colour = Color.White;
                     break;
                 case "orange":
                     powerup.EffectAmount = rng.Next(0, 10);
                     Player.Heal(powerup.EffectAmount);
+                    powerupText = "Health UP";
+                    colour = Color.Orange;
                     break;
                 case "pink":
                     break;
             }
+            activatePowerupText = true;
+            powerupTextPos = powerup.Position;
         }
 
         public void UnaffectPlayer(Powerup powerup)
